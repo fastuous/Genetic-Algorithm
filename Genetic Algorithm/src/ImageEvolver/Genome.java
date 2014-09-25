@@ -1,8 +1,6 @@
-package ImageEvolver.util;
+package ImageEvolver;
 
 import java.util.Collection;
-
-import ImageEvolver.Triangle;
 
 public class Genome
 {
