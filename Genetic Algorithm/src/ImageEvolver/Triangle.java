@@ -2,19 +2,23 @@ package ImageEvolver;
 
 public class Triangle
 {
-  public int[] xs = new int[3];
-  public int[] ys = new int[3];
-  public int[] rgba = new int[4];
+
+  public int[] dna = new int[10];
 
   public Triangle(int[] xPoints, int[] yPoints, int red, int green, int blue, int alpha)
   {
-    xs = xPoints;
-    ys = yPoints;
+    dna[0] = xPoints[0];
+    dna[1] = xPoints[1];
+    dna[2] = xPoints[2];
     
-    rgba[0] = red;
-    rgba[1] = green;
-    rgba[2] = blue;
-    rgba[3] = alpha;
-  }
+    dna[3] = yPoints[0];
+    dna[4] = yPoints[1];
+    dna[5] = yPoints[2];
+    
+    dna[6] = red;
+    dna[7] = green;
+    dna[8] = blue;
+    dna[9] = alpha;
 
+  }
 }
