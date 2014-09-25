@@ -1,38 +1,20 @@
 package ImageEvolver;
 
-import java.awt.Color;
-
-
-
 public class Triangle
 {
-  public int x1;
-  public int x2;
-  public int x3;
-
-  public int y1;
-  public int y2;
-  public int y3;
-
-  public int red;
-  public int green;
-  public int blue;
-  public int alpha;
+  public int[] xs = new int[3];
+  public int[] ys = new int[3];
+  public int[] rgba = new int[4];
 
   public Triangle(int[] xPoints, int[] yPoints, int red, int green, int blue, int alpha)
   {
-    x1 = xPoints[0];
-    x2 = xPoints[1];
-    x3 = xPoints[2];
+    xs = xPoints;
+    ys = yPoints;
     
-    y1 = yPoints[0];
-    y2 = yPoints[1];
-    y3 = yPoints[2];
-    
-    this.red = red;
-    this.green = green;
-    this.blue = blue;
-    this.alpha = alpha;
+    rgba[0] = red;
+    rgba[1] = green;
+    rgba[2] = blue;
+    rgba[3] = alpha;
   }
 
 }
