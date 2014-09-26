@@ -42,8 +42,9 @@ public class VolatileImageTest
     for (int x = 5, y = 5; x < 200 && y < 200; x += 5, y += 5)
     {
       panel.addShape(new Rectangle(x, x, 405 - 2*x, 405 - 2*y));
-      Thread.sleep(500);
+      Thread.sleep(50);
     }
+    panel.removeShape(panel.getShapes().stream().findFirst().get());
   }
   
   /**
@@ -127,6 +128,19 @@ class DrawPanel extends JPanel
     repaint();
   }
   
+  @Override
+  public void repaint()
+  {
+    if (offscreenBuffer != null)
+    {
+      Graphics2D offscreenGraphics = offscreenBuffer.createGraphics();
+      offscreenGraphics.clearRect(0, 0, getWidth(), getHeight());
+      for (Shape s : shapes) offscreenGraphics.draw(s);
+      offscreenGraphics.dispose();
+    }
+    super.repaint();
+  }
+  
   /**
    * Returns the shapes collection that this DrawPanel is using.
    * @return The shapes collection that this DrawPanel is using.
@@ -154,10 +168,6 @@ class DrawPanel extends JPanel
       {
         createOffScreenBuffer(this.getWidth(), this.getHeight());
       }
-      
-      Graphics2D offscreenGraphics = offscreenBuffer.createGraphics();
-      for (Shape s : shapes) offscreenGraphics.draw(s);
-      offscreenGraphics.dispose();
       
       g.drawImage(offscreenBuffer, 0, 0, this);
       
