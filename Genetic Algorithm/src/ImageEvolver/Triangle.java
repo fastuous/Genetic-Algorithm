@@ -5,7 +5,7 @@ public class Triangle
 
   public int[] dna = new int[10];
 
-  public Triangle(int[] xPoints, int[] yPoints, int red, int green, int blue, int alpha)
+  public Triangle(int[] xPoints, int[] yPoints, int[] rgba)
   {
     dna[0] = xPoints[0];
     dna[1] = xPoints[1];
@@ -15,10 +15,10 @@ public class Triangle
     dna[4] = yPoints[1];
     dna[5] = yPoints[2];
     
-    dna[6] = red;
-    dna[7] = green;
-    dna[8] = blue;
-    dna[9] = alpha;
+    dna[6] = rgba[0];
+    dna[7] = rgba[1];
+    dna[8] = rgba[2];
+    dna[9] = rgba[3];
 
   }
 }

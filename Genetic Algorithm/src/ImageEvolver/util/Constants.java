@@ -1,5 +1,7 @@
 package ImageEvolver.util;
 
+import java.util.Random;
+
 /**
  * Centralized place to keep hard-coded variables. Like in AntWorld
  * 
@@ -17,4 +19,6 @@ public class Constants
   
   public static int width;
   public static int height;
+  
+  public static final Random rand = new Random();
 }
