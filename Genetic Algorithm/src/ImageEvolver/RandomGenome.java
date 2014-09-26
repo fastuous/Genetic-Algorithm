@@ -2,9 +2,20 @@ package ImageEvolver;
 
 import ImageEvolver.util.Constants;
 
+/**
+ * Utility class to satisfy requirements for Milestone 1
+ * 
+ * @author Truman DeYoung
+ */
 public class RandomGenome
 {
 
+  /**
+   * Using the project-wide Random instance, generates a genome with valid triangles, given that the
+   * global image height and width have been set.
+   * 
+   * @return A genome with randomly generated genes.
+   */
   public static Genome generateGenome()
   {
     Genome genome = new Genome();

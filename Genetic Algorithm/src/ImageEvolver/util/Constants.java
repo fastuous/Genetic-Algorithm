@@ -5,15 +5,15 @@ import java.util.Random;
 /**
  * Centralized place to keep hard-coded variables. Like in AntWorld
  * 
- * @author Truman
+ * @author Truman DeYoung
  */
 public class Constants
 {
   public static final int TRIANGLE_COUNT = 200;
 
   public static final String[] IMAGE_FILES =
-  { "Leonardo_da_Vinci-Mona_Lisa-450x363.png", "Hokusai-Great_Wave_Off_Kanagawa-200x137.png",
-      "Hokusai-Great_Wave_Off_Kanagawa-450x309.png", "Claude_Monet-Poppy_Fields-450x338.png" };
+  { "mona-lisa-cropped-512x413.png", "poppyfields-512x384.png",
+      "the_great_wave_off_kanagawa-512x352.png" };
   
   public static final int MAX_RGBA = 255;
   
