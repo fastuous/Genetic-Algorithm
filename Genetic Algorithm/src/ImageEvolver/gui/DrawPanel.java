@@ -24,6 +24,9 @@ import ImageEvolver.Triangle;
  * Example code:
  * <code><br /> <br />
  * DrawPanel p = new DrawPanel(640, 480);<br />
+ * <br />
+ * // Add DrawPanel p to a JFrame or something similar.<br />
+ * <br />
  * Triangle t = new Triangle(new int[] {5, 5, 20}, new int[] {5, 20, 20}, 0, 0, 0, 255);<br />
  * p.setTriangleDrawLimit(200); // Default value is 0<br />
  * <br />
