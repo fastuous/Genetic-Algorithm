@@ -40,7 +40,7 @@ public class ImagePanel extends JPanel
    * Change the image displayed in the ImagePanel. Only accepts image names that are pre-defined in
    * Constants.
    * 
-   * @param fileName 
+   * @param fileName
    */
   public void selectImage(String fileName)
   {
@@ -62,15 +62,19 @@ public class ImagePanel extends JPanel
     this.repaint();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
    */
   @Override
   protected void paintComponent(Graphics g)
   {
     super.paintComponent(g);
-
-    g.drawImage(targetImage, 0, 0, null);
+    if (targetImage != null)
+    {
+      g.drawImage(targetImage, 0, 0, null);
+    }
   }
 
 }
