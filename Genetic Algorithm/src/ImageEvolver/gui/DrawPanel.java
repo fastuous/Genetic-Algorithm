@@ -21,27 +21,27 @@ import ImageEvolver.Triangle;
  * A panel which extends {@link JPanel} and uses a {@link VolatileImage} to
  * to render graphics.
  * <br /><br />
- * Example code:
- * <code><br /> <br />
- * DrawPanel p = new DrawPanel(640, 480);<br />
- * <br />
- * // Add DrawPanel p to a JFrame or something similar.<br />
- * <br />
- * Triangle t = new Triangle(new int[] {5, 5, 20}, new int[] {5, 20, 20}, 0, 0, 0, 255);<br />
- * p.setTriangleDrawLimit(200); // Default value is 0<br />
- * <br />
- * p.getTirangles().add(t);<br />
- * p.repaint(); // Must manually repaint after adding a triangle.<br />
- * <br />
- * t.dna[0] = 10;<br />
- * p.repaint(); // Must manually repaint after changing a triangle.<br />
- * <br />
- * List&lt;Triangle&gt; ts = new ArrayList&lt;Triangle&gt;();<br /> 
- * ts.add(t);<br />
- * p.setTriangles(ts); // Automatically repaints the DrawPanel<br />
- * <br />
- * <br />
- * </code>
+ * Example code:<br/>
+ * <code><pre>
+ *  DrawPanel p = new DrawPanel(640, 480);
+ *  
+ *  // Add DrawPanel p to a JFrame or something similar.
+ *  
+ *  Triangle t = new Triangle(new int[] {5, 5, 20}, new int[] {5, 20, 20}, 0, 0, 0, 255);
+ *  p.setTriangleDrawLimit(200); // Default value is 0
+ *  
+ *  p.getTirangles().add(t);
+ *  p.repaint(); // Must manually repaint after adding a triangle.
+ *  
+ *  t.dna[0] = 10;
+ *  p.repaint(); // Must manually repaint after changing a triangle.
+ *  
+ *  List&lt;Triangle&gt; ts = new ArrayList&lt;Triangle&gt;(); 
+ *  ts.add(t);
+ *  p.setTriangles(ts); // Automatically repaints the DrawPanel
+ *  
+ *  
+ * </pre></code>
  * 
  * @author David Collins
  */
