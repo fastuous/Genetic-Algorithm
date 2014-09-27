@@ -20,7 +20,7 @@ public class RandomGenome
   {
     Genome genome = new Genome();
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < Constants.TRIANGLE_COUNT; i++)
     {
       int xPoints[] = new int[3];
       for (int j = 0; j < xPoints.length; j++)
