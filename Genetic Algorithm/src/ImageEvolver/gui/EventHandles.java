@@ -10,7 +10,7 @@ package ImageEvolver.gui;
  */
 public class EventHandles
 {
-  private static boolean isPaused = false;
+  public static boolean isPaused = true;
 
   public static void pause()
   {
