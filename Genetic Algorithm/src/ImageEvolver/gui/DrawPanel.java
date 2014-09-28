@@ -161,7 +161,7 @@ public class DrawPanel extends JPanel
     int [] xs = Arrays.copyOfRange(t.dna, 0, 3);
     int [] ys = Arrays.copyOfRange(t.dna, 3, 6);
     Polygon p = new Polygon(xs, ys, 3);
-    g.draw(p);
+    g.fill(p);
   }
   
   /*
