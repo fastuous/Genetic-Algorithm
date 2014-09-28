@@ -97,7 +97,7 @@ public class MainFrame extends javax.swing.JFrame
   // desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents()
   {
-    btnPause = new javax.swing.JButton("Pause");
+    btnPause = new javax.swing.JButton("Start");
     btnNext = new javax.swing.JButton("Next");
     btnGenomeTable = new javax.swing.JButton("Show Genome Table");
     btnReadGenome = new javax.swing.JButton("Read Genome");
@@ -152,6 +152,7 @@ public class MainFrame extends javax.swing.JFrame
           btnWriteGenome.setEnabled(true);
           btnStatsFile.setEnabled(true);
           comboSelectImage.setEnabled(true);
+          triangleSlider.setEnabled(true);
         }
         else
         {
@@ -162,6 +163,7 @@ public class MainFrame extends javax.swing.JFrame
           btnWriteGenome.setEnabled(false);
           btnStatsFile.setEnabled(false);
           comboSelectImage.setEnabled(false);
+          triangleSlider.setEnabled(false);
         }
       }
     });

@@ -82,8 +82,7 @@ public class GUIController
     
     drawPanel.setTriangleDrawLimit(value);
 
-    if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
-    System.out.println();
+    if (!isPaused) System.out.println(" **WARNING: PROGRAM IS NOT PAUSED**");
   }
 
   public void appendStats()
