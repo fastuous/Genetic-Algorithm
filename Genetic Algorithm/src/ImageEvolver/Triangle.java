@@ -1,5 +1,6 @@
 package ImageEvolver;
 
+import java.nio.IntBuffer;
 import java.util.Arrays;
 
 /**
@@ -55,5 +56,15 @@ public class Triangle
       return Arrays.equals(this.dna, ((Triangle)other).dna);
     }
     else return false;
+  }
+  
+  /**
+   * Returns a buffer wrapping the {@link Triangle#dna} which can be used in
+   * JOCL. Any changes made to the dna will change the buffer and vice-versa.
+   * @return A buffer wrapping the {@link Triangle#dna}.
+   */
+  public IntBuffer asIntBuffer()
+  {
+    return IntBuffer.wrap(dna);
   }
 }
