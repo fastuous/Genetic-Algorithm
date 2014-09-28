@@ -58,7 +58,10 @@ public class ImagePanel extends JPanel
     {
       e.printStackTrace();
     }
-
+    
+    Constants.width = targetImage.getWidth();
+    Constants.height = targetImage.getHeight();
+    
     this.repaint();
   }
 

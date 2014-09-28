@@ -1,5 +1,8 @@
 package ImageEvolver.gui;
 
+import ImageEvolver.Genome;
+import ImageEvolver.RandomGenome;
+
 /**
  * A simple class to test the functionality of our GUI, may evolve into view-controller
  * 
@@ -11,6 +14,7 @@ package ImageEvolver.gui;
 public class EventHandles
 {
   public static boolean isPaused = true;
+  private static DrawPanel drawPanel;
 
   public static void pause()
   {
@@ -29,7 +33,10 @@ public class EventHandles
 
   public static void next()
   {
-
+    Genome genome = RandomGenome.generateGenome();
+    drawPanel.setTriangles(genome.getGenes());
+    drawPanel.repaint();
+    
     System.out.print("Next button clicked.");
     if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
     System.out.println();
@@ -83,5 +90,10 @@ public class EventHandles
     System.out.print("Image selected: " + fileName);
     if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
     System.out.println();
+  }
+  
+  public static void setDrawPanel(DrawPanel drawPanel)
+  {
+    EventHandles.drawPanel = drawPanel;
   }
 }
