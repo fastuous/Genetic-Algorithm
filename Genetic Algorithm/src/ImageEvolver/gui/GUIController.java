@@ -1,5 +1,7 @@
 package ImageEvolver.gui;
 
+import javax.swing.SwingUtilities;
+
 import ImageEvolver.Genome;
 import ImageEvolver.RandomGenome;
 
@@ -11,12 +13,12 @@ import ImageEvolver.RandomGenome;
  * 
  * @author Truman
  */
-public class EventHandles
+public class GUIController
 {
-  public static boolean isPaused = true;
-  private static DrawPanel drawPanel;
+  public boolean isPaused = true;
+  private DrawPanel drawPanel;
 
-  public static void pause()
+  public void pause()
   {
     System.out.print("Pause button clicked.");
     if (!isPaused)
@@ -31,69 +33,79 @@ public class EventHandles
     }
   }
 
-  public static void next()
+  public void next()
   {
     Genome genome = RandomGenome.generateGenome();
     drawPanel.setTriangles(genome.getGenes());
     drawPanel.repaint();
-    
+
     System.out.print("Next button clicked.");
     if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
     System.out.println();
   }
 
-  public static void reset()
+  public void reset()
   {
     System.out.print("Reset button clicked.");
     if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
     System.out.println();
   }
 
-  public static void genomeTable()
+  public void genomeTable()
   {
     System.out.print("Genome Table button clicked.");
     if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
     System.out.println();
   }
 
-  public static void writeGenome()
+  public void writeGenome()
   {
     System.out.print("Write Genome button clicked.");
     if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
     System.out.println();
   }
 
-  public static void readGenome()
+  public void readGenome()
   {
     System.out.print("Read Genome button clicked.");
     if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
     System.out.println();
   }
 
-  public static void tribeSliderUpdate(int value)
+  public void tribeSliderUpdate(int value)
   {
     System.out.print("Tribe slider changed to " + value);
   }
 
-  public static void triangleSliderUpdate(int value)
+  public void triangleSliderUpdate(int value)
   {
+    
+    drawPanel.setTriangleDrawLimit(value);
 
-    // we'll actually have to implement this one
-    System.out.print("Triangle slider changed to " + value);
     if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
     System.out.println();
   }
 
-  public static void pictureSelect(String fileName)
+  public void appendStats()
   {
-    // we'll actually have to implement this one
-    System.out.print("Image selected: " + fileName);
-    if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
-    System.out.println();
+
+  }
+
+  public void setDrawPanel(DrawPanel drawPanel)
+  {
+    this.drawPanel = drawPanel;
   }
   
-  public static void setDrawPanel(DrawPanel drawPanel)
+  public static void main(String[] args)
   {
-    EventHandles.drawPanel = drawPanel;
+    SwingUtilities.invokeLater(new Runnable() {
+
+      public void run()
+      {
+        GUIController controller = new GUIController();
+        new MainFrame(controller).setVisible(true);;
+      }
+    });
+    
   }
 }

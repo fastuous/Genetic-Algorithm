@@ -11,9 +11,11 @@ import ImageEvolver.util.Constants;
  *
  * @author masonbanning
  */
-public class NewJFrame extends javax.swing.JFrame
+public class MainFrame extends javax.swing.JFrame
 {
   private static final long serialVersionUID = 1L;
+  
+  private GUIController controller;
   
   private javax.swing.JButton btnPause;
   private javax.swing.JButton btnNext;
@@ -35,9 +37,53 @@ public class NewJFrame extends javax.swing.JFrame
 
   /**
    * Creates new form NewJFrame
+   * @param controller 
    */
-  public NewJFrame()
+  public MainFrame(GUIController controller)
   {
+    /* Set the Nimbus look and feel */
+    // <editor-fold defaultstate="collapsed"
+    // desc=" Look and feel setting code (optional) ">
+    /*
+     * If Nimbus (introduced in Java SE 6) is not available, stay with the
+     * default look and feel. For details see
+     * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+     */
+    try
+    {
+      for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
+          .getInstalledLookAndFeels())
+      {
+        if ("Nimbus".equals(info.getName()))
+        {
+          javax.swing.UIManager.setLookAndFeel(info.getClassName());
+          break;
+        }
+      }
+    }
+    catch (ClassNotFoundException ex)
+    {
+      java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(
+          java.util.logging.Level.SEVERE, null, ex);
+    }
+    catch (InstantiationException ex)
+    {
+      java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(
+          java.util.logging.Level.SEVERE, null, ex);
+    }
+    catch (IllegalAccessException ex)
+    {
+      java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(
+          java.util.logging.Level.SEVERE, null, ex);
+    }
+    catch (javax.swing.UnsupportedLookAndFeelException ex)
+    {
+      java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(
+          java.util.logging.Level.SEVERE, null, ex);
+    }
+    // </editor-fold>
+    /* Create and display the form */
+    this.controller = controller;
     initComponents();
     setResizable(false);
   }
@@ -51,25 +97,25 @@ public class NewJFrame extends javax.swing.JFrame
   // desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents()
   {
-    btnPause = new javax.swing.JButton();
-    btnNext = new javax.swing.JButton();
-    btnGenomeTable = new javax.swing.JButton();
-    btnReadGenome = new javax.swing.JButton();
-    btnWriteGenome = new javax.swing.JButton();
-    btnStatsFile = new javax.swing.JButton();
+    btnPause = new javax.swing.JButton("Pause");
+    btnNext = new javax.swing.JButton("Next");
+    btnGenomeTable = new javax.swing.JButton("Show Genome Table");
+    btnReadGenome = new javax.swing.JButton("Read Genome");
+    btnWriteGenome = new javax.swing.JButton("Write Genome");
+    btnStatsFile = new javax.swing.JButton("Append Stats File");
     comboSelectImage = new javax.swing.JComboBox<String>();
     jComboBox2 = new javax.swing.JComboBox<String>();
-    jLabel1 = new javax.swing.JLabel();
-    jLabel2 = new javax.swing.JLabel();
-    jLabel3 = new javax.swing.JLabel();
-    jLabel4 = new javax.swing.JLabel();
+    jLabel1 = new javax.swing.JLabel("Label 1");
+    jLabel2 = new javax.swing.JLabel("Label 2");
+    jLabel3 = new javax.swing.JLabel("Label 3");
+    jLabel4 = new javax.swing.JLabel("Label 4");
     imagePanel = new ImagePanel(512, 512);
     drawPanel = new DrawPanel(512, 512);
-    triangleSlider = new javax.swing.JSlider();
+    triangleSlider = new javax.swing.JSlider(0, 200);
     tribeSlider = new javax.swing.JSlider();
     jTextField1 = new javax.swing.JTextField();
     
-    EventHandles.setDrawPanel(drawPanel);
+    controller.setDrawPanel(drawPanel);
     imagePanel.selectImage("mona-lisa-cropped-512x413.png");
     drawPanel.setTriangleDrawLimit(200);
     
@@ -88,67 +134,48 @@ public class NewJFrame extends javax.swing.JFrame
         javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 512, Short.MAX_VALUE));
     jPanel2Layout.setVerticalGroup(jPanel2Layout.createParallelGroup(
         javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 510, Short.MAX_VALUE));
-    btnGenomeTable.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        jButton3ActionPerformed(evt);
-      }
-    });
+    
+    btnGenomeTable.addActionListener(e -> controller.genomeTable());
     btnPause.addActionListener(new java.awt.event.ActionListener()
     {
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
-        jButton1ActionPerformed(evt);
-      }
-    });
-    btnNext.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        jButton2ActionPerformed(evt);
-      }
-    });
-    btnReadGenome.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        jButton4ActionPerformed(evt);
-      }
-    });
-    btnWriteGenome.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        jButton5ActionPerformed(evt);
-      }
-    });
-    btnStatsFile.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        jButton6ActionPerformed(evt);
-      }
-    });
+          
+        controller.pause();
 
+        if(controller.isPaused)
+        {
+          btnPause.setText("Start");
+          btnNext.setEnabled(true);
+          btnGenomeTable.setEnabled(true);
+          btnReadGenome.setEnabled(true);
+          btnWriteGenome.setEnabled(true);
+          btnStatsFile.setEnabled(true);
+          comboSelectImage.setEnabled(true);
+        }
+        else
+        {
+          btnPause.setText("Pause");
+          btnNext.setEnabled(false);
+          btnGenomeTable.setEnabled(false);
+          btnReadGenome.setEnabled(false);
+          btnWriteGenome.setEnabled(false);
+          btnStatsFile.setEnabled(false);
+          comboSelectImage.setEnabled(false);
+        }
+      }
+    });
+    btnNext.addActionListener(e -> controller.next());
+    btnReadGenome.addActionListener(e -> controller.readGenome());
+    btnWriteGenome.addActionListener(e -> controller.writeGenome());
+    btnStatsFile.addActionListener(e -> controller.appendStats());
+    
+    
+    triangleSlider.addChangeListener(e -> controller.triangleSliderUpdate(triangleSlider.getValue()));
     
     comboSelectImage.setModel(new javax.swing.DefaultComboBoxModel<String>(Constants.IMAGE_FILES));
-    comboSelectImage.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        jComboBox1ActionPerformed(evt);
-      }
-    });
-    btnPause.setText("Pause");
-    btnNext.setText("Next");
-    btnGenomeTable.setText("Show Genome Table");
-    btnReadGenome.setText("Read Genome File");
-    btnWriteGenome.setText("Write Genome File");
-    btnStatsFile.setText("Append Stats File");
-    jLabel1.setText("jLabel1");
-    jLabel2.setText("jLabel2");
-    jLabel3.setText("jLabel3");
+    comboSelectImage.addActionListener(e -> imagePanel.selectImage(comboSelectImage.getSelectedItem().toString()));
+
     jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[]
     {"Item 1", "Item 2", "Item 3", "Item 4"}));
     jTextField1.setText("jTextField1");
@@ -156,7 +183,7 @@ public class NewJFrame extends javax.swing.JFrame
     {
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
-        jTextField1ActionPerformed(evt);
+        //TODO Add action code for text field
       }
     });
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -381,114 +408,6 @@ public class NewJFrame extends javax.swing.JFrame
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-  private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)
-  {
-    EventHandles.pause();
 
-    if(EventHandles.isPaused)
-    {
-      btnNext.setEnabled(true);
-      btnGenomeTable.setEnabled(true);
-      btnReadGenome.setEnabled(true);
-      btnWriteGenome.setEnabled(true);
-      btnStatsFile.setEnabled(true);
-      comboSelectImage.setEnabled(true);
-    }
-    else
-    {
-      btnNext.setEnabled(false);
-      btnGenomeTable.setEnabled(false);
-      btnReadGenome.setEnabled(false);
-      btnWriteGenome.setEnabled(false);
-      btnStatsFile.setEnabled(false);
-      comboSelectImage.setEnabled(false);
-    }
-  }
-  private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)
-  {
-    EventHandles.next();
-  }
-  private void jButton3ActionPerformed(java.awt.event.ActionEvent evt)
-  {
-    EventHandles.genomeTable();
-  }
-  private void jButton4ActionPerformed(java.awt.event.ActionEvent evt)
-  {
-    EventHandles.readGenome();
-  }
-  private void jButton5ActionPerformed(java.awt.event.ActionEvent evt)
-  {
-    EventHandles.writeGenome();
-  }
-  private void jButton6ActionPerformed(java.awt.event.ActionEvent evt)
-  {
-
-  }
-  private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt)
-  {
-    imagePanel.selectImage(comboSelectImage.getSelectedItem().toString());
-  }
-
-  private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt)
-  {
-    // TODO add your handling code here:
-  }
-
-  /**
-   * @param args
-   *          the command line arguments
-   */
-  public static void main(String args[])
-  {
-    /* Set the Nimbus look and feel */
-    // <editor-fold defaultstate="collapsed"
-    // desc=" Look and feel setting code (optional) ">
-    /*
-     * If Nimbus (introduced in Java SE 6) is not available, stay with the
-     * default look and feel. For details see
-     * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-     */
-    try
-    {
-      for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
-          .getInstalledLookAndFeels())
-      {
-        if ("Nimbus".equals(info.getName()))
-        {
-          javax.swing.UIManager.setLookAndFeel(info.getClassName());
-          break;
-        }
-      }
-    }
-    catch (ClassNotFoundException ex)
-    {
-      java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(
-          java.util.logging.Level.SEVERE, null, ex);
-    }
-    catch (InstantiationException ex)
-    {
-      java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(
-          java.util.logging.Level.SEVERE, null, ex);
-    }
-    catch (IllegalAccessException ex)
-    {
-      java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(
-          java.util.logging.Level.SEVERE, null, ex);
-    }
-    catch (javax.swing.UnsupportedLookAndFeelException ex)
-    {
-      java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(
-          java.util.logging.Level.SEVERE, null, ex);
-    }
-    // </editor-fold>
-    /* Create and display the form */
-    java.awt.EventQueue.invokeLater(new Runnable()
-    {
-      public void run()
-      {
-        new NewJFrame().setVisible(true);
-      }
-    });
-  }
   // Variables declaration - do not modify//GEN-BEGIN:variables
 }
