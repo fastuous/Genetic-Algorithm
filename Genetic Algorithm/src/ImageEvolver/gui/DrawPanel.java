@@ -128,13 +128,13 @@ public class DrawPanel extends JPanel
    */
   public BufferedImage getSnapshot()
   {
-    int oldTirangleDrawLimit = triangleDrawLimit;
+    int oldTriangleDrawLimit = triangleDrawLimit;
     
     triangleDrawLimit = Constants.TRIANGLE_COUNT;
     updateOffScreenBuffer();
     BufferedImage snapshot = offscreenBuffer.getSnapshot();
     
-    triangleDrawLimit = oldTirangleDrawLimit;
+    triangleDrawLimit = oldTriangleDrawLimit;
     updateOffScreenBuffer();
     
     return snapshot;
