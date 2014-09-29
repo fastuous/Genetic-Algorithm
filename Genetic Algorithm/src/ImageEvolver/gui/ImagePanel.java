@@ -64,6 +64,11 @@ public class ImagePanel extends JPanel
     
     this.repaint();
   }
+  
+  public BufferedImage getSnapshot()
+  {
+    return targetImage;
+  }
 
   /*
    * (non-Javadoc)

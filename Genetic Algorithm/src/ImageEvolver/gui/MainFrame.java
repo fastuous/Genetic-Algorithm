@@ -41,6 +41,7 @@ public class MainFrame extends javax.swing.JFrame
    */
   public MainFrame(GUIController controller)
   {
+    super("Image Evolver");
     /* Set the Nimbus look and feel */
     // <editor-fold defaultstate="collapsed"
     // desc=" Look and feel setting code (optional) ">
@@ -111,11 +112,12 @@ public class MainFrame extends javax.swing.JFrame
     jLabel4 = new javax.swing.JLabel("Label 4");
     imagePanel = new ImagePanel(512, 512);
     drawPanel = new DrawPanel(512, 512);
-    triangleSlider = new javax.swing.JSlider(0, 200);
+    triangleSlider = new javax.swing.JSlider(0, Constants.TRIANGLE_COUNT, Constants.TRIANGLE_COUNT);
     tribeSlider = new javax.swing.JSlider();
     jTextField1 = new javax.swing.JTextField();
     
     controller.setDrawPanel(drawPanel);
+    controller.setImagePanel(imagePanel);
     imagePanel.selectImage("mona-lisa-cropped-512x413.png");
     drawPanel.setTriangleDrawLimit(200);
     
@@ -410,6 +412,9 @@ public class MainFrame extends javax.swing.JFrame
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-
+  public void setDisplayFitness(int fitness)
+  {
+    jLabel4.setText("Fitness: " + fitness);
+  }
   // Variables declaration - do not modify//GEN-BEGIN:variables
 }

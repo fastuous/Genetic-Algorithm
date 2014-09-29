@@ -2,6 +2,7 @@ package ImageEvolver.gui;
 
 import javax.swing.SwingUtilities;
 
+import ImageEvolver.FitnessFunctions;
 import ImageEvolver.Genome;
 import ImageEvolver.RandomGenome;
 
@@ -17,6 +18,8 @@ public class GUIController
 {
   public boolean isPaused = true;
   private DrawPanel drawPanel;
+  private ImagePanel imagePanel;
+  private static MainFrame mainFrame;
 
   public void pause()
   {
@@ -38,7 +41,10 @@ public class GUIController
     Genome genome = RandomGenome.generateGenome();
     drawPanel.setTriangles(genome.getGenes());
     drawPanel.repaint();
-
+    
+    int fitness = FitnessFunctions.getSimpleFitness(drawPanel.getSnapshot(), imagePanel.getSnapshot());
+    mainFrame.setDisplayFitness(fitness);
+    
     System.out.print("Next button clicked.");
     if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
     System.out.println();
@@ -95,6 +101,11 @@ public class GUIController
     this.drawPanel = drawPanel;
   }
   
+  public void setImagePanel(ImagePanel imagePanel)
+  {
+    this.imagePanel = imagePanel;
+  }
+  
   public static void main(String[] args)
   {
     SwingUtilities.invokeLater(new Runnable() {
@@ -102,7 +113,8 @@ public class GUIController
       public void run()
       {
         GUIController controller = new GUIController();
-        new MainFrame(controller).setVisible(true);;
+        mainFrame = new MainFrame(controller);
+        mainFrame.setVisible(true);
       }
     });
     
