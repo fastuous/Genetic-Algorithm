@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import ImageEvolver.Triangle;
+import ImageEvolver.util.Constants;
 
 /**
  * A panel which extends {@link JPanel} and uses a {@link VolatileImage} to
@@ -122,12 +123,21 @@ public class DrawPanel extends JPanel
   public int getTriangleDrawLimit() { return triangleDrawLimit; }
   
   /**
-   * Returns a snapshot of the current offscreen buffer.
-   * @return A snapshot of the current offscreen buffer.
+   * Returns a snapshot containing all of the triangles.
+   * @return A snapshot containing all of the triangles.
    */
   public BufferedImage getSnapshot()
   {
-    return offscreenBuffer.getSnapshot();
+    int oldTirangleDrawLimit = triangleDrawLimit;
+    
+    triangleDrawLimit = Constants.TRIANGLE_COUNT;
+    updateOffScreenBuffer();
+    BufferedImage snapshot = offscreenBuffer.getSnapshot();
+    
+    triangleDrawLimit = oldTirangleDrawLimit;
+    updateOffScreenBuffer();
+    
+    return snapshot;
   }
   
   /**
