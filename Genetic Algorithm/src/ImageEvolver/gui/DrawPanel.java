@@ -8,6 +8,7 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
+import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,6 +120,15 @@ public class DrawPanel extends JPanel
    * drawing.
    */
   public int getTriangleDrawLimit() { return triangleDrawLimit; }
+  
+  /**
+   * Returns a snapshot of the current offscreen buffer.
+   * @return A snapshot of the current offscreen buffer.
+   */
+  public BufferedImage getSnapshot()
+  {
+    return offscreenBuffer.getSnapshot();
+  }
   
   /**
    * Initializes the {@link DrawPanel#offscreenBuffer}
