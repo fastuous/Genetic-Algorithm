@@ -28,7 +28,7 @@ public class MainFrame extends javax.swing.JFrame
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
-  private javax.swing.JLabel jLabel4;
+  public static javax.swing.JLabel jLabel4;
   private ImagePanel imagePanel;
   private DrawPanel drawPanel;
   private javax.swing.JSlider triangleSlider;
@@ -109,10 +109,11 @@ public class MainFrame extends javax.swing.JFrame
     jLabel1 = new javax.swing.JLabel("Label 1");
     jLabel2 = new javax.swing.JLabel("Label 2");
     jLabel3 = new javax.swing.JLabel("Label 3");
-    jLabel4 = new javax.swing.JLabel("Label 4");
-    imagePanel = new ImagePanel(512, 512);
-    drawPanel = new DrawPanel(512, 512);
+    jLabel4 = new javax.swing.JLabel("Triangle: 200/200");
+    imagePanel = new ImagePanel(512, 413);
+    drawPanel = new DrawPanel(512, 413);
     triangleSlider = new javax.swing.JSlider(0, Constants.TRIANGLE_COUNT, Constants.TRIANGLE_COUNT);
+    triangleSlider.setValue(200);
     tribeSlider = new javax.swing.JSlider();
     jTextField1 = new javax.swing.JTextField();
     
