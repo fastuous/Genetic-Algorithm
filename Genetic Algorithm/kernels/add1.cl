@@ -2,7 +2,7 @@
  * A kernel that takes an array of floats, copies them over into
  * another array and adds 1.0f.
  */
-kernel void add1(global const float* a, global float* c, int numElements)
+__kernel void add1(__global const float* a, __global float* c, int numElements)
 {
   int iGID = get_global_id(0);
   if (iGID >= numElements) return;
