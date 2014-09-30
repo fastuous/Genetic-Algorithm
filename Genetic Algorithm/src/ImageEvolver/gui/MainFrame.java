@@ -185,6 +185,8 @@ public class MainFrame extends javax.swing.JFrame
       imagePanel.selectImage(comboSelectImage.getSelectedItem().toString());
       imagePanel.setSize(Constants.width,Constants.height);
       drawPanel.setSize(Constants.width,Constants.height);
+      controller.setDrawPanel(drawPanel);
+      controller.setImagePanel(imagePanel);
       }
   );
 
