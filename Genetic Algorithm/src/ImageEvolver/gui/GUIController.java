@@ -88,7 +88,7 @@ public class GUIController
   {
     
     drawPanel.setTriangleDrawLimit(value);
-    MainFrame.jLabel5.setText("Triangle: " + value + "/200 ");
+    mainFrame.setTriangleLabel(value);
     if (!isPaused) System.out.println(" **WARNING: PROGRAM IS NOT PAUSED**");
   }
 

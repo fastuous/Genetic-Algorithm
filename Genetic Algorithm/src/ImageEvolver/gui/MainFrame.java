@@ -29,10 +29,10 @@ public class MainFrame extends javax.swing.JFrame
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
-  public static javax.swing.JLabel jLabel5;
+  private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel4;
-  public static ImagePanel imagePanel;
-  public static DrawPanel drawPanel;
+  private ImagePanel imagePanel;
+  private DrawPanel drawPanel;
   private javax.swing.JSlider triangleSlider;
   private javax.swing.JSlider tribeSlider;
   private javax.swing.JTextField jTextField1;
@@ -181,7 +181,12 @@ public class MainFrame extends javax.swing.JFrame
     triangleSlider.addChangeListener(e -> controller.triangleSliderUpdate(triangleSlider.getValue()));
     
     comboSelectImage.setModel(new javax.swing.DefaultComboBoxModel<String>(Constants.IMAGE_FILES));
-    comboSelectImage.addActionListener(e -> imagePanel.selectImage(comboSelectImage.getSelectedItem().toString()));
+    comboSelectImage.addActionListener(e -> {
+      imagePanel.selectImage(comboSelectImage.getSelectedItem().toString());
+      imagePanel.setSize(Constants.width,Constants.height);
+      drawPanel.setSize(Constants.width,Constants.height);
+      }
+  );
 
     jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[]
     {"Item 1", "Item 2", "Item 3", "Item 4"}));
@@ -422,6 +427,10 @@ public class MainFrame extends javax.swing.JFrame
   public void setDisplayFitness(int fitness)
   {
     jLabel4.setText("Fitness: " + fitness);
+  }
+  public void setTriangleLabel(int value)
+  {
+    jLabel5.setText("Triangle: " + value + "/200 ");
   }
   // Variables declaration - do not modify//GEN-BEGIN:variables
 }
