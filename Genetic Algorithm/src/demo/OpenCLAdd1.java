@@ -31,6 +31,7 @@ public class OpenCLAdd1
       CLDevice device = context.getMaxFlopsDevice();
       CLCommandQueue queue = device.createCommandQueue();
       
+      int elementCount = 1024;
       int localWorkSize = 256;
       int globalWorkSize = 1024; // Must be a multiple of localWorkSize
       
@@ -44,7 +45,7 @@ public class OpenCLAdd1
       fillFloatBuffer(clBufferA.getBuffer());
       
       CLKernel kernel = program.createCLKernel("add1");
-      kernel.putArgs(clBufferA, clBufferC);
+      kernel.putArgs(clBufferA, clBufferC).putArg(elementCount);
 
       queue.putWriteBuffer(clBufferA, false)
            .put1DRangeKernel(kernel, 0, globalWorkSize, localWorkSize)
