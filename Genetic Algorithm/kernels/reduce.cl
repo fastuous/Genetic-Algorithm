@@ -14,7 +14,7 @@
  *   differences[0] += differences[4]
  *   differences[8] += differences[12]
  */
-__kernel void reduceSum(__global int* differences, int step)
+__kernel void reduceSum(__global long* differences, int step)
 {
   int iGID = get_global_id(0);
   int multiplier = (int)pow(2.0, step);

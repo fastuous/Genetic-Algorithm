@@ -2,7 +2,7 @@ package demo;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 
 import com.jogamp.opencl.CLBuffer;
 import com.jogamp.opencl.CLCommandQueue;
@@ -38,15 +38,15 @@ public class OpenCLReduceSum
       CLDevice device = context.getMaxFlopsDevice();
       CLCommandQueue queue = device.createCommandQueue();
       
-      int elementCount = 1024;
-      int globalWorkSize = (int)pow(2, ceil(log(elementCount)/log(2) - 1));
+      int elementCount = 16777216;
+      int globalWorkSize = (int)pow(2, ceil(log(elementCount)/log(2)));
       int localWorkSize = min(device.getMaxWorkGroupSize(), globalWorkSize);
       
       File sourceFile = new File("kernels/reduce.cl");
       FileInputStream sourceInputStream = new FileInputStream(sourceFile);
       CLProgram program = context.createProgram(sourceInputStream).build();
       
-      CLBuffer<IntBuffer> clBufferA = context.createIntBuffer(1024, CLMemory.Mem.READ_WRITE);
+      CLBuffer<LongBuffer> clBufferA = context.createLongBuffer(globalWorkSize, CLMemory.Mem.READ_WRITE);
       
       fillIntBuffer(clBufferA.getBuffer());
       
@@ -66,7 +66,7 @@ public class OpenCLReduceSum
         localWorkSize = min(localWorkSize, globalWorkSize);
       }
         
-      int result = clBufferA.getBuffer().get();
+      long result = clBufferA.getBuffer().get();
       System.out.print("The sum is : " + result);
     }
     catch (Exception e)
@@ -81,12 +81,12 @@ public class OpenCLReduceSum
   
   /**
    * Fills an buffer with a sequence 1, 2, 3, ...
-   * @param buffer The buffer to fill with the sequence.
+   * @param longBuffer The buffer to fill with the sequence.
    */
-  private static void fillIntBuffer(IntBuffer buffer)
+  private static void fillIntBuffer(LongBuffer longBuffer)
   {
-    int i = 1;
-    while (buffer.remaining() != 0) buffer.put(i++);
-    buffer.rewind();
+    long i = 1;
+    while (longBuffer.remaining() != 0) longBuffer.put(i++);
+    longBuffer.rewind();
   }
 }
