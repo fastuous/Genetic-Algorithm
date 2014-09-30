@@ -3,6 +3,7 @@ package demo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.LongBuffer;
+import java.util.stream.LongStream;
 
 import com.jogamp.opencl.CLBuffer;
 import com.jogamp.opencl.CLCommandQueue;
@@ -53,6 +54,9 @@ public class OpenCLReduceSum
       CLKernel kernel = program.createCLKernel("reduceSum");
       kernel.putArgs(clBufferA).putArg(0);
       
+      
+      
+      long time1 = System.currentTimeMillis();
       int stepCount = (int)ceil(log(elementCount)/log(2));
       for (int i = 1; i <= stepCount; i++)
       {
@@ -62,12 +66,25 @@ public class OpenCLReduceSum
              .put1DRangeKernel(kernel, 0, globalWorkSize, localWorkSize)
              .putReadBuffer(clBufferA, true);
         
+        
         globalWorkSize = max(globalWorkSize / 2, 1);
         localWorkSize = min(localWorkSize, globalWorkSize);
       }
-        
+      time1 = System.currentTimeMillis() - time1;
+      
       long result = clBufferA.getBuffer().get();
-      System.out.print("The sum is : " + result);
+      System.out.println("OpenCL sum is : " + result);
+      
+      long [] test = LongStream.range(0, 16777216).toArray();
+      long time2 = System.currentTimeMillis();
+      long sum = 0;
+      for (int i = 0; i < test.length; i++) sum += test[i];
+      time2 = System.currentTimeMillis() - time2;
+      System.out.println("Java sum is   : " + sum);
+      
+      
+      System.out.println("OpenCL Time   : " + time1);
+      System.out.println("Java Time     : " + time2);
     }
     catch (Exception e)
     { 
