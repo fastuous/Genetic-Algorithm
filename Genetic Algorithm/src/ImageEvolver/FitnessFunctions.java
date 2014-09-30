@@ -29,11 +29,12 @@ public class FitnessFunctions
         int dRed = Math.abs((sourceColor >> 16) & 0xFF - (targetColor >> 16) & 0xFF);
         int dGreen = Math.abs((sourceColor >> 8) & 0xFF - (targetColor >> 8) & 0xFF);
         int dBlue = Math.abs(sourceColor & 0xFF - targetColor & 0xFF);
-        int dAlpha = Math.abs((sourceColor >> 24) & 0xFF - (targetColor >> 24) & 0xFF);
         
-        fitness += dRed + dGreen + dBlue + dAlpha;
+        fitness += dRed + dGreen + dBlue;
       }
     }
+    fitness = fitness / (sourceWidth * sourceHeight);
+    
     
     return fitness;
   }
