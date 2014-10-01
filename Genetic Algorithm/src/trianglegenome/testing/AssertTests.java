@@ -128,25 +128,13 @@ public class AssertTests
     Triangle t2Crosst5 = new Triangle(new int[] {1, 1, 4, 4, 4, 4, 4, 4, 4, 4});
     Triangle t5Crosst2 = new Triangle(new int[] {4, 4, 1, 1, 1, 1, 1, 1, 1, 1});
     
-    Genome parent1 = new Genome();
-    parent1.addGene(t1);
-    parent1.addGene(t2);
-    parent1.addGene(t3);
-    Genome parent2 = new Genome();
-    parent2.addGene(t4);
-    parent2.addGene(t5);
-    parent2.addGene(t6);
+    Genome parent1 = new Genome(t1, t2, t3);
+    Genome parent2 = new Genome(t4, t5, t6);
     Genome child1 = new Genome();
     Genome child2 = new Genome();
     
-    Genome expectedChild1 = new Genome();
-    expectedChild1.addGene(t1);
-    expectedChild1.addGene(t2Crosst5);
-    expectedChild1.addGene(t6);
-    Genome expectedChild2 = new Genome();
-    expectedChild2.addGene(t4);
-    expectedChild2.addGene(t5Crosst2);
-    expectedChild2.addGene(t3);
+    Genome expectedChild1 = new Genome(t1, t2Crosst5, t6);
+    Genome expectedChild2 = new Genome(t4, t5Crosst2, t3);
 
     Genome.singlePointCrossOver(parent1, parent2, child1, child2, 12);
     
