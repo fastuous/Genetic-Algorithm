@@ -6,7 +6,7 @@ import java.util.List;
 
 import trianglegenome.util.Constants;
 
-public class Genome
+public class Genome implements Cloneable
 {
   private List<Triangle> genes = new LinkedList<>();
   
@@ -74,16 +74,14 @@ public class Genome
   }
   
   /**
-   * Simple static method to provice deep-copy of a given genome.
-   * 
-   * @param source The genome to be copied.
-   * @return The copy of the genome.
+   * Returns a deep-copy of this Genome.
+   * @return A deep-copy of this Genome.
    */
-  public static Genome genomeCopy(Genome source)
+  @Override
+  public Genome clone()
   {
     Genome copy = new Genome();
-    copy.addGenes(source.getGenes());
-    
+    this.genes.forEach(t -> copy.addGene(t.clone()));
     return copy;
   }
   
