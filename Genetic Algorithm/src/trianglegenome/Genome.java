@@ -177,7 +177,16 @@ public class Genome implements Cloneable
   {
     if (other instanceof Genome)
     {
-      return false;
+      if (this.genes.size() != ((Genome)other).genes.size()) return false;
+      
+      Iterator<Triangle> t1Iterator = this.genes.iterator();
+      Iterator<Triangle> t2Iterator = ((Genome)other).genes.iterator();
+      boolean isEqual = true;
+      while (t1Iterator.hasNext())
+      {
+        isEqual &= t1Iterator.next().equals(t2Iterator.next());
+      }
+      return isEqual;
     }
     else return false;
   }
