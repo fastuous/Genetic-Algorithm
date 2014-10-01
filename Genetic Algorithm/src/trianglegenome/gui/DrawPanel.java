@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.util.ArrayList;
@@ -182,8 +181,7 @@ public class DrawPanel extends JPanel
     g.setColor(c);
     int [] xs = Arrays.copyOfRange(t.dna, 0, 3);
     int [] ys = Arrays.copyOfRange(t.dna, 3, 6);
-    Polygon p = new Polygon(xs, ys, 3);
-    g.fill(p);
+    g.fillPolygon(xs, ys, 3);
   }
   
   /*
