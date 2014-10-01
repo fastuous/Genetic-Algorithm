@@ -117,6 +117,7 @@ public class Triangle implements Cloneable
   }
   
   /**
+   * Returns a deep copy of this triangle.
    * @return A deep copy of this triangle.
    */
   @Override
