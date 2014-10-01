@@ -141,4 +141,23 @@ public class Triangle implements Cloneable
     t.dna = Arrays.copyOf(this.dna, Triangle.DNA_LENGTH);
     return t;
   }
+  
+  /**
+   * Performs the unit tests for all of the triangles.
+   * @author collinsd
+   */
+  public static class TriangleUnitTests
+  {
+    static
+    {
+      Triangle t1 = new Triangle(new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+      Triangle t2 = new Triangle(new int[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+      Triangle t3 = new Triangle(new int[] {2, 2, 2, 2, 2, 2, 2, 2, 2, 2});
+      Triangle t4 = new Triangle(new int[] {3, 3, 3, 3, 3, 3, 3, 3, 3, 3});
+      Triangle t5 = new Triangle(new int[] {4, 4, 4, 4, 4, 4, 4, 4, 4, 4});
+      Triangle t6 = new Triangle(new int[] {5, 5, 5, 5, 5, 5, 5, 5, 5, 5});
+      
+      // TODO put unit tests here. We can move this code somewhere else later.
+    }
+  }
 }
