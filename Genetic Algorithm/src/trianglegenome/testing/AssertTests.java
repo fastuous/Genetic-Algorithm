@@ -44,6 +44,24 @@ public class AssertTests
 
   public static void main(String[] args)
   {
+    Genome distanceTestA = new Genome();
+    Genome distanceTestB = new Genome();
+    int[] dna1 = {0,0,0,0,0,0,0,0,0,0};
+    int[] dna2 = {1,1,1,1,1,1,1,1,1,1};
+    for(int i = 0; i < 200; ++i)
+    {
+      if(i < 100)
+      {
+        distanceTestA.addGene(new Triangle(dna1));
+        distanceTestB.addGene(new Triangle(dna2));
+      }
+      else if(i >= 100)
+      {
+        distanceTestA.addGene(new Triangle(dna2));
+        distanceTestB.addGene(new Triangle(dna1));
+      }
+    }
+    
     Constants.height = 413;
     Constants.width = 512;
     Genome testA = RandomGenome.generateGenome();
@@ -51,5 +69,6 @@ public class AssertTests
     AssertTests test = new AssertTests();
     assert test.isValidGenome(testA);
     assert test.isValidGenome(testB);
+    assert Genome.getHammingDistance(distanceTestA, distanceTestB) == 2000;
   }
 }
