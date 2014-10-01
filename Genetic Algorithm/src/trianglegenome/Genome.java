@@ -1,4 +1,4 @@
-package ImageEvolver;
+package trianglegenome;
 
 import java.util.List;
 import java.util.LinkedList;

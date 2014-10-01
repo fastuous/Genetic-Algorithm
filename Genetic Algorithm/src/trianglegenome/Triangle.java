@@ -1,4 +1,4 @@
-package ImageEvolver;
+package trianglegenome;
 
 import java.nio.IntBuffer;
 import java.util.Arrays;

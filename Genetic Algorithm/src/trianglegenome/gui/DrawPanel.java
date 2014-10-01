@@ -1,4 +1,4 @@
-package ImageEvolver.gui;
+package trianglegenome.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,8 +16,8 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import ImageEvolver.Triangle;
-import ImageEvolver.util.Constants;
+import trianglegenome.Triangle;
+import trianglegenome.util.Constants;
 
 /**
  * A panel which extends {@link JPanel} and uses a {@link VolatileImage} to
