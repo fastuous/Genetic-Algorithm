@@ -134,15 +134,15 @@ public class AssertTests
 
   public void testCrossover()
   {
-    Triangle t1 = new Triangle(new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
-    Triangle t2 = new Triangle(new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
-    Triangle t3 = new Triangle(new int[] { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 });
-    Triangle t4 = new Triangle(new int[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
-    Triangle t5 = new Triangle(new int[] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 });
-    Triangle t6 = new Triangle(new int[] { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 });
+    Triangle t1 = new Triangle(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    Triangle t2 = new Triangle(1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+    Triangle t3 = new Triangle(2, 2, 2, 2, 2, 2, 2, 2, 2, 2);
+    Triangle t4 = new Triangle(3, 3, 3, 3, 3, 3, 3, 3, 3, 3);
+    Triangle t5 = new Triangle(4, 4, 4, 4, 4, 4, 4, 4, 4, 4);
+    Triangle t6 = new Triangle(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
 
-    Triangle t2Crosst5 = new Triangle(new int[] { 1, 1, 4, 4, 4, 4, 4, 4, 4, 4 });
-    Triangle t5Crosst2 = new Triangle(new int[] { 4, 4, 1, 1, 1, 1, 1, 1, 1, 1 });
+    Triangle t2Crosst5 = new Triangle(1, 1, 4, 4, 4, 4, 4, 4, 4, 4);
+    Triangle t5Crosst2 = new Triangle(4, 4, 1, 1, 1, 1, 1, 1, 1, 1);
 
     Genome parent1 = new Genome(t1, t2, t3);
     Genome parent2 = new Genome(t4, t5, t6);
