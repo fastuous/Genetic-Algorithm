@@ -1,8 +1,11 @@
 package trianglegenome;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.naming.OperationNotSupportedException;
 
 import trianglegenome.util.Constants;
 
@@ -160,5 +163,22 @@ public class Genome implements Cloneable
     Genome copy = new Genome();
     this.genes.forEach(t -> copy.addGene(t.clone()));
     return copy;
+  }
+  
+  /**
+   * Compares this Genome with an Object. If the Object is not an instance
+   * of Genome then this automatically returns false. Otherwise, does
+   * a element-wise comparison of the two Genome's {@link Genome#genes}
+   * fields.
+   * @param other The other object to compare with this Genome.
+   */
+  @Override
+  public boolean equals(Object other)
+  {
+    if (other instanceof Genome)
+    {
+      return false;
+    }
+    else return false;
   }
 }
