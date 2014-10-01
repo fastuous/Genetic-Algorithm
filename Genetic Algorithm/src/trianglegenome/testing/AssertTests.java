@@ -20,13 +20,14 @@ public class AssertTests
     hammingDistanceTests();
     testCrossover();
   }
-  /*
-   * @param Triangle
-   * @return Boolean
+  /**
    * This method Tests a triangle's dna to make sure all the values are in 
    * the correct bounds. Returns false if not valid, else it returns true.
+   * 
+   * @param Triangle
+   * @return Boolean
    */
-  public boolean isValidTriangle(Triangle tri)
+  private boolean isValidTriangle(Triangle tri)
   {
     for (int i = 0; i <= 2; ++i)
     {
@@ -42,13 +43,14 @@ public class AssertTests
     }
     return true;
   }
-  /*
-   * @param Triangle
-   * @return Boolean
+  /**
    * This method Tests a genomes's triangles to make sure all the triangles dna values are in 
    * the correct bounds. Returns false if not valid, else it returns true.
+   * 
+   * @param Triangle
+   * @return Boolean
    */
-  public boolean isValidGenome(Genome genome)
+  private boolean isValidGenome(Genome genome)
   {
     List<Triangle> genes = genome.getGenes();
     for(Triangle tri : genes)
@@ -57,10 +59,10 @@ public class AssertTests
     }
     return true;
   }
-  /*
+  /**
    * Assert tests that make two random genomes and test their validity
    */
-  public void validityTests()
+  private void validityTests()
   {
     Genome testA = RandomGenome.generateGenome();
     Genome testB = RandomGenome.generateGenome();
@@ -68,11 +70,11 @@ public class AssertTests
     assert isValidGenome(testA);
     assert isValidGenome(testB);
   }
-  /*
+  /**
    * Assert tests that make four different genomes and perform different tests
    * on their hamming distance
    */
-  public void hammingDistanceTests()
+  private void hammingDistanceTests()
   {
     Genome distanceTestA = new Genome();//first Genome 
     Genome distanceTestB = new Genome();//second Genome
@@ -116,7 +118,7 @@ public class AssertTests
     assert Genome.getHammingDistance(distanceTestB, distanceTestD) == 2;//This is the test for the genomes with two differences in the DNA
   }
   
-  public void testCrossover()
+  private void testCrossover()
   {
     Triangle t1 = new Triangle(new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
     Triangle t2 = new Triangle(new int[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
