@@ -28,6 +28,20 @@ public class Genome implements Cloneable
     return genes;
   }
   
+  public static int getHammingDistance(Genome genome1, Genome genome2)
+  {
+    int distance = 0;
+    List<Triangle> genes1 = genome1.getGenes();
+    List<Triangle> genes2 = genome2.getGenes();
+    
+    for (int i = 0; i < Constants.TRIANGLE_COUNT; i++)
+    {
+      distance += genes1.get(i).countDifferences(genes2.get(i));
+    }
+    
+    return distance;
+  }
+  
   /**
    * Given two parents and two children, performs a double point crossover
    * of the two parents and writes the data to the two children. 
