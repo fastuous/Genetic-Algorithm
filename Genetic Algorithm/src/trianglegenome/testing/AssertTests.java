@@ -5,6 +5,7 @@ package trianglegenome.testing;
 
 import java.util.List;
 import trianglegenome.Genome;
+import trianglegenome.RandomGenome;
 import trianglegenome.Triangle;
 import trianglegenome.util.Constants;
 
@@ -43,6 +44,10 @@ public class AssertTests
 
   public static void main(String[] args)
   {
-    // TODO Auto-generated method stub
+    Genome testA = RandomGenome.generateGenome();
+    Genome testB = RandomGenome.generateGenome();
+    AssertTests test = new AssertTests();
+    assert test.isValidGenome(testA);
+    assert test.isValidGenome(testB);
   }
 }
