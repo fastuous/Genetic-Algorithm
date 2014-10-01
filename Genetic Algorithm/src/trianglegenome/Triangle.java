@@ -1,6 +1,5 @@
 package trianglegenome;
 
-import java.nio.IntBuffer;
 import java.util.Arrays;
 
 /**
@@ -10,13 +9,18 @@ import java.util.Arrays;
 public class Triangle
 {
   /**
+   * The length of the {{@link #dna} array that keeps track of the triangle DNA.
+   */
+  public static int DNA_LENGTH = 10;
+  
+  /**
    * Stores the color and the location of the triangle vertexes.
    * Indices 0-2 are the three x coordinates of the vertices.
    * Indices 3-5 are the three y coordinates of the vertices.
    * Indices 6, 7, 8, and 9 are the red, green, blue and alpha
    * respectively.
    */
-  public int[] dna = new int[10];
+  public int[] dna = new int[DNA_LENGTH];
 
   /**
    * Given three x and three y coordinates and four values for rgba,
@@ -59,12 +63,47 @@ public class Triangle
   }
   
   /**
-   * Returns a buffer wrapping the {@link Triangle#dna} which can be used in
-   * JOCL. Any changes made to the dna will change the buffer and vice-versa.
-   * @return A buffer wrapping the {@link Triangle#dna}.
+   * Returns the number of differences between this Triangle and another triangle.
+   * @param with The triangle to compare to this triangle.
+   * @return The number of differences between this Triangle and another triangle.
    */
-  public IntBuffer asIntBuffer()
+  public int countDifferences(Triangle with)
   {
-    return IntBuffer.wrap(dna);
+    int differences = 0;
+    for (int i = 0; i < DNA_LENGTH; i++)
+    {
+      if (with.dna[i] != this.dna[1]) differences++;
+    }
+    return differences;
+  }
+  
+  /**
+   * Swaps two triangles' DNA starting at a given point and ending at a
+   * given point.
+   * @param a The first triangle of the swap.
+   * @param b The second triangle of the swap.
+   * @param startInclusive The start index (inclusive) of the DNA to swap.
+   * @param endExclusive The end index (exclusive) of the DNA to swap.
+   */
+  public void swapDNA(Triangle a, Triangle b, int startInclusive, int endExclusive)
+  {
+    int [] temp = Arrays.copyOfRange(b.dna, startInclusive, endExclusive);
+    for (int i = startInclusive, j = 0; i < endExclusive; i++, j++)
+    {
+      a.dna[i] = b.dna[i];
+      b.dna[i] = temp[j];
+    }
+  }
+  
+  /**
+   * Swaps two triangles' DNA.
+   * @param a The first triangle of the swap.
+   * @param b The second triangle of the swap.
+   */
+  public void swapDNA(Triangle a, Triangle b)
+  {
+    int [] temp = a.dna;
+    a.dna = b.dna;
+    b.dna = temp;
   }
 }
