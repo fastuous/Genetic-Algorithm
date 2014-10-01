@@ -1,8 +1,10 @@
 package trianglegenome;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
+
+import trianglegenome.util.Constants;
 
 public class Genome
 {
@@ -11,6 +13,13 @@ public class Genome
   public void addGene(Triangle gene)
   {
     genes.add(gene);
+  }
+  
+  public void addGenes(List<Triangle> genes)
+  {
+    if (this.genes.size() + genes.size() > Constants.TRIANGLE_COUNT) return;
+    
+    this.genes.addAll(genes);
   }
   
   public List<Triangle> getGenes()
@@ -72,10 +81,7 @@ public class Genome
   public static Genome genomeCopy(Genome source)
   {
     Genome copy = new Genome();
-    for (Triangle gene : source.getGenes())
-    {
-      copy.addGene(gene);
-    }
+    copy.addGenes(source.getGenes());
     
     return copy;
   }
