@@ -154,7 +154,7 @@ public class AssertTests
 
     // Genome.singlePointCrossOver(parent1, parent2, child1, child2, 1);
 
-    assert isSinglePointCrossover(parent1, parent1, expectedChild1, expectedChild2);
+    assert isSinglePointCrossover(parent1, parent2, expectedChild1, expectedChild2);
 
     // assert child1.equals(expectedChild1);
     // assert child2.equals(expectedChild2);
