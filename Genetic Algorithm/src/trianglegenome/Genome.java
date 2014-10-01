@@ -64,6 +64,23 @@ public class Genome
   }
   
   /**
+   * Simple static method to provice deep-copy of a given genome.
+   * 
+   * @param source The genome to be copied.
+   * @return The copy of the genome.
+   */
+  public static Genome genomeCopy(Genome source)
+  {
+    Genome copy = new Genome();
+    for (Triangle gene : source.getGenes())
+    {
+      copy.addGene(gene);
+    }
+    
+    return copy;
+  }
+  
+  /**
    * Given two triangle Genomes, performs a crossover from the beginning to a given end point.
    * The ending point should not be greater than the number of triangles in a Genome
    * multiplied by the triangle DNA length.
