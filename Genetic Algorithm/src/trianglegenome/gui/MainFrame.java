@@ -113,7 +113,7 @@ public class MainFrame extends javax.swing.JFrame
     jLabel2 = new javax.swing.JLabel("Label 2");
     jLabel3 = new javax.swing.JLabel("Label 3");
     jLabel4 = new javax.swing.JLabel("Fitness:                   ");
-    jLabel5 = new javax.swing.JLabel("Triangle 200/200 ");
+    jLabel5 = new javax.swing.JLabel("Triangle " + Constants.TRIANGLE_COUNT + "/" +Constants.TRIANGLE_COUNT);
     imagePanel = new ImagePanel(512, 413);
     drawPanel = new DrawPanel(512, 413);
     triangleSlider = new javax.swing.JSlider(0, Constants.TRIANGLE_COUNT, Constants.TRIANGLE_COUNT);
@@ -433,7 +433,7 @@ public class MainFrame extends javax.swing.JFrame
   }
   public void setTriangleLabel(int value)
   {
-    jLabel5.setText("Triangle: " + value + "/200 ");
+    jLabel5.setText("Triangle: " + value + "/" + Constants.TRIANGLE_COUNT + " ");
   }
   // Variables declaration - do not modify//GEN-BEGIN:variables
 }

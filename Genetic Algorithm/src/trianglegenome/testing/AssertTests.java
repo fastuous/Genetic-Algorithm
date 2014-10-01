@@ -120,23 +120,13 @@ public class AssertTests
   
   private void testCrossover()
   {
-    Triangle t1 = new Triangle(new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
-    Triangle t2 = new Triangle(new int[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
-    Triangle t3 = new Triangle(new int[] {2, 2, 2, 2, 2, 2, 2, 2, 2, 2});
-    Triangle t4 = new Triangle(new int[] {3, 3, 3, 3, 3, 3, 3, 3, 3, 3});
-    Triangle t5 = new Triangle(new int[] {4, 4, 4, 4, 4, 4, 4, 4, 4, 4});
-    Triangle t6 = new Triangle(new int[] {5, 5, 5, 5, 5, 5, 5, 5, 5, 5});
-
-    Triangle t2Crosst5 = new Triangle(new int[] {1, 1, 4, 4, 4, 4, 4, 4, 4, 4});
-    Triangle t5Crosst2 = new Triangle(new int[] {4, 4, 1, 1, 1, 1, 1, 1, 1, 1});
-    
-    Genome parent1 = new Genome(t1, t2, t3);
-    Genome parent2 = new Genome(t4, t5, t6);
+    Genome parent1 = new Genome(0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2);
+    Genome parent2 = new Genome(3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5);
     Genome child1 = new Genome();
     Genome child2 = new Genome();
     
-    Genome expectedChild1 = new Genome(t1, t2Crosst5, t6);
-    Genome expectedChild2 = new Genome(t4, t5Crosst2, t3);
+    Genome expectedChild1 = new Genome(0,0,0,0,0,0,0,0,0,0,1,1,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5);
+    Genome expectedChild2 = new Genome(3,3,3,3,3,3,3,3,3,3,4,4,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2);
 
     Genome.singlePointCrossOver(parent1, parent2, child1, child2, 12);
     

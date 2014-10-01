@@ -1,11 +1,11 @@
 package trianglegenome;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import trianglegenome.util.Constants;
-
 import static java.lang.Math.min;
 
 public class Genome implements Cloneable
@@ -19,6 +19,20 @@ public class Genome implements Cloneable
   public Genome(Triangle ... triangles)
   {
     for (Triangle t : triangles) addGene(t);
+  }
+  
+  public Genome(int ... dna)
+  {
+    if (dna.length % Triangle.DNA_LENGTH != 0)
+    {
+      throw new IllegalArgumentException("DNA must be divisible by " + Triangle.DNA_LENGTH);
+    }
+    for (int i = 0; i < dna.length / Triangle.DNA_LENGTH; i ++)
+    {
+      int[] tDna = Arrays.copyOfRange(dna, i * Triangle.DNA_LENGTH, (i+1) * Triangle.DNA_LENGTH);
+      Triangle t = new Triangle(tDna);
+      addGene(t);
+    }
   }
   
   public void addGene(Triangle gene)
