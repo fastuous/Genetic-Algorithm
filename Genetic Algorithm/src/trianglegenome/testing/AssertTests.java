@@ -44,6 +44,8 @@ public class AssertTests
 
   public static void main(String[] args)
   {
+    Constants.height = 413;
+    Constants.width = 512;
     Genome testA = RandomGenome.generateGenome();
     Genome testB = RandomGenome.generateGenome();
     AssertTests test = new AssertTests();
