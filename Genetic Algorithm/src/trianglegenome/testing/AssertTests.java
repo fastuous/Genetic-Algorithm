@@ -12,6 +12,13 @@ import trianglegenome.util.Constants;
 
 public class AssertTests
 {
+  public AssertTests()
+  {
+    Constants.height = 413;
+    Constants.width = 512;
+    validityTests();
+    hammingDistanceTests();
+  }
   /*
    * @param Triangle
    * @return Boolean
@@ -111,13 +118,6 @@ public class AssertTests
   public static void main(String[] args)
   {
     //sets the global variables
-    Constants.height = 413;
-    Constants.width = 512;
-
     AssertTests test = new AssertTests();
-    
-    test.validityTests();
-    test.hammingDistanceTests();
-
   }
 }
