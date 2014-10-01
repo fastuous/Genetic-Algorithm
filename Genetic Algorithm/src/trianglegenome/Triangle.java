@@ -85,7 +85,7 @@ public class Triangle
    * @param startInclusive The start index (inclusive) of the DNA to swap.
    * @param endExclusive The end index (exclusive) of the DNA to swap.
    */
-  public void swapDNA(Triangle a, Triangle b, int startInclusive, int endExclusive)
+  public static void swapDNA(Triangle a, Triangle b, int startInclusive, int endExclusive)
   {
     int [] temp = Arrays.copyOfRange(b.dna, startInclusive, endExclusive);
     for (int i = startInclusive, j = 0; i < endExclusive; i++, j++)
@@ -100,7 +100,7 @@ public class Triangle
    * @param a The first triangle of the swap.
    * @param b The second triangle of the swap.
    */
-  public void swapDNA(Triangle a, Triangle b)
+  public static void swapDNA(Triangle a, Triangle b)
   {
     int [] temp = a.dna;
     a.dna = b.dna;
