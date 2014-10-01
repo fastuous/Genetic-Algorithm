@@ -12,6 +12,7 @@ public class Genome
   
   public void addGene(Triangle gene)
   {
+    if (genes.size() == Constants.TRIANGLE_COUNT) return;
     genes.add(gene);
   }
   

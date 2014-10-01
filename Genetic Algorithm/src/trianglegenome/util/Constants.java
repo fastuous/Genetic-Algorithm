@@ -1,5 +1,6 @@
 package trianglegenome.util;
 
+import java.io.File;
 import java.util.Random;
 
 /**
@@ -9,18 +10,30 @@ import java.util.Random;
  */
 public class Constants
 {
+  public static String[] imageFiles;
+
+  static
+  {
+    File folder = new File("src/images/");
+    File[] listFile = folder.listFiles();
+    imageFiles = new String[listFile.length];
+    for (int i = 0; i < listFile.length; i++)
+    {
+      if (listFile[i].isFile())
+      {
+        imageFiles[i] = listFile[i].getName();
+      }
+    }
+
+  }
   public static final int TRIANGLE_COUNT = 200;
 
-  public static final String[] IMAGE_FILES =
-  { "mona-lisa-cropped-512x413.png", "poppyfields-512x384.png",
-      "the_great_wave_off_kanagawa-512x352.png" };
-  
   public static final int MAX_RGBA = 255;
-  
-  /** The width of the target image.*/
+
+  /** The width of the target image. */
   public static int width;
-  /** The height of the target image.*/
+  /** The height of the target image. */
   public static int height;
-  
+
   public static final Random rand = new Random();
 }

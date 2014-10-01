@@ -43,7 +43,7 @@ public class ImagePanel extends JPanel
    */
   public void selectImage(String fileName)
   {
-    if (!Arrays.asList(Constants.IMAGE_FILES).contains(fileName))
+    if (!Arrays.asList(Constants.imageFiles).contains(fileName))
     {
       System.err.println("ERROR: Invalid image selection.");
       return;
