@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Contains the information of a triangle for drawing.
  * @author Truman DeYoung
  */
-public class Triangle
+public class Triangle implements Cloneable
 {
   /**
    * The length of the {{@link #dna} array that keeps track of the triangle DNA.
@@ -20,7 +20,7 @@ public class Triangle
    * Indices 6, 7, 8, and 9 are the red, green, blue and alpha
    * respectively.
    */
-  public int[] dna = new int[DNA_LENGTH];
+  public int[] dna;
 
   /**
    * Given three x and three y coordinates and four values for rgba,
@@ -31,6 +31,8 @@ public class Triangle
    */
   public Triangle(int[] xPoints, int[] yPoints, int[] rgba)
   {
+    dna = new int[DNA_LENGTH];
+    
     dna[0] = xPoints[0];
     dna[1] = xPoints[1];
     dna[2] = xPoints[2];
@@ -43,6 +45,13 @@ public class Triangle
     dna[7] = rgba[1];
     dna[8] = rgba[2];
     dna[9] = rgba[3];
+  }
+  
+  /**
+   * A private constructor that does not initialize the {{@link #dna}.
+   */
+  private Triangle()
+  {
   }
 
   /**
@@ -105,5 +114,16 @@ public class Triangle
     int [] temp = a.dna;
     a.dna = b.dna;
     b.dna = temp;
+  }
+  
+  /**
+   * @return A deep copy of this triangle.
+   */
+  @Override
+  public Triangle clone()
+  {
+    Triangle t = new Triangle();
+    t.dna = Arrays.copyOf(this.dna, Triangle.DNA_LENGTH);
+    return t;
   }
 }
