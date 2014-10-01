@@ -12,6 +12,15 @@ public class Genome implements Cloneable
 {
   private List<Triangle> genes = new LinkedList<>();
   
+  public Genome()
+  {
+  }
+  
+  public Genome(Triangle ... triangles)
+  {
+    for (Triangle t : triangles) addGene(t);
+  }
+  
   public void addGene(Triangle gene)
   {
     if (genes.size() == Constants.TRIANGLE_COUNT) return;
