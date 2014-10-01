@@ -3,7 +3,6 @@ package ImageEvolver.gui;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -52,7 +51,7 @@ public class ImagePanel extends JPanel
 
     try
     {
-      targetImage = ImageIO.read(new File("images/" + fileName));
+      targetImage = ImageIO.read(ImagePanel.class.getResourceAsStream("/images/" + fileName));
     }
     catch (IOException e)
     {
