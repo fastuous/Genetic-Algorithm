@@ -110,7 +110,7 @@ public class Triangle implements Cloneable
    */
   public static void swapDNA(Triangle a, Triangle b, int startInclusive, int endExclusive)
   {
-    int [] temp = Arrays.copyOfRange(b.dna, startInclusive, endExclusive);
+    int [] temp = Arrays.copyOfRange(a.dna, startInclusive, endExclusive);
     for (int i = startInclusive, j = 0; i < endExclusive; i++, j++)
     {
       a.dna[i] = b.dna[i];
@@ -143,21 +143,16 @@ public class Triangle implements Cloneable
   }
   
   /**
-   * Performs the unit tests for all of the triangles.
-   * @author collinsd
+   * Returns a string representation of this triangle.
+   * @return A string representation of this triangle.
    */
-  public static class TriangleUnitTests
+  @Override
+  public String toString()
   {
-    static
-    {
-      Triangle t1 = new Triangle(new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
-      Triangle t2 = new Triangle(new int[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
-      Triangle t3 = new Triangle(new int[] {2, 2, 2, 2, 2, 2, 2, 2, 2, 2});
-      Triangle t4 = new Triangle(new int[] {3, 3, 3, 3, 3, 3, 3, 3, 3, 3});
-      Triangle t5 = new Triangle(new int[] {4, 4, 4, 4, 4, 4, 4, 4, 4, 4});
-      Triangle t6 = new Triangle(new int[] {5, 5, 5, 5, 5, 5, 5, 5, 5, 5});
-      
-      // TODO put unit tests here. We can move this code somewhere else later.
-    }
+    StringBuilder sb = new StringBuilder();
+    sb.append("{ Triangle : ");
+    for (int i = 0; i < DNA_LENGTH; i++) sb.append(dna[i] + " ");
+    sb.append("}");
+    return sb.toString();
   }
 }
