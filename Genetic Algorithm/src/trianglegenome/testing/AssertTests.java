@@ -18,6 +18,7 @@ public class AssertTests
     Constants.width = 512;
     validityTests();
     hammingDistanceTests();
+    testCrossover();
   }
   /*
    * @param Triangle
@@ -114,10 +115,56 @@ public class AssertTests
     assert Genome.getHammingDistance(distanceTestA, distanceTestC) == 1;//This is the test for the genomes with one difference in the DNA
     assert Genome.getHammingDistance(distanceTestB, distanceTestD) == 2;//This is the test for the genomes with two differences in the DNA
   }
+  
+  public void testCrossover()
+  {
+    Triangle t1 = new Triangle(new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+    Triangle t2 = new Triangle(new int[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+    Triangle t3 = new Triangle(new int[] {2, 2, 2, 2, 2, 2, 2, 2, 2, 2});
+    Triangle t4 = new Triangle(new int[] {3, 3, 3, 3, 3, 3, 3, 3, 3, 3});
+    Triangle t5 = new Triangle(new int[] {4, 4, 4, 4, 4, 4, 4, 4, 4, 4});
+    Triangle t6 = new Triangle(new int[] {5, 5, 5, 5, 5, 5, 5, 5, 5, 5});
+
+    Triangle t2Crosst5 = new Triangle(new int[] {1, 1, 4, 4, 4, 4, 4, 4, 4, 4});
+    Triangle t5Crosst2 = new Triangle(new int[] {4, 4, 1, 1, 1, 1, 1, 1, 1, 1});
+    
+    Genome parent1 = new Genome();
+    parent1.addGene(t1);
+    parent1.addGene(t2);
+    parent1.addGene(t3);
+    Genome parent2 = new Genome();
+    parent2.addGene(t4);
+    parent2.addGene(t5);
+    parent2.addGene(t6);
+    Genome child1 = new Genome();
+    Genome child2 = new Genome();
+    
+    Genome expectedChild1 = new Genome();
+    expectedChild1.addGene(t1);
+    expectedChild1.addGene(t2Crosst5);
+    expectedChild1.addGene(t6);
+    Genome expectedChild2 = new Genome();
+    expectedChild2.addGene(t4);
+    expectedChild2.addGene(t5Crosst2);
+    expectedChild2.addGene(t3);
+
+    Genome.singlePointCrossOver(parent1, parent2, child1, child2, 12);
+    
+    assert child1.equals(expectedChild1);
+    assert child2.equals(expectedChild2);
+    
+    assert !child1.equals(child2);
+    
+    assert !child1.equals(parent1);
+    assert !child1.equals(parent2);
+    assert !child2.equals(parent1);
+    assert !child2.equals(parent2);
+    
+    return;
+  }
 
   public static void main(String[] args)
   {
-    //sets the global variables
-    AssertTests test = new AssertTests();
+    new AssertTests();
   }
 }
