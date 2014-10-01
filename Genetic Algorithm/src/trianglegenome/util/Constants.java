@@ -10,18 +10,18 @@ import java.util.Random;
  */
 public class Constants
 {
-  public static String[] imageFiles;
+  public static final String[] IMAGE_FILES;
 
   static
   {
     File folder = new File("src/images/");
     File[] listFile = folder.listFiles();
-    imageFiles = new String[listFile.length];
+    IMAGE_FILES = new String[listFile.length];
     for (int i = 0; i < listFile.length; i++)
     {
       if (listFile[i].isFile())
       {
-        imageFiles[i] = listFile[i].getName();
+        IMAGE_FILES[i] = listFile[i].getName();
       }
     }
 

@@ -181,7 +181,7 @@ public class MainFrame extends javax.swing.JFrame
     
     triangleSlider.addChangeListener(e -> controller.triangleSliderUpdate(triangleSlider.getValue()));
     
-    comboSelectImage.setModel(new javax.swing.DefaultComboBoxModel<String>(Constants.imageFiles));
+    comboSelectImage.setModel(new javax.swing.DefaultComboBoxModel<String>(Constants.IMAGE_FILES));
     comboSelectImage.addActionListener(e -> {
       imagePanel.selectImage(comboSelectImage.getSelectedItem().toString());
       imagePanel.setSize(Constants.width,Constants.height);
