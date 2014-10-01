@@ -1,13 +1,12 @@
 package trianglegenome;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.naming.OperationNotSupportedException;
-
 import trianglegenome.util.Constants;
+
+import static java.lang.Math.min;
 
 public class Genome implements Cloneable
 {
@@ -53,7 +52,7 @@ public class Genome implements Cloneable
    * @param child1 The first child, to which the data will be overwritten.
    * @param child2 The second child, to which the data will be overwritten.
    * @param start The starting point of the swap (inclusive).
-   * @param end The ending point of the swap (exclusive).
+   * @param end The ending point of the swap (inclusive).
    */
   public static void doublePointCrossOver(
       Genome parent1, Genome parent2,
@@ -62,7 +61,7 @@ public class Genome implements Cloneable
   {
     child1.copyFrom(parent1);
     child2.copyFrom(parent2);
-    doublePointCrossoverInPlace(child1, child2, start, end);
+    doublePointCrossoverInPlace(child2, child1, start, end);
   }
   
   /**
@@ -72,16 +71,16 @@ public class Genome implements Cloneable
    * @param parent2 The second parent of the crossover.
    * @param child1 The first child, to which the data will be overwritten.
    * @param child2 The second child, to which the data will be overwritten.
-   * @param end The ending point of the swap (exclusive).
+   * @param start The start point of the swap (inclusive).
    */
   public static void singlePointCrossOver(
       Genome parent1, Genome parent2,
       Genome child1, Genome child2,
-      int end)
+      int start)
   {
     child1.copyFrom(parent1);
     child2.copyFrom(parent2);
-    singlePointCrossoverInPlace(child1, child2, end);
+    singlePointCrossoverInPlace(child2, child1, start);
   }
 
   /**
@@ -91,7 +90,7 @@ public class Genome implements Cloneable
    * @param a The first Genome of the crossover.
    * @param b The second Genome of the crossover.
    * @param start The starting point of the swap (inclusive).
-   * @param end The ending point of the swap (exclusive).
+   * @param end The ending point of the swap (inclusive).
    */
   public static void doublePointCrossoverInPlace(Genome a, Genome b, int start, int end)
   {
@@ -110,12 +109,12 @@ public class Genome implements Cloneable
     // The last triangle to be swapped.
     int lastTriangle = end / Triangle.DNA_LENGTH;
     
-    List<Triangle> aSubList = a.genes.subList(firstTriangle, lastTriangle + 1);
-    List<Triangle> bSubList = b.genes.subList(firstTriangle, lastTriangle + 1);
+    List<Triangle> aSubList = a.genes.subList(firstTriangle, lastTriangle);
+    List<Triangle> bSubList = b.genes.subList(firstTriangle, lastTriangle);
     Iterator<Triangle> aIterator = aSubList.iterator();
     Iterator<Triangle> bIterator = bSubList.iterator();
     
-    if (aIterator.hasNext() && bIterator.hasNext())
+    if (start1 != 0 && aIterator.hasNext() && bIterator.hasNext())
     {
       Triangle.swapDNA(aIterator.next(), bIterator.next(), start1, Triangle.DNA_LENGTH);
     }
@@ -135,11 +134,12 @@ public class Genome implements Cloneable
    * multiplied by the triangle DNA length.
    * @param a The first Genome of the crossover.
    * @param b The second Genome of the crossover.
-   * @param end The ending point of the swap (exclusive).
+   * @param start The start point of the swap (inclusive).
    */
-  public static void singlePointCrossoverInPlace(Genome a, Genome b, int end)
+  public static void singlePointCrossoverInPlace(Genome a, Genome b, int start)
   {
-    doublePointCrossoverInPlace(a, b, 0, end);
+    int end = min(a.genes.size(), b.genes.size()) * Triangle.DNA_LENGTH;
+    doublePointCrossoverInPlace(a, b, start, end);
   }
   
   /**
@@ -189,5 +189,22 @@ public class Genome implements Cloneable
       return isEqual;
     }
     else return false;
+  }
+  
+  /**
+   * Returns a string representation of this genome.
+   * @return A string representation of this genome.
+   */
+  @Override
+  public String toString()
+  {
+    StringBuilder sb = new StringBuilder();
+    sb.append("{ Genome : ");
+    for (Triangle t : genes)
+    {
+      for (int i = 0; i < Triangle.DNA_LENGTH; i++) sb.append(t.dna[i] + " ");
+    }
+    sb.append("}");
+    return sb.toString();
   }
 }
