@@ -44,31 +44,47 @@ public class AssertTests
 
   public static void main(String[] args)
   {
+    
+    Constants.height = 413;
+    Constants.width = 512;
     Genome distanceTestA = new Genome();
     Genome distanceTestB = new Genome();
+    Genome distanceTestC = new Genome();
+    Genome distanceTestD = new Genome();
     int[] dna1 = {0,0,0,0,0,0,0,0,0,0};
     int[] dna2 = {1,1,1,1,1,1,1,1,1,1};
+    int[] dna3 = {0,1,1,1,1,1,1,1,1,1};
+    int[] dna4 = {1,1,0,0,0,0,0,0,0,0};
     for(int i = 0; i < 200; ++i)
     {
       if(i < 100)
       {
         distanceTestA.addGene(new Triangle(dna1));
         distanceTestB.addGene(new Triangle(dna2));
+        distanceTestC.addGene(new Triangle(dna1));
+        distanceTestD.addGene(new Triangle(dna2));
       }
       else if(i >= 100)
       {
         distanceTestA.addGene(new Triangle(dna2));
         distanceTestB.addGene(new Triangle(dna1));
+        if(i != 199){
+          distanceTestC.addGene(new Triangle(dna2));
+          distanceTestD.addGene(new Triangle(dna1));
+        }
       }
     }
-    
-    Constants.height = 413;
-    Constants.width = 512;
+    distanceTestC.addGene(new Triangle(dna3));
+    distanceTestD.addGene(new Triangle(dna4));
+    Genome cloneA = distanceTestA.clone();
     Genome testA = RandomGenome.generateGenome();
     Genome testB = RandomGenome.generateGenome();
     AssertTests test = new AssertTests();
     assert test.isValidGenome(testA);
     assert test.isValidGenome(testB);
     assert Genome.getHammingDistance(distanceTestA, distanceTestB) == 2000;
+    assert Genome.getHammingDistance(cloneA, distanceTestA) == 0;
+    assert Genome.getHammingDistance(distanceTestA, distanceTestC) == 1;
+    assert Genome.getHammingDistance(distanceTestB, distanceTestD) == 2;
   }
 }
