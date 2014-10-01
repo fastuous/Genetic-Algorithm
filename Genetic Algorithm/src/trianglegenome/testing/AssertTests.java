@@ -3,6 +3,7 @@
  */
 package trianglegenome.testing;
 
+import java.util.List;
 import trianglegenome.Genome;
 import trianglegenome.Triangle;
 import trianglegenome.util.Constants;
@@ -14,7 +15,7 @@ public class AssertTests
     // TODO Auto-generated constructor stub
   }
 
-  public boolean checkValidTriangle(Triangle tri)
+  public boolean isValidTriangle(Triangle tri)
   {
     for (int i = 0; i <= 2; ++i)
     {
@@ -30,9 +31,14 @@ public class AssertTests
     }
     return true;
   }
-  public boolean checkValidGenome(Genome genome)
+  public boolean isValidGenome(Genome genome)
   {
-    
+    List<Triangle> genes = genome.getGenes();
+    for(Triangle tri : genes)
+    {
+      if(!isValidTriangle(tri)) return false;
+    }
+    return true;
   }
 
   public static void main(String[] args)
