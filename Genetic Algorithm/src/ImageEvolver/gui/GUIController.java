@@ -2,7 +2,7 @@ package ImageEvolver.gui;
 
 import javax.swing.SwingUtilities;
 
-import ImageEvolver.SimpleFitness;
+import ImageEvolver.FitnessFunctions;
 import ImageEvolver.Genome;
 import ImageEvolver.RandomGenome;
 
@@ -42,8 +42,7 @@ public class GUIController
     drawPanel.setTriangles(genome.getGenes());
     drawPanel.repaint();
     
-    SimpleFitness simpleFitness = SimpleFitness.getSimpleFitnessSingleton();
-    int fitness = simpleFitness.getSimpleFitness(drawPanel.getSnapshot(), imagePanel.getSnapshot());
+    int fitness = FitnessFunctions.getSimpleFitness(drawPanel.getSnapshot(), imagePanel.getSnapshot());
     mainFrame.setDisplayFitness(fitness);
     
     System.out.print("Next button clicked.");
