@@ -48,11 +48,12 @@ public class Triangle implements Cloneable
   }
   
   /**
-   * Given a dna as an array. Creates a new Triangle whose dna will be the given array.
-   * The given array must be of length {@value #DNA_LENGTH} (the value of {link #DNA_LENGTH}).
+   * Given a dna as an array (or as separate parameters). Creates a new Triangle whose dna will
+   * be the given array. The given array must be of length {@value #DNA_LENGTH}
+   * (the value of {link #DNA_LENGTH}).
    * @param dna The dna that this new triangle will use for its {@link #dna}.
    */
-  public Triangle(int[] dna)
+  public Triangle(int ... dna)
   {
     if (dna.length != DNA_LENGTH)
     {
