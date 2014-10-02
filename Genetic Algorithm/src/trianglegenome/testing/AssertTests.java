@@ -174,6 +174,8 @@ public class AssertTests
     // NOTE our method changes the dna contained in the children passed to it and leaves the parents
     // unchanged
     Genome.singlePointCrossOver(parent1, parent2, child1, child2, 12);
+    
+    assert isSinglePointCrossover(parent1, parent2, child1, child2);
 
     // check against manually constructed results
     assert child1.equals(expectedChild1);
