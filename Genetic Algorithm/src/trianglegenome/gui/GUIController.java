@@ -1,7 +1,10 @@
 package trianglegenome.gui;
 
+import java.awt.image.BufferedImage;
+
 import javax.swing.SwingUtilities;
 
+import demo.FitnessEvaluator;
 import trianglegenome.FitnessFunctions;
 import trianglegenome.Genome;
 import trianglegenome.RandomGenome;
@@ -20,6 +23,8 @@ public class GUIController
   private DrawPanel drawPanel;
   private ImagePanel imagePanel;
   private static MainFrame mainFrame;
+  
+  private demo.FitnessEvaluator fitnessEvaluator = new demo.FitnessEvaluator();
 
   public void pause()
   {
@@ -42,8 +47,23 @@ public class GUIController
     drawPanel.setTriangles(genome.getGenes());
     drawPanel.repaint();
     
-    int fitness = FitnessFunctions.getSimpleFitness(drawPanel.getSnapshot(), imagePanel.getSnapshot());
-    mainFrame.setDisplayFitness(fitness);
+    BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
+    BufferedImage imagePanelSnapshot = imagePanel.getSnapshot();
+    
+    long time1 = System.currentTimeMillis();
+    int fitness1 = fitnessEvaluator.differenceSumCL(drawPanelSnapshot, imagePanelSnapshot);
+    time1 = System.currentTimeMillis() - time1;
+
+    long time2 = System.currentTimeMillis();
+    int fitness2 = fitnessEvaluator.differenceSum(drawPanelSnapshot, imagePanelSnapshot);
+    time2 = System.currentTimeMillis() - time2;
+
+    System.out.println("OpenCL Fitness : " + fitness1);
+    System.out.println("Java Fitness   : " + fitness2);
+    System.out.println("OpenCL time : " + time1);
+    System.out.println("Java time   : " + time2);
+    
+    mainFrame.setDisplayFitness(fitness1);
     
     System.out.print("Next button clicked.");
     if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
