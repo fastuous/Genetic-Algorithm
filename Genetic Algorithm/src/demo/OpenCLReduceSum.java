@@ -75,7 +75,7 @@ public class OpenCLReduceSum
       long result = clBufferA.getBuffer().get();
       System.out.println("OpenCL sum is : " + result);
       
-      long [] test = LongStream.range(0, 16777216).toArray();
+      long [] test = LongStream.range(0, 16777217).toArray();
       long time2 = System.currentTimeMillis();
       long sum = 0;
       for (int i = 0; i < test.length; i++) sum += test[i];
