@@ -1,8 +1,11 @@
 package demo;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import com.jogamp.opencl.CLBuffer;
@@ -27,6 +30,8 @@ public class FitnessEvaluator
   File sourceFile;
   FileInputStream sourceInputStream;
   CLProgram program;
+  BufferedImage reference;
+  CLKernel kernel;
   
   public FitnessEvaluator()
   {
@@ -41,6 +46,8 @@ public class FitnessEvaluator
       program = context.createProgram(sourceInputStream).build();
     }
     catch (Exception e) { e.printStackTrace(); }
+    
+    kernel = program.createCLKernel("fitness");
   }
   
   public int differenceSumCL(BufferedImage reference, BufferedImage triangles)
@@ -54,29 +61,26 @@ public class FitnessEvaluator
       throw new IllegalArgumentException("Reference and triangle images must be the same size.");
     }
     
-    CLKernel kernel = program.createCLKernel("fitness");
-    
     int elementCount = tWidth * tHeight;
     int globalWorkSize = (int)pow(2, ceil(log(elementCount)/log(2)));
     int localWorkSize = min(device.getMaxWorkGroupSize(), globalWorkSize);
     
     CLBuffer<IntBuffer> rBuf = context.createIntBuffer(globalWorkSize, Mem.READ_ONLY);
-    CLBuffer<IntBuffer> tBuf = context.createIntBuffer(globalWorkSize, Mem.READ_ONLY);
-    CLBuffer<IntBuffer> oBuf = context.createIntBuffer(globalWorkSize, Mem.WRITE_ONLY);
-    rBuf.getBuffer().put(reference.getRGB(0, 0, rWidth, rHeight, null, 0, rWidth));
-    tBuf.getBuffer().put(triangles.getRGB(0, 0, tWidth, tHeight, null, 0, tWidth));
+    CLBuffer<ByteBuffer> tBuf = context.createByteBuffer(globalWorkSize * 4, Mem.READ_WRITE);
+    rBuf.getBuffer().put((((DataBufferInt)reference.getRaster().getDataBuffer()).getData()));
+    tBuf.getBuffer().put((((DataBufferByte)triangles.getRaster().getDataBuffer()).getData()));
     rBuf.getBuffer().rewind();
     tBuf.getBuffer().rewind();
     
-    kernel.putArgs(rBuf, tBuf, oBuf).putArg(elementCount);
+    kernel.setArgs(rBuf, tBuf).setArg(2, elementCount);
     
     queue.putWriteBuffer(rBuf, false);
     queue.putWriteBuffer(tBuf, false);
     queue.put1DRangeKernel(kernel, 0, globalWorkSize, localWorkSize);
-    queue.putReadBuffer(oBuf, true);
+    queue.putReadBuffer(tBuf, true);
     
     int sum = 0;
-    IntBuffer differences = oBuf.getBuffer();
+    IntBuffer differences = tBuf.getBuffer().asIntBuffer();
     for (int i = 0; i < elementCount; i++) sum += differences.get();
     
     return sum;

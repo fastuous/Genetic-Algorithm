@@ -1,7 +1,6 @@
 __kernel void fitness(
     __global const int * reference,
-    __global const int * triangles,
-    __global int * differences,
+    __global int * triangles,
     int elementCount
     )
 {
@@ -24,5 +23,5 @@ __kernel void fitness(
   
   int d = (int)sqrt(dr2 + dg2 + db2);
   
-  differences[iGID] = d;
+  triangles[iGID] = d;
 }
