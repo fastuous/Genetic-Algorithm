@@ -1,13 +1,18 @@
 package trianglegenome;
 
+import static java.lang.Math.min;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import trianglegenome.util.Constants;
-import static java.lang.Math.min;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
+import trianglegenome.util.Constants;
+
+@XmlRootElement(name="genome")
 public class Genome implements Cloneable
 {
   private List<Triangle> genes = new LinkedList<>();
@@ -48,6 +53,7 @@ public class Genome implements Cloneable
     this.genes.addAll(genes);
   }
   
+  @XmlElement(name="gene")
   public List<Triangle> getGenes()
   {
     return genes;
