@@ -1,6 +1,7 @@
 package trianglegenome;
 
 import java.util.Arrays;
+import trianglegenome.util.Constants;
 
 /**
  * Contains the information of a triangle for drawing.
@@ -142,7 +143,22 @@ public class Triangle implements Cloneable
     t.dna = Arrays.copyOf(this.dna, Triangle.DNA_LENGTH);
     return t;
   }
-  
+  public boolean isValidTriangle(Triangle tri)
+  {
+    for (int i = 0; i <= 2; ++i)
+    {
+      if (tri.dna[i] < 0 || tri.dna[i] > Constants.width) return false;
+    }
+    for (int i = 3; i <= 5; ++i)
+    {
+      if (tri.dna[i] < 0 || tri.dna[i] > Constants.height) return false;
+    }
+    for (int i = 6; i <= 9; ++i)
+    {
+      if (tri.dna[i] < 0 || tri.dna[i] > 255) return false;
+    }
+    return true;
+  }
   /**
    * Returns a string representation of this triangle.
    * @return A string representation of this triangle.
