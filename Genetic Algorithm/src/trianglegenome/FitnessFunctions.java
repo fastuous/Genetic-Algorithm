@@ -2,6 +2,9 @@ package trianglegenome;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * @depricated Use {@link trianglegeonme.FitnessEvaluator} instead.
+ */
 public class FitnessFunctions
 {
   public static int getSimpleFitness(BufferedImage source, BufferedImage target)
