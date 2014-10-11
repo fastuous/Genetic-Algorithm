@@ -66,9 +66,9 @@ public class FitnessEvaluator
     int localWorkSize = min(device.getMaxWorkGroupSize(), globalWorkSize);
     
     CLBuffer<IntBuffer> rBuf = context.createIntBuffer(globalWorkSize, Mem.READ_ONLY);
-    CLBuffer<ByteBuffer> tBuf = context.createByteBuffer(globalWorkSize * 4, Mem.READ_WRITE);
-    rBuf.getBuffer().put((((DataBufferInt)reference.getRaster().getDataBuffer()).getData()));
-    tBuf.getBuffer().put((((DataBufferByte)triangles.getRaster().getDataBuffer()).getData()));
+    CLBuffer<IntBuffer> tBuf = context.createIntBuffer(globalWorkSize, Mem.READ_WRITE);
+    rBuf.getBuffer().put(((DataBufferInt)reference.getRaster().getDataBuffer()).getData());
+    tBuf.getBuffer().put(((DataBufferInt)triangles.getRaster().getDataBuffer()).getData());
     rBuf.getBuffer().rewind();
     tBuf.getBuffer().rewind();
     
@@ -80,7 +80,7 @@ public class FitnessEvaluator
     queue.putReadBuffer(tBuf, true);
     
     int sum = 0;
-    IntBuffer differences = tBuf.getBuffer().asIntBuffer();
+    IntBuffer differences = tBuf.getBuffer();
     for (int i = 0; i < elementCount; i++) sum += differences.get();
     
     return sum;
@@ -99,8 +99,11 @@ public class FitnessEvaluator
     
     int elementCount = tWidth * tHeight;
     
-    int [] rRGB = reference.getRGB(0, 0, rWidth, rHeight, null, 0, rWidth);
-    int [] tRGB = triangles.getRGB(0, 0, tWidth, tHeight, null, 0, tWidth);
+    DataBufferInt rBuf = (DataBufferInt)reference.getRaster().getDataBuffer();
+    DataBufferInt tBuf = (DataBufferInt)triangles.getRaster().getDataBuffer();
+    
+    int [] rRGB = rBuf.getData();
+    int [] tRGB = tBuf.getData();
     
     int sum = 0;
     for (int i = 0; i < elementCount; i++)
