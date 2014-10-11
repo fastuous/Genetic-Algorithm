@@ -80,6 +80,13 @@ public class FitnessEvaluator
     kernel = program.createCLKernel("fitness");
   }
   
+  /**
+   * Uses OpenCL to calculate the differences between each red, green and blue value
+   * of each pixel in two images.
+   * @param reference The reference image against which the triangles will be compared.
+   * @param triangles The image containing the triangles to compare to the reference image.
+   * @return AThe fitness of the triangles where lower is better. 
+   */
   public int differenceSumCL(BufferedImage reference, BufferedImage triangles)
   {
     int rWidth = reference.getWidth();
@@ -115,7 +122,14 @@ public class FitnessEvaluator
     
     return sum;
   }
-  
+
+  /**
+   * Uses Java to calculate the differences between each red, green and blue value
+   * of each pixel in two images.
+   * @param reference The reference image against which the triangles will be compared.
+   * @param triangles The image containing the triangles to compare to the reference image.
+   * @return AThe fitness of the triangles where lower is better. 
+   */
   public int differenceSum(BufferedImage reference, BufferedImage triangles)
   {
     int rWidth = reference.getWidth();
