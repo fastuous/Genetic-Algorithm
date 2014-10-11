@@ -4,8 +4,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.SwingUtilities;
 
-import demo.FitnessEvaluator;
-import trianglegenome.FitnessFunctions;
+import trianglegenome.FitnessEvaluator;
 import trianglegenome.Genome;
 import trianglegenome.RandomGenome;
 
@@ -24,7 +23,7 @@ public class GUIController
   private ImagePanel imagePanel;
   private static MainFrame mainFrame;
   
-  private demo.FitnessEvaluator fitnessEvaluator = new demo.FitnessEvaluator();
+  private FitnessEvaluator fitnessEvaluator = new FitnessEvaluator();
 
   public void pause()
   {
