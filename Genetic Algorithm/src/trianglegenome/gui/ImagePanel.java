@@ -51,7 +51,14 @@ public class ImagePanel extends JPanel
 
     try
     {
-      targetImage = ImageIO.read(ImagePanel.class.getResourceAsStream("/images/" + fileName));
+      BufferedImage targetImage =
+          ImageIO.read(ImagePanel.class.getResourceAsStream("/images/" + fileName));
+      
+      this.targetImage =
+          new BufferedImage(
+              targetImage.getWidth(), targetImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+     
+      this.targetImage.getGraphics().drawImage(targetImage, 0, 0, null);
     }
     catch (IOException e)
     {
