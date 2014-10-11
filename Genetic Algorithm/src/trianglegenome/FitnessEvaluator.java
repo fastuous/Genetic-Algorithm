@@ -2,9 +2,12 @@ package trianglegenome;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.IntBuffer;
+
+import javax.swing.JPanel;
 
 import com.jogamp.opencl.CLBuffer;
 import com.jogamp.opencl.CLCommandQueue;
@@ -20,6 +23,32 @@ import static java.lang.Math.min;
 import static java.lang.Math.sqrt;
 import static com.jogamp.opencl.CLMemory.Mem;
 
+/**
+ * Calculates fitness using java methods and by calling an opencl kernel,
+ * kernels/fitness.cl
+ * <br /><br />
+ * Example code:<br/>
+ * <code><pre>
+ *  FitnessEvaluator f = new FitnessEvaluator();
+ *  
+ *  DrawPanel p1 = new DrawPanel(20, 20);
+ *  ImagePanel p2 = new ImagePanel(20, 20);
+ *  
+ *  // put triangles in p1
+ *  // set image on p2
+ *  
+ *  // Get fitness with java methods
+ *  int f1 = f.differenceSum(drawPanelSnapshot, imagePanelSnapshot);
+ *  
+ *  // Get fitness with OpenCL kernel
+ *  int f2 = f.differenceSumCL(drawPanelSnapshot, imagePanelSnapshot);
+ *  
+ *  assert f1 == f2;
+ *  
+ * </pre></code>
+ * 
+ * @author David Collins
+ */
 public class FitnessEvaluator
 {
   CLContext context;
@@ -31,6 +60,9 @@ public class FitnessEvaluator
   BufferedImage reference;
   CLKernel kernel;
   
+  /**
+   * Creates a new fitness evaluator.
+   */
   public FitnessEvaluator()
   {
     context = CLContext.create();
