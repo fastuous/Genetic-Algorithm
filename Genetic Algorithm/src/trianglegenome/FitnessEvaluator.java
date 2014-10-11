@@ -1,11 +1,9 @@
-package demo;
+package trianglegenome;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import com.jogamp.opencl.CLBuffer;
