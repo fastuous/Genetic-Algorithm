@@ -2,12 +2,9 @@ package trianglegenome;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.IntBuffer;
-
-import javax.swing.JPanel;
 
 import com.jogamp.opencl.CLBuffer;
 import com.jogamp.opencl.CLCommandQueue;
@@ -16,10 +13,7 @@ import com.jogamp.opencl.CLDevice;
 import com.jogamp.opencl.CLKernel;
 import com.jogamp.opencl.CLProgram;
 
-import static java.lang.Math.ceil;
-import static java.lang.Math.log;
 import static java.lang.Math.pow;
-import static java.lang.Math.min;
 import static java.lang.Math.sqrt;
 import static com.jogamp.opencl.CLMemory.Mem;
 
@@ -95,17 +89,27 @@ public class FitnessEvaluator
     int tHeight = triangles.getHeight();
     if (tWidth != rWidth || tHeight != rHeight)
     {
-      throw new IllegalArgumentException("Reference and triangle images must be the same size.");
+      final String ERROR = "Reference and triangle images must be the same size"; 
+      throw new IllegalArgumentException(ERROR);
+    }
+    if (reference.getType() != BufferedImage.TYPE_INT_RGB ||
+        triangles.getType() != BufferedImage.TYPE_INT_RGB)
+    {
+      final String ERROR = "Reference and triangle images must be BufferedImage.TYPE_INT_RGB"; 
+      throw new IllegalArgumentException(ERROR);
     }
     
-    int elementCount = tWidth * tHeight;
-    int globalWorkSize = (int)pow(2, ceil(log(elementCount)/log(2)));
-    int localWorkSize = min(device.getMaxWorkGroupSize(), globalWorkSize);
+    DataBufferInt rBufInt = (DataBufferInt)reference.getRaster().getDataBuffer();
+    DataBufferInt tBufInt = (DataBufferInt)triangles.getRaster().getDataBuffer();
+    
+    int elementCount = rBufInt.getSize();
+    int globalWorkSize = getBufferSize(elementCount);
+    int localWorkSize = device.getMaxWorkGroupSize();
     
     CLBuffer<IntBuffer> rBuf = context.createIntBuffer(globalWorkSize, Mem.READ_ONLY);
     CLBuffer<IntBuffer> tBuf = context.createIntBuffer(globalWorkSize, Mem.READ_WRITE);
-    rBuf.getBuffer().put(((DataBufferInt)reference.getRaster().getDataBuffer()).getData());
-    tBuf.getBuffer().put(((DataBufferInt)triangles.getRaster().getDataBuffer()).getData());
+    rBuf.getBuffer().put(rBufInt.getData());
+    tBuf.getBuffer().put(tBufInt.getData());
     rBuf.getBuffer().rewind();
     tBuf.getBuffer().rewind();
     
@@ -138,13 +142,20 @@ public class FitnessEvaluator
     int tHeight = triangles.getHeight();
     if (tWidth != rWidth || tHeight != rHeight)
     {
-      throw new IllegalArgumentException("Reference and triangle images must be the same size.");
+      final String ERROR = "Reference and triangle images must be the same size"; 
+      throw new IllegalArgumentException(ERROR);
     }
-    
-    int elementCount = tWidth * tHeight;
+    if (reference.getType() != BufferedImage.TYPE_INT_RGB ||
+        triangles.getType() != BufferedImage.TYPE_INT_RGB)
+    {
+      final String ERROR = "Reference and triangle images must be BufferedImage.TYPE_INT_RGB"; 
+      throw new IllegalArgumentException(ERROR);
+    }
     
     DataBufferInt rBuf = (DataBufferInt)reference.getRaster().getDataBuffer();
     DataBufferInt tBuf = (DataBufferInt)triangles.getRaster().getDataBuffer();
+    
+    int elementCount = tBuf.getSize();
     
     int [] rRGB = rBuf.getData();
     int [] tRGB = tBuf.getData();
@@ -168,5 +179,12 @@ public class FitnessEvaluator
       sum += sqrt(dr2 + dg2 + db2);
     }
     return sum;
+  }
+  
+  private int getBufferSize(int elementCount)
+  {
+    int mwSize = device.getMaxWorkGroupSize();
+    int wgs = mwSize / elementCount + 1; 
+    return wgs * elementCount;
   }
 }
