@@ -23,7 +23,7 @@ public class GUIController
   private ImagePanel imagePanel;
   private static MainFrame mainFrame;
   
-  private FitnessEvaluator fitnessEvaluator = new FitnessEvaluator();
+  private FitnessEvaluator fitnessEvaluator = null;
 
   public void pause()
   {
@@ -49,12 +49,14 @@ public class GUIController
     BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
     BufferedImage imagePanelSnapshot = imagePanel.getSnapshot();
     
+    if (fitnessEvaluator == null) fitnessEvaluator = new FitnessEvaluator(imagePanelSnapshot);
+    
     long time1 = System.currentTimeMillis();
-    int fitness1 = fitnessEvaluator.differenceSumCL(drawPanelSnapshot, imagePanelSnapshot);
+    int fitness1 = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
     time1 = System.currentTimeMillis() - time1;
 
     long time2 = System.currentTimeMillis();
-    int fitness2 = fitnessEvaluator.differenceSum(drawPanelSnapshot, imagePanelSnapshot);
+    int fitness2 = fitnessEvaluator.differenceSum(drawPanelSnapshot);
     time2 = System.currentTimeMillis() - time2;
 
     System.out.println("OpenCL Fitness : " + fitness1);
