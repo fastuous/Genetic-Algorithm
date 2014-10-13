@@ -126,14 +126,7 @@ public class FitnessEvaluator
     
     if (tWidth != rWidth || tHeight != rHeight)
     {
-      final String ERROR = "Reference and triangle images must be the same size"; 
-      throw new IllegalArgumentException(ERROR);
-    }
-    if (reference.getType() != BufferedImage.TYPE_INT_RGB ||
-        triangles.getType() != BufferedImage.TYPE_INT_RGB)
-    {
-      final String ERROR = "Reference and triangle images must be BufferedImage.TYPE_INT_RGB"; 
-      throw new IllegalArgumentException(ERROR);
+      throw new IllegalArgumentException("Reference and triangle images must be the same size.");
     }
     
     trtianglesBufferInt = (DataBufferInt)triangles.getRaster().getDataBuffer();
@@ -174,14 +167,7 @@ public class FitnessEvaluator
     int tHeight = triangles.getHeight();
     if (tWidth != rWidth || tHeight != rHeight)
     {
-      final String ERROR = "Reference and triangle images must be the same size"; 
-      throw new IllegalArgumentException(ERROR);
-    }
-    if (reference.getType() != BufferedImage.TYPE_INT_RGB ||
-        triangles.getType() != BufferedImage.TYPE_INT_RGB)
-    {
-      final String ERROR = "Reference and triangle images must be BufferedImage.TYPE_INT_RGB"; 
-      throw new IllegalArgumentException(ERROR);
+      throw new IllegalArgumentException("Reference and triangle images must be the same size.");
     }
     
     DataBufferInt trianglesBufferInt = (DataBufferInt)triangles.getRaster().getDataBuffer();

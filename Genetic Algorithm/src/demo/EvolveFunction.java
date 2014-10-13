@@ -19,8 +19,8 @@ public interface EvolveFunction extends Function<Triangle, Triangle>
    * @return True if the EvolveFunction can improve a given triangle
    * according to a given fitness function.
    */
-  default boolean improvesTriangle(
-      FitnessFunction fitnessFunction, Triangle triangle)
+  
+  public default boolean improvesTriangle(FitnessFunction fitnessFunction, Triangle triangle)
   {
     int fitnessBefore = fitnessFunction.applyAsInt(triangle);
     int fitnessAfter = fitnessFunction.compose(this).applyAsInt(triangle);
