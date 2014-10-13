@@ -9,6 +9,10 @@ public class HillClimbing
 {
   int fitnessBefore = 0;
   int fitnessAfter = 0;
+  boolean successfulEvolution = false;
+  int successfulDNA;
+  int successfulStepsize;
+  int successfulMultiplier = 1;
   Random stepSize = new Random();
   Random randomTriangle = new Random();
   Random dnaSelection = new Random();
