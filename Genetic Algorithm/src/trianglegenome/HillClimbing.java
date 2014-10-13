@@ -21,13 +21,18 @@ public class HillClimbing
   ImagePanel imagePanel;
   DrawPanel drawPanel;
   
-  private FitnessEvaluator fitnessEvaluator = new FitnessEvaluator();
+  BufferedImage imagePanelSnapshot;
+  
+  private FitnessEvaluator fitnessEvaluator;
   
   public HillClimbing(Genome genome, ImagePanel imagePanel, DrawPanel drawPanel)
   {
     genomeBefore = genome;
     this.imagePanel = imagePanel;
     this.drawPanel = drawPanel;
+
+    imagePanelSnapshot = imagePanel.getSnapshot();
+    fitnessEvaluator = new FitnessEvaluator(imagePanelSnapshot);
   }
   
   public Genome performEvolution()
@@ -36,7 +41,6 @@ public class HillClimbing
     drawPanel.repaint();
     
     BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
-    BufferedImage imagePanelSnapshot = imagePanel.getSnapshot();
     
     EvolveGenome evolution = (genome, triangle, dna, step) ->
     {
@@ -47,7 +51,7 @@ public class HillClimbing
       } while(!tri.isValidTriangle(tri));
       return genome;
     };
-    fitnessBefore = fitnessEvaluator.differenceSumCL(drawPanelSnapshot, imagePanelSnapshot);
+    fitnessBefore = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
     
     return genomeBefore;
   }

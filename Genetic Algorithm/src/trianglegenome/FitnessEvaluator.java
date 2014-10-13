@@ -2,12 +2,9 @@ package trianglegenome;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.IntBuffer;
-
-import javax.swing.JPanel;
 
 import com.jogamp.opencl.CLBuffer;
 import com.jogamp.opencl.CLCommandQueue;
@@ -16,32 +13,31 @@ import com.jogamp.opencl.CLDevice;
 import com.jogamp.opencl.CLKernel;
 import com.jogamp.opencl.CLProgram;
 
-import static java.lang.Math.ceil;
-import static java.lang.Math.log;
 import static java.lang.Math.pow;
-import static java.lang.Math.min;
 import static java.lang.Math.sqrt;
 import static com.jogamp.opencl.CLMemory.Mem;
 
 /**
- * Calculates fitness using java methods and by calling an opencl kernel,
+ * Calculates fitness using java or by calling an opencl kernel,
  * kernels/fitness.cl
  * <br /><br />
  * Example code:<br/>
  * <code><pre>
- *  FitnessEvaluator f = new FitnessEvaluator();
  *  
  *  DrawPanel p1 = new DrawPanel(20, 20);
  *  ImagePanel p2 = new ImagePanel(20, 20);
  *  
- *  // put triangles in p1
- *  // set image on p2
+ *  // draw image on p2
+ *  
+ *  FitnessEvaluator f = new FitnessEvaluator(p2.getSnapshot());
+ *  
+ *  // draw triangles in p1
  *  
  *  // Get fitness with java methods
- *  int f1 = f.differenceSum(drawPanelSnapshot, imagePanelSnapshot);
+ *  int f1 = f.differenceSum(p1.getSnapshot());
  *  
  *  // Get fitness with OpenCL kernel
- *  int f2 = f.differenceSumCL(drawPanelSnapshot, imagePanelSnapshot);
+ *  int f2 = f.differenceSumCL(p1.getSnapshot());
  *  
  *  assert f1 == f2;
  *  
@@ -51,19 +47,32 @@ import static com.jogamp.opencl.CLMemory.Mem;
  */
 public class FitnessEvaluator
 {
-  CLContext context;
-  CLDevice device;
-  CLCommandQueue queue;
-  File sourceFile;
-  FileInputStream sourceInputStream;
-  CLProgram program;
-  BufferedImage reference;
-  CLKernel kernel;
+  private File sourceFile;
+  private FileInputStream sourceInputStream;
+  
+  private CLContext context;
+  private CLDevice device;
+  private CLCommandQueue queue;
+  private CLProgram program;
+  private CLKernel kernel;
+  
+  private int elementCount;
+  private int globalWorkSize;
+  private int localWorkSize;
+  
+  private CLBuffer<IntBuffer> referenceCLBuffer;
+  private DataBufferInt referenceBufferInt;
+  
+  private int referenceWidth;
+  private int referenceHeight;
+  
+  private final String ERROR_SIZE = "Reference and triangle images must be the same size"; 
+  private final String ERROR_TYPE = "Image must be of type BufferedImage.TYPE_INT_RGB"; 
   
   /**
    * Creates a new fitness evaluator.
    */
-  public FitnessEvaluator()
+  public FitnessEvaluator(BufferedImage reference)
   {
     context = CLContext.create();
     device = context.getMaxFlopsDevice();
@@ -78,6 +87,35 @@ public class FitnessEvaluator
     catch (Exception e) { e.printStackTrace(); }
     
     kernel = program.createCLKernel("fitness");
+    
+    initializeReferenceBuffers(reference);
+  }
+  
+  /**
+   * Initializes the {@link #referenceBufferInt} and {@link #referenceCLBuffer} based on
+   * the given reference image.
+   * @param reference The reference image to which the triangles image will be compared.
+   */
+  private void initializeReferenceBuffers(BufferedImage reference)
+  {
+    referenceWidth = reference.getWidth();
+    referenceHeight = reference.getHeight();
+    
+    if (reference.getType() != BufferedImage.TYPE_INT_RGB)
+    {
+      throw new IllegalArgumentException(ERROR_TYPE);
+    }
+    
+    referenceBufferInt = (DataBufferInt)reference.getRaster().getDataBuffer();
+    
+    this.elementCount = referenceBufferInt.getSize();
+    this.globalWorkSize = getBufferSize(elementCount);
+    this.localWorkSize = device.getMaxWorkGroupSize();
+    
+    referenceCLBuffer = context.createIntBuffer(globalWorkSize, Mem.READ_ONLY);
+    
+    referenceCLBuffer.getBuffer().put(referenceBufferInt.getData());
+    referenceCLBuffer.getBuffer().rewind();
   }
   
   /**
@@ -87,38 +125,31 @@ public class FitnessEvaluator
    * @param triangles The image containing the triangles to compare to the reference image.
    * @return AThe fitness of the triangles where lower is better. 
    */
-  public int differenceSumCL(BufferedImage reference, BufferedImage triangles)
+  public int differenceSumCL(BufferedImage triangles)
   {
-    int rWidth = reference.getWidth();
-    int rHeight = reference.getHeight();
-    int tWidth = triangles.getWidth();
-    int tHeight = triangles.getHeight();
-    if (tWidth != rWidth || tHeight != rHeight)
-    {
-      throw new IllegalArgumentException("Reference and triangle images must be the same size.");
-    }
+    CLBuffer<IntBuffer> trianglesCLBuffer;
+    DataBufferInt trtianglesBufferInt;
+
+    checkTriangleImageArgument(triangles);
     
-    int elementCount = tWidth * tHeight;
-    int globalWorkSize = (int)pow(2, ceil(log(elementCount)/log(2)));
-    int localWorkSize = min(device.getMaxWorkGroupSize(), globalWorkSize);
+    trtianglesBufferInt = (DataBufferInt)triangles.getRaster().getDataBuffer();
     
-    CLBuffer<IntBuffer> rBuf = context.createIntBuffer(globalWorkSize, Mem.READ_ONLY);
-    CLBuffer<IntBuffer> tBuf = context.createIntBuffer(globalWorkSize, Mem.READ_WRITE);
-    rBuf.getBuffer().put(((DataBufferInt)reference.getRaster().getDataBuffer()).getData());
-    tBuf.getBuffer().put(((DataBufferInt)triangles.getRaster().getDataBuffer()).getData());
-    rBuf.getBuffer().rewind();
-    tBuf.getBuffer().rewind();
+    trianglesCLBuffer = context.createIntBuffer(globalWorkSize, Mem.READ_WRITE);
+    trianglesCLBuffer.getBuffer().put(trtianglesBufferInt.getData());
+    trianglesCLBuffer.getBuffer().rewind();
     
-    kernel.setArgs(rBuf, tBuf).setArg(2, elementCount);
+    kernel.setArgs(referenceCLBuffer, trianglesCLBuffer).setArg(2, elementCount);
     
-    queue.putWriteBuffer(rBuf, false);
-    queue.putWriteBuffer(tBuf, false);
+    queue.putWriteBuffer(referenceCLBuffer, false);
+    queue.putWriteBuffer(trianglesCLBuffer, false);
     queue.put1DRangeKernel(kernel, 0, globalWorkSize, localWorkSize);
-    queue.putReadBuffer(tBuf, true);
+    queue.putReadBuffer(trianglesCLBuffer, true);
     
     int sum = 0;
-    IntBuffer differences = tBuf.getBuffer();
+    IntBuffer differences = trianglesCLBuffer.getBuffer();
     for (int i = 0; i < elementCount; i++) sum += differences.get();
+    
+    trianglesCLBuffer.release();
     
     return sum;
   }
@@ -128,26 +159,18 @@ public class FitnessEvaluator
    * of each pixel in two images.
    * @param reference The reference image against which the triangles will be compared.
    * @param triangles The image containing the triangles to compare to the reference image.
-   * @return AThe fitness of the triangles where lower is better. 
+   * @return The fitness of the triangles where lower is better. 
    */
-  public int differenceSum(BufferedImage reference, BufferedImage triangles)
+  public int differenceSum(BufferedImage triangles)
   {
-    int rWidth = reference.getWidth();
-    int rHeight = reference.getHeight();
-    int tWidth = triangles.getWidth();
-    int tHeight = triangles.getHeight();
-    if (tWidth != rWidth || tHeight != rHeight)
-    {
-      throw new IllegalArgumentException("Reference and triangle images must be the same size.");
-    }
+    checkTriangleImageArgument(triangles);
     
-    int elementCount = tWidth * tHeight;
+    DataBufferInt trianglesBufferInt = (DataBufferInt)triangles.getRaster().getDataBuffer();
     
-    DataBufferInt rBuf = (DataBufferInt)reference.getRaster().getDataBuffer();
-    DataBufferInt tBuf = (DataBufferInt)triangles.getRaster().getDataBuffer();
+    int elementCount = trianglesBufferInt.getSize();
     
-    int [] rRGB = rBuf.getData();
-    int [] tRGB = tBuf.getData();
+    int [] rRGB = referenceBufferInt.getData();
+    int [] tRGB = trianglesBufferInt.getData();
     
     int sum = 0;
     for (int i = 0; i < elementCount; i++)
@@ -155,7 +178,7 @@ public class FitnessEvaluator
       int rRGBVal = rRGB[i];
       int tRGBVal = tRGB[i];
       int rr = (rRGBVal >> 0x04) & 0xFF;
-      int rg = (rRGBVal >> 0x02) & 0xFF ;
+      int rg = (rRGBVal >> 0x02) & 0xFF;
       int rb = rRGBVal & 0xFF;
       int tr = (tRGBVal >> 0x04) & 0xFF;
       int tg = (tRGBVal >> 0x02) & 0xFF;
@@ -168,5 +191,39 @@ public class FitnessEvaluator
       sum += sqrt(dr2 + dg2 + db2);
     }
     return sum;
+  }
+  
+  /**
+   * Throws an IllegalArgumentException if one of the following is true about a given image:
+   * <li> The width and height are not {@link #referenceHeight} and
+   * {@link #referenceHeight} respectively.</li>
+   * <li> The image is not of type BufferedImage.TYPE_INT_RGB</li>
+   * @param triangles The image to check.
+   */
+  private void checkTriangleImageArgument(BufferedImage triangles)
+  {
+    int tWidth = triangles.getWidth();
+    int tHeight = triangles.getHeight();
+    
+    if (tWidth != referenceWidth || tHeight != referenceHeight)
+    {
+      throw new IllegalArgumentException(ERROR_SIZE);
+    }
+    if (triangles.getType() != BufferedImage.TYPE_INT_RGB)
+    {
+      throw new IllegalArgumentException(ERROR_TYPE);
+    }
+  }
+  
+  /**
+   * Returns a buffer size to use for the CLBuffers based on element count.
+   * @param elementCount The element count.
+   * @return A buffer size to use for the CLBuffers based on element count.
+   */
+  private int getBufferSize(int elementCount)
+  {
+    int mwSize = device.getMaxWorkGroupSize();
+    int wgs = mwSize / elementCount + 1; 
+    return wgs * elementCount;
   }
 }
