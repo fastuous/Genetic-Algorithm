@@ -42,17 +42,29 @@ public class HillClimbing
     
     BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
     
-    EvolveGenome evolution = (genome, triangle, dna, step) ->
+    EvolveGenome evolution = (genome) ->
     {
       Triangle tri = genome.getGenes().remove(randomTriangle.nextInt(Constants.TRIANGLE_COUNT));
       do
       {
         tri.dna[dnaSelection.nextInt(10)] += stepSize.nextInt(2);
       } while(!tri.isValidTriangle(tri));
+      
+      genome.addGene(tri);
       return genome;
     };
+    
     fitnessBefore = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
     
+    do{
+      genomeAfter = evolution.Evolve(genomeBefore);
+      drawPanel.setTriangles(genomeAfter.getGenes());
+      drawPanel.repaint();
+      drawPanelSnapshot = drawPanel.getSnapshot();
+      fitnessAfter = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
+      }while(fitnessAfter <= fitnessBefore);
+    
+    genomeBefore = genomeAfter;
     return genomeBefore;
   }
 }
