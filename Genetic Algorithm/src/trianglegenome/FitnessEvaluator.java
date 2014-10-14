@@ -108,9 +108,9 @@ public class FitnessEvaluator
     
     referenceBufferInt = (DataBufferInt)reference.getRaster().getDataBuffer();
     
-    this.elementCount = referenceBufferInt.getSize();
-    this.globalWorkSize = getBufferSize(elementCount);
-    this.localWorkSize = device.getMaxWorkGroupSize();
+    elementCount = referenceBufferInt.getSize();
+    globalWorkSize = getBufferSize(elementCount);
+    localWorkSize = device.getMaxWorkGroupSize();
     
     referenceCLBuffer = context.createIntBuffer(globalWorkSize, Mem.READ_ONLY);
     
