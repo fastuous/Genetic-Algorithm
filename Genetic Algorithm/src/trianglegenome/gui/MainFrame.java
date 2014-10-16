@@ -117,7 +117,7 @@ public class MainFrame extends javax.swing.JFrame
     imagePanel = new ImagePanel(512, 413);
     drawPanel = new DrawPanel(512, 413);
     triangleSlider = new javax.swing.JSlider(0, Constants.TRIANGLE_COUNT, Constants.TRIANGLE_COUNT);
-    triangleSlider.setValue(200);
+    triangleSlider.setValue(Constants.TRIANGLE_COUNT);
     tribeSlider = new javax.swing.JSlider();
     jTextField1 = new javax.swing.JTextField();
     controller.setDrawPanel(drawPanel);

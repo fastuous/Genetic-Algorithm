@@ -13,6 +13,7 @@ public class HillClimbing
   int successfulDNA;
   int successfulStepsize;
   int successfulMultiplier = 1;
+  Random plusOrMinus = new Random();
   Random stepSize = new Random();
   Random randomTriangle = new Random();
   Random dnaSelection = new Random();
@@ -20,50 +21,54 @@ public class HillClimbing
   Genome genomeAfter;
   ImagePanel imagePanel;
   DrawPanel drawPanel;
-  
   BufferedImage imagePanelSnapshot;
-  
   private FitnessEvaluator fitnessEvaluator;
-  
+
   public HillClimbing(Genome genome, ImagePanel imagePanel, DrawPanel drawPanel)
   {
     genomeBefore = genome;
     this.imagePanel = imagePanel;
     this.drawPanel = drawPanel;
-
     imagePanelSnapshot = imagePanel.getSnapshot();
     fitnessEvaluator = new FitnessEvaluator(imagePanelSnapshot);
   }
-  
+
   public Genome performEvolution()
   {
     drawPanel.setTriangles(genomeBefore.getGenes());
     drawPanel.repaint();
-    
     BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
-    
-    EvolveGenome evolution = (genome) ->
+    EvolveGenome evolution = (genome)->
     {
       Triangle tri = genome.getGenes().remove(randomTriangle.nextInt(Constants.TRIANGLE_COUNT));
       do
       {
-        tri.dna[dnaSelection.nextInt(10)] += stepSize.nextInt(2);
-      } while(!tri.isValidTriangle(tri));
-      
+        if (!successfulEvolution)
+        {
+          if (plusOrMinus.nextInt(100000) % 2 == 0)
+          {
+            tri.dna[dnaSelection.nextInt(10)] += successfulMultiplier * stepSize.nextInt(2);
+          }
+          else
+          {
+            tri.dna[dnaSelection.nextInt(10)] -= successfulMultiplier * stepSize.nextInt(2);
+          }
+        }
+      }
+      while (!tri.isValidTriangle(tri));
       genome.addGene(tri);
       return genome;
     };
-    
     fitnessBefore = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
-    
-    do{
+    do
+    {
       genomeAfter = evolution.Evolve(genomeBefore);
       drawPanel.setTriangles(genomeAfter.getGenes());
       drawPanel.repaint();
       drawPanelSnapshot = drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
-      }while(fitnessAfter <= fitnessBefore);
-    
+    }
+    while (fitnessAfter <= fitnessBefore);
     genomeBefore = genomeAfter;
     return genomeBefore;
   }
