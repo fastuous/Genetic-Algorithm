@@ -18,21 +18,21 @@ import trianglegenome.gui.DrawPanel;
  *  d.setTriangles(g.getGenes());
  *  d.repaint();
  *  
- *  GenomePanelPair p = new GenomePanelPair(g, d);
+ *  GenomeState s = new GenomeState(g, d);
  *  
  *  // Mutate the Genome g
  *  // p.genome is now mutated but p.previous is preserved.
  *  
- *  p.drawPanel.setTriangles(g.getGenes());
- *  p.drawPanel.repaint();
+ *  s.drawPanel.setTriangles(g.getGenes());
+ *  s.drawPanel.repaint();
  *  
  *  // Check if the mutation was good and if it was do the following:
- *  p.previous.copyFrom(p.genome);
+ *  s.previous.copyFrom(p.genome);
  *  
  * </pre></code>
  * @author collinsd
  */
-public class GenomePanelPair
+public class GenomeState
 {
   /** A Genome meant to keep track of the previous state.
    * Use {@link trianglegenome.Genome#clone() to set this initially. */
@@ -45,12 +45,12 @@ public class GenomePanelPair
   public DrawPanel drawPanel;
   
   /**
-   * Creates a new GenomePanelPair where {@link GenomePanelPair#previous}
-   * is a deep copy of {@link GenomePanelPair#genome}.
+   * Creates a new GenomePanelPair where {@link GenomeState#previous}
+   * is a deep copy of {@link GenomeState#genome}.
    * @param genome The Genome in the Genome/DrawPanel mapping.
    * @param drawPanel The DrawPanel in the Genome/DrawPanel mapping. 
    */
-  public GenomePanelPair(Genome genome, DrawPanel drawPanel)
+  public GenomeState(Genome genome, DrawPanel drawPanel)
   {
     this.genome = genome;
     this.previous = genome.clone();
@@ -60,12 +60,12 @@ public class GenomePanelPair
   /**
    * Given two lists of equal length, one of {@link trianglegenome.Genome} objects and the
    * other of {@link trianglegenome.gui.DrawPanel} objects, create a list of
-   * {@link trianglegenome.GenomePanelPair} objects.
+   * {@link trianglegenome.GenomeState} objects.
    * @param genomes The Genome objects to zip.
    * @param drawPanels The DrawPanel objects to zip.
    * @return A list of Genomes and DrawPanels zipped together into a list of GenomePanelPairs.
    */
-  static List<GenomePanelPair> zip(List<Genome> genomes, List<DrawPanel> drawPanels)
+  static List<GenomeState> zip(List<Genome> genomes, List<DrawPanel> drawPanels)
   {
     if (genomes.size() != drawPanels.size())
     {
@@ -74,11 +74,11 @@ public class GenomePanelPair
     
     Iterator<Genome> genomeIt = genomes.iterator();
     Iterator<DrawPanel> drawPanelIt = drawPanels.iterator();
-    List<GenomePanelPair> zipped = new ArrayList<GenomePanelPair>(genomes.size());
+    List<GenomeState> zipped = new ArrayList<GenomeState>(genomes.size());
     
     while (genomeIt.hasNext())
     {
-      zipped.add(new GenomePanelPair(genomeIt.next(), drawPanelIt.next()));
+      zipped.add(new GenomeState(genomeIt.next(), drawPanelIt.next()));
     }
     return zipped;
   }
