@@ -176,7 +176,7 @@ public class Genome implements Cloneable
    * from a different Genome into this Genome's genes. 
    * @param other The other Genome from which to copy the genes.
    */
-  private void copyFrom(Genome other)
+  public void copyFrom(Genome other)
   {
     this.genes.clear();
     other.genes.forEach(t -> this.addGene(t.clone()));
