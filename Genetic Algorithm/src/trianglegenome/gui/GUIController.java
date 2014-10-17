@@ -42,7 +42,7 @@ public class GUIController
 
   public void next()
   {
-    Genome genome = RandomGenome.generateGenome();
+    Genome genome = SeedGenome.generateSeed(imagePanel.getSnapshot());
     drawPanel.setTriangles(genome.getGenes());
     drawPanel.repaint();
     
