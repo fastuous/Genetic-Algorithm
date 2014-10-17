@@ -13,25 +13,29 @@ public class HillClimbing extends Thread
   int successfulDNA = Constants.rand.nextInt(10);
   int successfulStepsize;
   int successfulMultiplier = 1;
-  Genome genomeBefore;
-  Genome genomeAfter;
   ImagePanel imagePanel;
   DrawPanel drawPanel;
   BufferedImage imagePanelSnapshot;
   private FitnessEvaluator fitnessEvaluator;
+  private List<GenomeState> genomeStates;
 
-  public HillClimbing(Genome genome, ImagePanel imagePanel, DrawPanel drawPanel)
+  public HillClimbing(List<GenomeState> genomeStates, ImagePanel imagePanel)
   {
-    genomeBefore = genome;
     this.imagePanel = imagePanel;
-    this.drawPanel = drawPanel;
     imagePanelSnapshot = imagePanel.getSnapshot();
     fitnessEvaluator = new FitnessEvaluator(imagePanelSnapshot);
+    this.genomeStates = genomeStates;
+  }
+  
+  @Override
+  public void run()
+  {
+    // performEvolution on all genomeStates
   }
 
-  public Genome performEvolution()
+  public void performEvolution(GenomeState genomeState)
   {
-    drawPanel.setTriangles(genomeBefore.getGenes());
+    drawPanel.setTriangles(genomeState.previous.getGenes());
     drawPanel.repaint();
     BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
     EvolveGenome evolution = (genome)->
@@ -61,8 +65,8 @@ public class HillClimbing extends Thread
     fitnessBefore = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
     do
     {
-      genomeAfter = evolution.Evolve(genomeBefore);
-      drawPanel.setTriangles(genomeAfter.getGenes());
+      evolution.Evolve(genomeState.genome);
+      drawPanel.setTriangles(genomeState.genome.getGenes());
       drawPanel.repaint();
       drawPanelSnapshot = drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
@@ -74,7 +78,6 @@ public class HillClimbing extends Thread
     }
     while (fitnessAfter <= fitnessBefore);
     successfulMultiplier += .5;
-    genomeBefore = genomeAfter;
-    return genomeBefore;
+    genomeState.previous.copyFrom(genomeState.genome);
   }
 }
