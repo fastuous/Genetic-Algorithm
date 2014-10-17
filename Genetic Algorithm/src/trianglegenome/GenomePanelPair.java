@@ -20,8 +20,6 @@ import trianglegenome.gui.DrawPanel;
  *  
  *  GenomePanelPair p = new GenomePanelPair(g, d);
  *  
- *  p.previous = g.clone();
- *  
  *  // Mutate the Genome g
  *  // p.genome is now mutated but p.previous is preserved.
  *  
@@ -47,15 +45,15 @@ public class GenomePanelPair
   public DrawPanel drawPanel;
   
   /**
-   * Creates a new GenomePanelPair where {@link GenomePanelPair#previous} and
-   * {@link GenomePanelPair#genome} both point to the given Genome.
+   * Creates a new GenomePanelPair where {@link GenomePanelPair#previous}
+   * is a deep copy of {@link GenomePanelPair#genome}.
    * @param genome The Genome in the Genome/DrawPanel mapping.
    * @param drawPanel The DrawPanel in the Genome/DrawPanel mapping. 
    */
   public GenomePanelPair(Genome genome, DrawPanel drawPanel)
   {
     this.genome = genome;
-    this.previous = genome;
+    this.previous = genome.clone();
     this.drawPanel = drawPanel;
   }
   
