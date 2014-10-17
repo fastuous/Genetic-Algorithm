@@ -5,18 +5,14 @@ import java.util.*;
 import trianglegenome.gui.*;
 import trianglegenome.util.Constants;
 
-public class HillClimbing
+public class HillClimbing extends Thread
 {
   int fitnessBefore = 0;
   int fitnessAfter = 0;
   boolean successfulEvolution = false;
-  int successfulDNA;
+  int successfulDNA = Constants.rand.nextInt(10);
   int successfulStepsize;
   int successfulMultiplier = 1;
-  Random plusOrMinus = new Random();
-  Random stepSize = new Random();
-  Random randomTriangle = new Random();
-  Random dnaSelection = new Random();
   Genome genomeBefore;
   Genome genomeAfter;
   ImagePanel imagePanel;
@@ -40,23 +36,26 @@ public class HillClimbing
     BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
     EvolveGenome evolution = (genome)->
     {
-      Triangle tri = genome.getGenes().remove(randomTriangle.nextInt(Constants.TRIANGLE_COUNT));
+      List<Triangle> genes = genome.getGenes();
+      Triangle tri = genes.get(Constants.rand.nextInt(Constants.TRIANGLE_COUNT));
+      
+      int location = genes.indexOf(tri);
       do
       {
         if (!successfulEvolution)
         {
-          if (plusOrMinus.nextInt(100000) % 2 == 0)
+          if (Constants.rand.nextInt(100000) % 2 == 0)
           {
-            tri.dna[dnaSelection.nextInt(10)] += successfulMultiplier * stepSize.nextInt(2);
+            tri.dna[successfulDNA] += successfulMultiplier * (Constants.rand.nextInt(2) + 1);
           }
           else
           {
-            tri.dna[dnaSelection.nextInt(10)] -= successfulMultiplier * stepSize.nextInt(2);
+            tri.dna[successfulDNA] -= successfulMultiplier * (Constants.rand.nextInt(2) + 1);
           }
         }
       }
       while (!tri.isValidTriangle(tri));
-      genome.addGene(tri);
+      genes.set(location, tri);
       return genome;
     };
     fitnessBefore = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
@@ -67,8 +66,14 @@ public class HillClimbing
       drawPanel.repaint();
       drawPanelSnapshot = drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
+      if(fitnessAfter <= fitnessBefore)
+      {
+        successfulMultiplier = 1;
+        successfulDNA = Constants.rand.nextInt(10);
+      }
     }
     while (fitnessAfter <= fitnessBefore);
+    successfulMultiplier += .5;
     genomeBefore = genomeAfter;
     return genomeBefore;
   }
