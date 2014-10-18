@@ -36,7 +36,6 @@ public class GenomeState
 {
   /** A Genome meant to keep track of the previous state.
    * Use {@link trianglegenome.Genome#clone() to set this initially. */
-  public Genome previous;
   
   /** The {@link trianglegenome.Genome} in the genome to draw panel mapping */
   public Genome genome;
@@ -53,7 +52,6 @@ public class GenomeState
   public GenomeState(Genome genome, DrawPanel drawPanel)
   {
     this.genome = genome;
-    this.previous = genome.clone();
     this.drawPanel = drawPanel;
   }
   
