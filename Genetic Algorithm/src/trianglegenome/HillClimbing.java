@@ -1,30 +1,28 @@
 package trianglegenome;
 
 import java.awt.image.BufferedImage;
-import java.util.*;
-import trianglegenome.gui.*;
+import java.util.List;
+
+import trianglegenome.gui.DrawPanel;
 import trianglegenome.util.Constants;
 
 public class HillClimbing extends Thread
 {
-  int fitnessBefore = 0;
-  int fitnessAfter = 0;
-  boolean successfulEvolution = false;
-  int successfulDNA = Constants.rand.nextInt(10);
-  int successfulStepsize;
-  int successfulMultiplier = 1;
-  ImagePanel imagePanel;
-  DrawPanel drawPanel;
-  BufferedImage imagePanelSnapshot;
+  private int fitnessBefore = 0;
+  private int fitnessAfter = 0;
+  private boolean successfulEvolution = false;
+  private int successfulDNA = Constants.rand.nextInt(10);
+  private int successfulMultiplier = 1;
+  private DrawPanel drawPanel;
+  private BufferedImage targetImage;
   private FitnessEvaluator fitnessEvaluator;
   private List<GenomeState> genomeStates;
   private boolean paused = false;
 
-  public HillClimbing(List<GenomeState> genomeStates, ImagePanel imagePanel)
+  public HillClimbing(List<GenomeState> genomeStates, BufferedImage target)
   {
-    this.imagePanel = imagePanel;
-    imagePanelSnapshot = imagePanel.getSnapshot();
-    fitnessEvaluator = new FitnessEvaluator(imagePanelSnapshot);
+    targetImage = target;
+    fitnessEvaluator = new FitnessEvaluator(targetImage);
     this.genomeStates = genomeStates;
   }
 
@@ -111,13 +109,13 @@ public class HillClimbing extends Thread
       drawPanel.repaint();
       drawPanelSnapshot = drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
-      if (fitnessAfter <= fitnessBefore)
+      if (fitnessAfter >= fitnessBefore)
       {
         successfulMultiplier = 1;
         successfulDNA = Constants.rand.nextInt(10);
       }
     }
-    while (fitnessAfter <= fitnessBefore);
+    while (fitnessAfter >= fitnessBefore);
     successfulMultiplier += .5;
     genomeState.previous.copyFrom(genomeState.genome);
   }

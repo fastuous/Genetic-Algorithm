@@ -1,23 +1,32 @@
-package trianglegenome.gui;
+package trianglegenome;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
-import trianglegenome.Genome;
-import trianglegenome.Triangle;
 import trianglegenome.util.Constants;
 
 /**
+ * A class that generates a good candidate for a seed genome, given a buffered image of the target.
+ * It does this by finding the average color of nine subsections of the image, then from those nine
+ * colors, averaging together the colors that correspond roughly to the areas of triangles that take
+ * up the top, left, right, and bottom of an image. We construct Triangle objects using those
+ * colors, then add them to the base layer of the genome. The rest of the triangles are randomly
+ * generated, with their opacity restricted so as to get more color-interaction between overlapping
+ * triangles.
+ * 
  * @author Truman DeYoung
  */
 public class SeedGenome
 {
+  /**
+   * Generate a genome based on a given target image. The genome is generated in accordance with the
+   * procedure outlined in the class comments.
+   * 
+   * @param image The target image.
+   * @return A genome to seed evolution.
+   */
   public static Genome generateSeed(BufferedImage image)
   {
     Image scaledImage = image.getScaledInstance(3, 3, Image.SCALE_AREA_AVERAGING);
@@ -29,7 +38,7 @@ public class SeedGenome
     Graphics g = newImage.getGraphics();
     g.drawImage(scaledImage, 0, 0, null);
     g.dispose();
-    
+
     int topLeftColor = newImage.getRGB(0, 0);
     int topColor = newImage.getRGB(1, 0);
     int topRightColor = newImage.getRGB(2, 0);
@@ -39,33 +48,35 @@ public class SeedGenome
     int bottomLeftColor = newImage.getRGB(0, 2);
     int bottomColor = newImage.getRGB(1, 2);
     int bottomRightColor = newImage.getRGB(2, 2);
-   
-    
+
     Color topTriangleColor = averageColors(topLeftColor, topColor, topRightColor, middleColor);
     Color leftTriangleColor = averageColors(topLeftColor, leftColor, middleColor, bottomLeftColor);
     Color rightTriangleColor = averageColors(topRightColor, middleColor, rightColor, bottomRightColor);
     Color bottomTriangleColor = averageColors(middleColor, bottomLeftColor, bottomColor, bottomRightColor);
-    
+
     int leftX = 0;
     int rightX = image.getWidth() - 1;
     int midX = image.getWidth() / 2;
-    
+
     int topY = 0;
     int bottomY = image.getHeight() - 1;
     int midY = image.getHeight() / 2;
-    
-    
-    Triangle topTriangle = new Triangle(leftX, rightX, midX, topY, topY, midY, topTriangleColor.getRed(), topTriangleColor.getGreen(), topTriangleColor.getBlue(), 255);
-    Triangle leftTriangle = new Triangle(leftX, midX, leftX, topY, midY, bottomY, leftTriangleColor.getRed(), leftTriangleColor.getGreen(), leftTriangleColor.getBlue(), 255);
-    Triangle rightTriangle = new Triangle(rightX, midX, rightX, topY, midY, bottomY, rightTriangleColor.getRed(), rightTriangleColor.getGreen(), rightTriangleColor.getBlue(), 255);
-    Triangle bottomTriangle = new Triangle(leftX, midX, rightX, bottomY, midY, bottomY, bottomTriangleColor.getRed(), bottomTriangleColor.getGreen(), bottomTriangleColor.getBlue(), 255);
-    
+
+    Triangle topTriangle = new Triangle(leftX, rightX, midX, topY, topY, midY, topTriangleColor.getRed(),
+        topTriangleColor.getGreen(), topTriangleColor.getBlue(), 255);
+    Triangle leftTriangle = new Triangle(leftX, midX, leftX, topY, midY, bottomY, leftTriangleColor.getRed(),
+        leftTriangleColor.getGreen(), leftTriangleColor.getBlue(), 255);
+    Triangle rightTriangle = new Triangle(rightX, midX, rightX, topY, midY, bottomY, rightTriangleColor.getRed(),
+        rightTriangleColor.getGreen(), rightTriangleColor.getBlue(), 255);
+    Triangle bottomTriangle = new Triangle(leftX, midX, rightX, bottomY, midY, bottomY, bottomTriangleColor.getRed(),
+        bottomTriangleColor.getGreen(), bottomTriangleColor.getBlue(), 255);
+
     Genome seed = new Genome();
     seed.addGene(topTriangle);
     seed.addGene(leftTriangle);
     seed.addGene(rightTriangle);
     seed.addGene(bottomTriangle);
-    
+
     for (int i = 0; i < Constants.TRIANGLE_COUNT - 4; i++)
     {
       int xPoints[] = new int[3];
@@ -85,22 +96,28 @@ public class SeedGenome
       {
         rgba[j] = Constants.rand.nextInt(Constants.MAX_RGBA);
       }
-      
+
       rgba[3] = Constants.rand.nextInt(100);
 
       Triangle gene = new Triangle(xPoints, yPoints, rgba);
       seed.addGene(gene);
     }
-    
+
     return seed;
   }
-  
-  private static Color averageColors(int ... colors)
+
+  /**
+   * Takes the average of any number of given int-colors. Returns a completely opaque color.
+   * 
+   * @param colors The colors to average together.
+   * @return An opaque color of the average.
+   */
+  private static Color averageColors(int... colors)
   {
     int red = 0;
     int green = 0;
     int blue = 0;
-    
+
     for (int color : colors)
     {
       Color c = new Color(color);
@@ -108,7 +125,7 @@ public class SeedGenome
       green += c.getGreen();
       blue += c.getBlue();
     }
-    
+
     return new Color(red / colors.length, green / colors.length, blue / colors.length);
   }
 }

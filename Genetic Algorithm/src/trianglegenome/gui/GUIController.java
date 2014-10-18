@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 import trianglegenome.FitnessEvaluator;
 import trianglegenome.Genome;
 import trianglegenome.RandomGenome;
+import trianglegenome.SeedGenome;
 
 /**
  * A simple class to test the functionality of our GUI, may evolve into view-controller
@@ -22,10 +23,11 @@ public class GUIController
   private DrawPanel drawPanel;
   private ImagePanel imagePanel;
   private static MainFrame mainFrame;
+  public boolean imageChanged = false;
   
   private FitnessEvaluator fitnessEvaluator = null;
 
-  public void pause()
+  public void toggleRunning()
   {
     System.out.print("Pause button clicked.");
     if (!isPaused)
@@ -49,7 +51,7 @@ public class GUIController
     BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
     BufferedImage imagePanelSnapshot = imagePanel.getSnapshot();
     
-    if (fitnessEvaluator == null) fitnessEvaluator = new FitnessEvaluator(imagePanelSnapshot);
+    fitnessEvaluator = new FitnessEvaluator(imagePanelSnapshot);
     
     long time1 = System.currentTimeMillis();
     int fitness1 = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
@@ -73,9 +75,7 @@ public class GUIController
 
   public void reset()
   {
-    System.out.print("Reset button clicked.");
-    if (!isPaused) System.out.print(" **WARNING: PROGRAM IS NOT PAUSED**");
-    System.out.println();
+    
   }
 
   public void genomeTable()
@@ -129,11 +129,14 @@ public class GUIController
   
   public static void main(String[] args)
   {
+    
+    
     SwingUtilities.invokeLater(new Runnable() {
 
       public void run()
       {
         GUIController controller = new GUIController();
+        controller.reset();
         mainFrame = new MainFrame(controller);
         mainFrame.setVisible(true);
       }

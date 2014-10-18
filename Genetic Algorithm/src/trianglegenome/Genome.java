@@ -17,6 +17,8 @@ public class Genome implements Cloneable
 {
   private List<Triangle> genes = new LinkedList<>();
   
+  private long fitness;
+  
   public Genome()
   {
   }
@@ -218,6 +220,11 @@ public class Genome implements Cloneable
       return isEqual;
     }
     else return false;
+  }
+  
+  public long getFitness()
+  {
+    return this.fitness;
   }
   
   /**
