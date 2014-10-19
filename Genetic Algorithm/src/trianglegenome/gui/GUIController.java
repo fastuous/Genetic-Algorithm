@@ -58,7 +58,7 @@ public class GUIController
     time1 = System.currentTimeMillis() - time1;
 
     long time2 = System.currentTimeMillis();
-    int fitness2 = fitnessEvaluator.differenceSum(drawPanelSnapshot);
+    int fitness2 = fitnessEvaluator.differenceSumJava(drawPanelSnapshot);
     time2 = System.currentTimeMillis() - time2;
 
     System.out.println("OpenCL Fitness : " + fitness1);
