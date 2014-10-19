@@ -101,14 +101,14 @@ public class HillClimbing extends Thread
     drawPanel.setTriangles(genomeState.previous.getGenes());
     drawPanel.repaint();
     BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
-    fitnessBefore = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
+    fitnessBefore = fitnessEvaluator.differenceSum(drawPanelSnapshot);
     do
     {
       evolve(genomeState.genome);
       drawPanel.setTriangles(genomeState.genome.getGenes());
       drawPanel.repaint();
       drawPanelSnapshot = drawPanel.getSnapshot();
-      fitnessAfter = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
+      fitnessAfter = fitnessEvaluator.differenceSum(drawPanelSnapshot);
       if (fitnessAfter >= fitnessBefore)
       {
         successfulMultiplier = 1;
