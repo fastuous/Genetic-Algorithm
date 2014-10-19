@@ -93,14 +93,14 @@ public class GenomeCrossover
       }
       else Genome.doublePointCrossoverInPlace(p1, p2, genomeLength, genomeLength * 2);
       
-      if (USE_LOCK)
-      {
-        alreadyCrossed.add(parentIndex1);
-        alreadyCrossed.add(parentIndex2);
-      }
+      alreadyCrossed.add(parentIndex1);
+      alreadyCrossed.add(parentIndex2);
     }
-    
-    crossoverLock.unlock();
-    crossoverLock.notify();
+
+    if (USE_LOCK)
+    {
+      crossoverLock.unlock();
+      crossoverLock.notify();
+    }
   }
 }
