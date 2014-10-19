@@ -85,7 +85,7 @@ public class Genome implements Cloneable
    * @param start The starting point of the swap (inclusive).
    * @param end The ending point of the swap (inclusive).
    */
-  public static void doublePointCrossOver(
+  public static void doublePointCrossover(
       Genome parent1, Genome parent2,
       Genome child1, Genome child2,
       int start, int end)
@@ -104,7 +104,7 @@ public class Genome implements Cloneable
    * @param child2 The second child, to which the data will be overwritten.
    * @param start The start point of the swap (inclusive).
    */
-  public static void singlePointCrossOver(
+  public static void singlePointCrossover(
       Genome parent1, Genome parent2,
       Genome child1, Genome child2,
       int start)
