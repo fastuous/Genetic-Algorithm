@@ -44,7 +44,7 @@ public class GenomeCrossover
   /**
    * Given a number of times to cross over and a list of genomes, perform some crossovers.
    * This method assumes that the given genomes list is sorted where genomes toward the
-   * begenning should be more likely to be parents of the crossover.
+   * beginning should be more likely to be parents of the crossover.
    * Note that if {{@value #crossoverLock} is already locked, this method will throw
    * an {@link IllegalStateException}.
    * @param crossoverCount The number of times to perform a crossover.
