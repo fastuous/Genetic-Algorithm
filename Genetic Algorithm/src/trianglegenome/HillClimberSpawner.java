@@ -42,11 +42,11 @@ public class HillClimberSpawner
     {
       DrawPanel drawPanel = new DrawPanel(Constants.width, Constants.height);
 
-      List<GenomeState> threadGenomes = genomes
+      List<GenomeDrawPanelPair> threadGenomes = genomes
           .stream()
           .skip(i * genomesPerThread)
           .limit(genomesPerThread)
-          .map(g -> new GenomeState(g, drawPanel))
+          .map(g -> new GenomeDrawPanelPair(g, drawPanel))
           .collect(Collectors.toList());
 
       HillClimbing hillClimbingThread = new HillClimbing(threadGenomes, target);
