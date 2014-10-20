@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.embed.swing.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trianglegenome.MainController">
+   <children>
+      <HBox prefHeight="450.0" prefWidth="1100.0" AnchorPane.bottomAnchor="149.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Pane fx:id="drawPanelContainer" prefHeight="413.0" prefWidth="512.0" />
+            <Separator HBox.hgrow="ALWAYS" />
+            <Pane fx:id="imagePanelContainer" prefHeight="413.0" prefWidth="512.0" />
+         </children>
+      </HBox>
+      <Button layoutX="319.0" layoutY="508.0" mnemonicParsing="false" onAction="#test" text="Button" />
+   </children>
+</AnchorPane>
