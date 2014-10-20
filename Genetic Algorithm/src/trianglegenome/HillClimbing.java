@@ -23,10 +23,10 @@ public class HillClimbing extends Thread
   private BufferedImage targetImage;
 
   private FitnessEvaluator fitnessEvaluator;
-  private List<GenomeState> genomeStates;
+  private List<GenomeDrawPanelPair> genomeStates;
   private boolean paused = false;
 
-  public HillClimbing(List<GenomeState> genomeStates, BufferedImage target)
+  public HillClimbing(List<GenomeDrawPanelPair> genomeStates, BufferedImage target)
   {
     targetImage = target;
     fitnessEvaluator = new FitnessEvaluator(targetImage);
@@ -41,7 +41,7 @@ public class HillClimbing extends Thread
     {
       if (!this.paused)
       {
-        for (GenomeState state : genomeStates)
+        for (GenomeDrawPanelPair state : genomeStates)
         {
           performEvolution(state);
         }
@@ -119,7 +119,7 @@ public class HillClimbing extends Thread
     genes.set(location, tri);
   }
   
-  public void performEvolution(GenomeState genomeState)
+  public void performEvolution(GenomeDrawPanelPair genomeState)
   {
     drawPanel.setTriangles(genomeState.genome.getGenes());
     drawPanel.repaint();
