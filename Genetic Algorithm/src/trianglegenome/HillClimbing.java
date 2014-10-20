@@ -121,16 +121,16 @@ public class HillClimbing extends Thread
   
   public void performEvolution(GenomeDrawPanelPair genomeState)
   {
-    drawPanel.setTriangles(genomeState.genome.getGenes());
-    drawPanel.repaint();
-    BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
+    genomeState.drawPanel.setTriangles(genomeState.genome.getGenes());
+    genomeState.drawPanel.repaint();
+    BufferedImage drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
     fitnessBefore = fitnessEvaluator.differenceSum(drawPanelSnapshot);
     do
     {
       evolve(genomeState.genome);
-      drawPanel.setTriangles(genomeState.genome.getGenes());
-      drawPanel.repaint();
-      drawPanelSnapshot = drawPanel.getSnapshot();
+      genomeState.drawPanel.setTriangles(genomeState.genome.getGenes());
+      genomeState.drawPanel.repaint();
+      drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSum(drawPanelSnapshot);
       if (fitnessAfter >= fitnessBefore)
       {
