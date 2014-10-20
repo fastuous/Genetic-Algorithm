@@ -41,32 +41,11 @@ public class ImagePanel extends JPanel
    * 
    * @param fileName
    */
-  public void selectImage(String fileName)
+  public void updateImage()
   {
-    if (!Arrays.asList(Constants.IMAGE_FILES).contains(fileName))
-    {
-      System.err.println("ERROR: Invalid image selection.");
-      return;
-    }
-
-    try
-    {
-      BufferedImage targetImage =
-          ImageIO.read(ImagePanel.class.getResourceAsStream("/images/" + fileName));
-      
-      this.targetImage =
-          new BufferedImage(
-              targetImage.getWidth(), targetImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-     
-      this.targetImage.getGraphics().drawImage(targetImage, 0, 0, null);
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
+    targetImage = Constants.IMAGES[Constants.selectedImage];
     
-    Constants.width = targetImage.getWidth();
-    Constants.height = targetImage.getHeight();
+    super.setSize(targetImage.getWidth(), targetImage.getHeight());
     
     this.repaint();
   }

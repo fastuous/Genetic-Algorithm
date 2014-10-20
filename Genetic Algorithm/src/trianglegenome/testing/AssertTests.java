@@ -173,7 +173,7 @@ public class AssertTests
     // Second test case: random point in genome (12), using our method to crossover
     // NOTE our method changes the dna contained in the children passed to it and leaves the parents
     // unchanged
-    Genome.singlePointCrossOver(parent1, parent2, child1, child2, 12);
+    Genome.singlePointCrossover(parent1, parent2, child1, child2, 12);
     
     assert isSinglePointCrossover(parent1, parent2, child1, child2);
 
@@ -195,7 +195,7 @@ public class AssertTests
     assert child1 != child2;
 
     // Third test case: crossover after first dna
-    Genome.singlePointCrossOver(parent1, parent2, child1, child2, 1);
+    Genome.singlePointCrossover(parent1, parent2, child1, child2, 1);
 
     assert isSinglePointCrossover(parent1, parent2, child1, child2);
 
@@ -209,7 +209,7 @@ public class AssertTests
     assert child1 != child2;
 
     // Fourth test case: last dna in genome sequence
-    Genome.singlePointCrossOver(parent1, parent2, child1, child2, 29);
+    Genome.singlePointCrossover(parent1, parent2, child1, child2, 29);
 
     assert isSinglePointCrossover(parent1, parent2, child1, child2);
 

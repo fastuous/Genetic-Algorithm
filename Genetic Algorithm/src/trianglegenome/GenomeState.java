@@ -1,9 +1,5 @@
 package trianglegenome;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import trianglegenome.gui.DrawPanel;
 
 /**
@@ -53,31 +49,5 @@ public class GenomeState
   {
     this.genome = genome;
     this.drawPanel = drawPanel;
-  }
-  
-  /**
-   * Given two lists of equal length, one of {@link trianglegenome.Genome} objects and the
-   * other of {@link trianglegenome.gui.DrawPanel} objects, create a list of
-   * {@link trianglegenome.GenomeState} objects.
-   * @param genomes The Genome objects to zip.
-   * @param drawPanels The DrawPanel objects to zip.
-   * @return A list of Genomes and DrawPanels zipped together into a list of GenomePanelPairs.
-   */
-  static List<GenomeState> zip(List<Genome> genomes, List<DrawPanel> drawPanels)
-  {
-    if (genomes.size() != drawPanels.size())
-    {
-      throw new IllegalArgumentException("The genomes and drawPanels lists must be the same size");
-    }
-    
-    Iterator<Genome> genomeIt = genomes.iterator();
-    Iterator<DrawPanel> drawPanelIt = drawPanels.iterator();
-    List<GenomeState> zipped = new ArrayList<GenomeState>(genomes.size());
-    
-    while (genomeIt.hasNext())
-    {
-      zipped.add(new GenomeState(genomeIt.next(), drawPanelIt.next()));
-    }
-    return zipped;
   }
 }

@@ -1,8 +1,9 @@
 package trianglegenome;
 
 import java.awt.image.BufferedImage;
-import java.util.*;
-import trianglegenome.gui.*;
+import java.util.List;
+import trianglegenome.gui.DrawPanel;
+import trianglegenome.gui.ImagePanel;
 import trianglegenome.util.Constants;
 
 public class HillClimbing extends Thread
@@ -19,15 +20,16 @@ public class HillClimbing extends Thread
   ImagePanel imagePanel;
   DrawPanel drawPanel;
   BufferedImage imagePanelSnapshot;
+  private BufferedImage targetImage;
+
   private FitnessEvaluator fitnessEvaluator;
   private List<GenomeState> genomeStates;
   private boolean paused = false;
 
-  public HillClimbing(List<GenomeState> genomeStates, ImagePanel imagePanel)
+  public HillClimbing(List<GenomeState> genomeStates, BufferedImage target)
   {
-    this.imagePanel = imagePanel;
-    imagePanelSnapshot = imagePanel.getSnapshot();
-    fitnessEvaluator = new FitnessEvaluator(imagePanelSnapshot);
+    targetImage = target;
+    fitnessEvaluator = new FitnessEvaluator(targetImage);
     this.genomeStates = genomeStates;
   }
 
@@ -122,22 +124,22 @@ public class HillClimbing extends Thread
     drawPanel.setTriangles(genomeState.genome.getGenes());
     drawPanel.repaint();
     BufferedImage drawPanelSnapshot = drawPanel.getSnapshot();
-    fitnessBefore = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
+    fitnessBefore = fitnessEvaluator.differenceSum(drawPanelSnapshot);
     do
     {
       evolve(genomeState.genome);
       drawPanel.setTriangles(genomeState.genome.getGenes());
       drawPanel.repaint();
       drawPanelSnapshot = drawPanel.getSnapshot();
-      fitnessAfter = fitnessEvaluator.differenceSumCL(drawPanelSnapshot);
-      if (fitnessAfter <= fitnessBefore)
+      fitnessAfter = fitnessEvaluator.differenceSum(drawPanelSnapshot);
+      if (fitnessAfter >= fitnessBefore)
       {
         devolve(genomeState.genome);
         successfulMultiplier = 1;
         successfulDNA = Constants.rand.nextInt(10);
       }
     }
-    while (fitnessAfter <= fitnessBefore);
+    while (fitnessAfter >= fitnessBefore);
     successfulMultiplier += .5;
   }
 }

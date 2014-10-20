@@ -122,7 +122,10 @@ public class MainFrame extends javax.swing.JFrame
     jTextField1 = new javax.swing.JTextField();
     controller.setDrawPanel(drawPanel);
     controller.setImagePanel(imagePanel);
-    imagePanel.selectImage("mona-lisa-cropped-512x413.png");
+    Constants.selectedImage = 0;
+    Constants.width = Constants.IMAGES[Constants.selectedImage].getWidth();
+    Constants.height = Constants.IMAGES[Constants.selectedImage].getHeight();
+    imagePanel.updateImage();
     drawPanel.setTriangleDrawLimit(200);
     
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -147,7 +150,7 @@ public class MainFrame extends javax.swing.JFrame
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
           
-        controller.pause();
+        controller.toggleRunning();
 
         if(controller.isPaused)
         {
@@ -183,9 +186,12 @@ public class MainFrame extends javax.swing.JFrame
     
     comboSelectImage.setModel(new javax.swing.DefaultComboBoxModel<String>(Constants.IMAGE_FILES));
     comboSelectImage.addActionListener(e -> {
-      imagePanel.selectImage(comboSelectImage.getSelectedItem().toString());
-      imagePanel.setSize(Constants.width,Constants.height);
-      drawPanel.setSize(Constants.width,Constants.height);
+      Constants.selectedImage = comboSelectImage.getSelectedIndex();
+      Constants.width = Constants.IMAGES[Constants.selectedImage].getWidth();
+      Constants.height = Constants.IMAGES[Constants.selectedImage].getHeight();
+      controller.reset();
+      imagePanel.updateImage();
+      drawPanel = new DrawPanel(Constants.width, Constants.height);
       controller.setDrawPanel(drawPanel);
       controller.setImagePanel(imagePanel);
       }

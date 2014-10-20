@@ -1,7 +1,12 @@
 package trianglegenome.util;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 /**
  * Centralized place to keep hard-coded variables. Like in AntWorld
@@ -26,6 +31,33 @@ public class Constants
     }
 
   }
+  
+  public static final BufferedImage[] IMAGES;
+  static
+  {
+    IMAGES = new BufferedImage[IMAGE_FILES.length];
+    
+    for (int i = 0; i < IMAGES.length; i++)
+    {
+      try
+      {
+        BufferedImage image = ImageIO.read(new File("src/images/" + IMAGE_FILES[i]));
+        IMAGES[i] = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+        Graphics g = IMAGES[i].getGraphics();
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+  
+  public static int selectedImage;
+  
+  public static boolean useOpenCL = true;
+  
   public static final int TRIANGLE_COUNT = 200;
 
   public static final int MAX_RGBA = 255;

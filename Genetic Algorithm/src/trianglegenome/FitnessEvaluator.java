@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.nio.IntBuffer;
 
+import trianglegenome.util.Constants;
+
 import com.jogamp.opencl.CLBuffer;
 import com.jogamp.opencl.CLCommandQueue;
 import com.jogamp.opencl.CLContext;
@@ -33,13 +35,17 @@ import static com.jogamp.opencl.CLMemory.Mem;
  *  
  *  // draw triangles in p1
  *  
- *  // Get fitness with java methods
- *  int f1 = f.differenceSum(p1.getSnapshot());
+ *  // Get fitness with Java method
+ *  int f1 = f.differenceSumJava(p1.getSnapshot());
  *  
  *  // Get fitness with OpenCL kernel
  *  int f2 = f.differenceSumCL(p1.getSnapshot());
  *  
+ *  // Preferrable way
+ *  int f3 = f.differenceSum(p1.getSnapshot());
+ *  
  *  assert f1 == f2;
+ *  assert f1 == f3;
  *  
  * </pre></code>
  * 
@@ -119,11 +125,24 @@ public class FitnessEvaluator
   }
   
   /**
+   * Uses OpenCL or Java (depending on {@link trianglegenome.util.Constants#useOpenCL}
+   * to calculate the differences between each red, green and blue value of each pixel in
+   * two images.
+   * @param reference The reference image against which the triangles will be compared.
+   * @param triangles The image containing the triangles to compare to the reference image.
+   * @return The fitness of the triangles where lower is better. 
+   */
+  public int differenceSum(BufferedImage triangles)
+  {
+    return (Constants.useOpenCL) ? differenceSumCL(triangles) : differenceSumJava(triangles);
+  }
+  
+  /**
    * Uses OpenCL to calculate the differences between each red, green and blue value
    * of each pixel in two images.
    * @param reference The reference image against which the triangles will be compared.
    * @param triangles The image containing the triangles to compare to the reference image.
-   * @return AThe fitness of the triangles where lower is better. 
+   * @return The fitness of the triangles where lower is better. 
    */
   public int differenceSumCL(BufferedImage triangles)
   {
@@ -161,7 +180,7 @@ public class FitnessEvaluator
    * @param triangles The image containing the triangles to compare to the reference image.
    * @return The fitness of the triangles where lower is better. 
    */
-  public int differenceSum(BufferedImage triangles)
+  public int differenceSumJava(BufferedImage triangles)
   {
     checkTriangleImageArgument(triangles);
     
