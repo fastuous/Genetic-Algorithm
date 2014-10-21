@@ -69,7 +69,8 @@ public class GenomeCrossover
   public void crossover(int crossoverCount)
   {
     Set<Integer> alreadyCrossed = new HashSet<Integer>(crossoverCount * 4);
-    Random rand = Constants.rand;
+    Random rnd = Constants.rand;
+    int geneCount = genomes.size();
     
     for (int i = 0; i < crossoverCount; i++)
     {
@@ -79,8 +80,8 @@ public class GenomeCrossover
       int childIndex2;
       do
       {
-        parentIndex1 = (int)(genomes.size()*abs(rand.nextDouble() - rand.nextDouble()));
-        parentIndex2 = (int)(genomes.size()*abs(rand.nextDouble() - rand.nextDouble()));
+        parentIndex1 = (int)(geneCount*abs(rnd.nextDouble() - rnd.nextDouble()));
+        parentIndex2 = (int)(geneCount*abs(rnd.nextDouble() - rnd.nextDouble()));
       }
       while (!(alreadyCrossed.contains(parentIndex1) || alreadyCrossed.contains(parentIndex2)));
       
@@ -92,8 +93,8 @@ public class GenomeCrossover
       {
         do
         {
-          childIndex1 = (int)(genomes.size()*abs(rand.nextDouble() - rand.nextDouble()));
-          childIndex2 = (int)(genomes.size()*abs(rand.nextDouble() - rand.nextDouble()));
+          childIndex1 = (int)(geneCount - geneCount*abs(rnd.nextDouble() - rnd.nextDouble()));
+          childIndex2 = (int)(geneCount - geneCount*abs(rnd.nextDouble() - rnd.nextDouble()));
         }
         while (!(alreadyCrossed.contains(childIndex1) || alreadyCrossed.contains(childIndex2)));
         Genome c1 = genomes.get(childIndex1);
