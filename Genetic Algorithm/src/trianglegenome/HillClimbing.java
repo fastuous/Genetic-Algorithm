@@ -96,10 +96,6 @@ public class HillClimbing extends Thread
     int location = genes.indexOf(tri);
     do
     {
-      if (!successfulEvolution)
-      {
-        evenOrOdd = Constants.rand.nextInt(100000) % 2;
-        stepSize = Constants.rand.nextInt(2)+1;
         if (evenOrOdd == 0)
         {
           tri.dna[successfulDNA] += successfulMultiplier * stepSize;
@@ -108,7 +104,6 @@ public class HillClimbing extends Thread
         {
           tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
         }
-      }
     }
     while (!tri.isValidTriangle(tri));
     genes.set(location, tri);
@@ -148,6 +143,8 @@ public class HillClimbing extends Thread
         devolve(genomeState.genome);
         successfulMultiplier = 1;
         successfulDNA = Constants.rand.nextInt(10);
+        evenOrOdd = Constants.rand.nextInt(100000) % 2;
+        stepSize = Constants.rand.nextInt(2)+1;
       }
     }
     while (fitnessAfter >= fitnessBefore);

@@ -27,6 +27,7 @@ public class MainController extends Application
   private ImagePanel imagePanel;
   private HillClimberSpawner hillClimberSpawner;
   private Genome selectedGenome;
+  private boolean started = false;
   
   //private MainGUI GUI
   
@@ -38,13 +39,19 @@ public class MainController extends Application
 
   public void toggleRunning()
   {
-    if(hillClimberSpawner.hillClimbersArePaused())
-    {
-      hillClimberSpawner.unpauseHillClimbers();
+    if(!started){
+      if(hillClimberSpawner.hillClimbersArePaused())
+      {
+        hillClimberSpawner.unpauseHillClimbers();
+      }
+      else if(!hillClimberSpawner.hillClimbersArePaused())
+      {
+        hillClimberSpawner.pauseHillClimbers(); 
+      }
     }
-    else if(!hillClimberSpawner.hillClimbersArePaused())
+    else
     {
-      hillClimberSpawner.pauseHillClimbers(); 
+      
     }
     // TODO if hill climbing, pause hill-climbing threads, if performing crossover, finish crossover
     // and stop
