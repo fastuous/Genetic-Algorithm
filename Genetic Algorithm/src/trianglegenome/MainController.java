@@ -1,8 +1,9 @@
 package trianglegenome;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
 import javafx.application.Application;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
@@ -11,9 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
 import javax.swing.SwingUtilities;
-
 import trianglegenome.gui.DrawPanel;
 import trianglegenome.gui.ImagePanel;
 import trianglegenome.util.Constants;
@@ -47,10 +46,11 @@ public class MainController extends Application
 
   private List<Genome> getSortedPopulation()
   {
-    // TODO return the global population sorted by best fitness first
-
-    return null;
+    List<Genome> genomes = globalPopulation;
+    genomes.sort((Genome g1, Genome g2) -> Long.compare(g1.getFitness(), g2.getFitness()));
+    return genomes;
   }
+
 
   public void showGenomeTable()
   {
