@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.locks.Lock;
 
 import trianglegenome.util.Constants;
 
@@ -20,9 +19,18 @@ import trianglegenome.util.Constants;
  *  // assume genomes is a List&lt;Genome&gt;
  *  // assume hcsp is a HillClimbingSpawner
  *  
- *  hcsp.pauseHillClimbers();
- *  GenomeCrossover.crossover(5, genomes);
- *  hcsp.unpauseHillClimbers();
+ *  java.util.concurrent.locks.Lock lock = new java.util.concurrent.locks.Lock();
+ *  
+ *  GenomeCrossover gc = new GenomeCrossover(genomes);
+ *  
+ *  // While program is running
+ *  {
+ *    // if a crossover is needed
+ *    {
+ *      hcsp.pauseHillClimbers();
+ *      gc.crossover(10); // 10 is an arbitrary number
+ *    }
+ *  }
  *  
  * </pre></code>
  * 
@@ -33,30 +41,32 @@ public class GenomeCrossover
    * GenomeCrossover will overwrite two random genomes. */
   public static final boolean IN_PLACE = true;
   
-  /** If set to true, this will lock the {@link #crossoverLock} when performing crossovers. */
-  public static final boolean USE_LOCK = false;
+  /** A list of genomes on which this GenomeCrossover will perform a crossover.
+   * This list should consist of every genome from every tribe. */
+  private List<Genome> genomes;
   
-  /** A lock to indicate when the crossover is finished. When the crossover is finished,
-   * the {@link #crossover(int, List)} method will call {@link Object#notify()}. Ignored
-   * if {@value #USE_LOCK} is false. */
-  public Lock crossoverLock;
+  /**
+   * Creates a GenomeCrossover given a list of {@link Genome} objects and
+   * a {@link java.util.concurrent.locks.Lock}.
+   * @param genomes A list of all genomes from every tribe.
+   * @param genomeLock A lock for the genomes.
+   */
+  public GenomeCrossover(List<Genome> genomes)
+  {
+    this.genomes = genomes;
+  }
   
   /**
    * Given a number of times to cross over and a list of genomes, perform some crossovers.
    * This method assumes that the given genomes list is sorted where genomes toward the
    * beginning should be more likely to be parents of the crossover.
-   * Note that if {{@value #crossoverLock} is already locked, this method will throw
+   * Note that if {@link #genomeLock} is already locked, this method will throw
    * an {@link IllegalStateException}.
    * @param crossoverCount The number of times to perform a crossover.
    * @param genomes A sorted list of genomes on which the crossover will be performed.
    */
-  @SuppressWarnings("unused") // Justification: IN_PLACE and USE_LOCK may be changed later on.
-  public void crossover(int crossoverCount, List<Genome> genomes)
+  public void crossover(int crossoverCount)
   {
-    if (USE_LOCK && !crossoverLock.tryLock())
-    {
-      throw new IllegalStateException("Lock on crossoverLock could not be obtained.");
-    }
     Set<Integer> alreadyCrossed = new HashSet<Integer>(crossoverCount * 4);
     Random rand = Constants.rand;
     
@@ -95,12 +105,6 @@ public class GenomeCrossover
       
       alreadyCrossed.add(parentIndex1);
       alreadyCrossed.add(parentIndex2);
-    }
-
-    if (USE_LOCK)
-    {
-      crossoverLock.unlock();
-      crossoverLock.notify();
     }
   }
 }
