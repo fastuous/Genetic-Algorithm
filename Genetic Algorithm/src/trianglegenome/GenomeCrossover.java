@@ -29,6 +29,7 @@ import trianglegenome.util.Constants;
  *    {
  *      hcsp.pauseHillClimbers();
  *      gc.crossover(10); // 10 is an arbitrary number
+ *      hcsp.unpauseHillClimbers();
  *    }
  *  }
  *  
