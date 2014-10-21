@@ -31,10 +31,8 @@ public class MainController extends Application
   
   //private MainGUI GUI
   
-  @FXML
-  public Pane drawPanelContainer;
-  @FXML
-  public Pane imagePanelContainer;
+  @FXML private Pane drawPanelContainer;
+  @FXML private Pane imagePanelContainer;
 
 
   public void toggleRunning()
@@ -138,11 +136,14 @@ public class MainController extends Application
       
       createAndSetSwingContent(drawPanelNode, imagePanelNode);
       
-      drawPanelContainer = new Pane(drawPanelNode);
-      imagePanelContainer = new Pane(imagePanelNode);
       
-      Scene scene = new Scene(root, 1100, 600);
+      Scene scene = new Scene(root, 1100, 700);
 
+      drawPanelContainer = (Pane)scene.lookup("#drawPanelContainer");
+      imagePanelContainer = (Pane)scene.lookup("#imagePanelContainer");
+      drawPanelContainer.getChildren().add(drawPanelNode);
+      imagePanelContainer.getChildren().add(imagePanelNode);
+      
       stage.setTitle("Image Evolver");
       stage.setScene(scene);
       stage.show();
@@ -152,6 +153,12 @@ public class MainController extends Application
 
     }
     imagePanel.updateImage();
+    Constants.selectedImage = 1;
+    Constants.height = 384;
+    drawPanel.setSize(512, 384);
+    imagePanel.updateImage();
+    imagePanel.setSize(512, 384);
+    imagePanelContainer.setPrefHeight(384);
   }
 
   private void createAndSetSwingContent(final SwingNode drawPanelNode, final SwingNode imagePanelNode)
@@ -176,7 +183,7 @@ public class MainController extends Application
   }
   
   @FXML
-  public void test()
+  private void test()
   {
     System.out.println("Test");
   }
