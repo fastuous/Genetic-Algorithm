@@ -77,6 +77,17 @@ public class HillClimbing extends Thread
     return false;
   }
   
+  public void performOneEvolution()
+  {
+    if(isPaused())
+    {
+      for (GenomeDrawPanelPair state : genomeStates)
+      {
+        performEvolution(state);
+      }
+    }
+  }
+  
   public void evolve(Genome genome)
   {
     List<Triangle> genes = genome.getGenes();

@@ -1,5 +1,6 @@
 package trianglegenome;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,6 +28,8 @@ public class MainController extends Application
   private HillClimberSpawner hillClimberSpawner;
   private Genome selectedGenome;
   
+  //private MainGUI GUI
+  
   @FXML
   public Pane drawPanelContainer;
   @FXML
@@ -35,13 +38,21 @@ public class MainController extends Application
 
   public void toggleRunning()
   {
+    if(hillClimberSpawner.hillClimbersArePaused())
+    {
+      hillClimberSpawner.unpauseHillClimbers();
+    }
+    else if(!hillClimberSpawner.hillClimbersArePaused())
+    {
+      hillClimberSpawner.pauseHillClimbers(); 
+    }
     // TODO if hill climbing, pause hill-climbing threads, if performing crossover, finish crossover
     // and stop
   }
 
   public void next()
   {
-    // TODO Run one hill-climbing evolution and stay paused
+    hillClimberSpawner.performOneEvolution();
   }
 
   private List<Genome> getSortedPopulation()
@@ -59,11 +70,25 @@ public class MainController extends Application
 
   public void imageSelected()
   {
-    // TODO change image and call setup method
+    setup();
   }
 
   private void setup()
   {
+    BufferedImage target = Constants.IMAGES[Constants.selectedImage];
+    imagePanel = new ImagePanel(target.getWidth(),target.getHeight());
+    drawPanel = new DrawPanel(target.getWidth(),target.getHeight());
+    globalPopulation.clear();
+    for(int i = 0; i < 1250; ++i)
+    {
+      globalPopulation.add(SeedGenome.generateSeed(target));
+    }
+    drawPanel.setTriangles(globalPopulation.get(Constants.rand.nextInt(1250)).getGenes());
+    hillClimberSpawner = new HillClimberSpawner(1250,globalPopulation, target);
+    
+    //Instantiate the Image and Draw Panels based on the Global Constants
+    //Set The draw Panel and Image Panel for the GUI
+    //
     // TODO instantiate and setup everything necessary for problem space
   }
 

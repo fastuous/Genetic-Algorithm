@@ -46,7 +46,7 @@ public class ImagePanel extends JPanel
     targetImage = Constants.IMAGES[Constants.selectedImage];
     
     super.setSize(targetImage.getWidth(), targetImage.getHeight());
-    
+    super.setPreferredSize(new Dimension(targetImage.getWidth(), targetImage.getWidth()));
     this.repaint();
   }
   

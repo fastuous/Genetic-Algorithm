@@ -54,6 +54,19 @@ public class HillClimberSpawner
     }
   }
 
+  public boolean hillClimbersArePaused()
+  {
+    for(HillClimbing thread : hillClimbingThreads)
+    {
+      if(!thread.isPaused()) return false;
+    }
+    return true;
+  }
+  public void performOneEvolution()
+  {
+    hillClimbingThreads.forEach(t->t.performOneEvolution());
+  }
+  
   public void pauseHillClimbers()
   {
     hillClimbingThreads.forEach(t -> t.pause());

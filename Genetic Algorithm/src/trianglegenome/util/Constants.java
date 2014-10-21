@@ -54,7 +54,7 @@ public class Constants
     }
   }
   
-  public static int selectedImage;
+  public static int selectedImage = 0;
   
   public static boolean useOpenCL = true;
   
