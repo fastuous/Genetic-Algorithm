@@ -40,7 +40,7 @@ public class GenomeCrossover
 {
   /** If set to true, GenomeCrossover will perform an in place crossover. Otherwise,
    * GenomeCrossover will overwrite two random genomes. */
-  public static final boolean IN_PLACE = true;
+  public static final boolean IN_PLACE = false;
   
   /** A list of genomes on which this GenomeCrossover will perform a crossover.
    * This list should consist of every genome from every tribe. */
@@ -61,8 +61,6 @@ public class GenomeCrossover
    * Given a number of times to cross over and a list of genomes, perform some crossovers.
    * This method assumes that the given genomes list is sorted where genomes toward the
    * beginning should be more likely to be parents of the crossover.
-   * Note that if {@link #genomeLock} is already locked, this method will throw
-   * an {@link IllegalStateException}.
    * @param crossoverCount The number of times to perform a crossover.
    * @param genomes A sorted list of genomes on which the crossover will be performed.
    */
@@ -71,6 +69,11 @@ public class GenomeCrossover
     Set<Integer> alreadyCrossed = new HashSet<Integer>(crossoverCount * 4);
     Random rnd = Constants.rand;
     int geneCount = genomes.size();
+    
+    if (crossoverCount * 4 >= geneCount)
+    {
+      throw new IllegalArgumentException("crossoverCount exceeds 1/4th the number of genomes");
+    }
     
     for (int i = 0; i < crossoverCount; i++)
     {
