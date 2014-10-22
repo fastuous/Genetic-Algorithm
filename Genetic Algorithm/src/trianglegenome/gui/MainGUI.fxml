@@ -12,7 +12,7 @@
       <HBox prefHeight="420.0" prefWidth="1100.0" AnchorPane.bottomAnchor="280.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Separator prefHeight="1.0" prefWidth="30.0" />
-            <Pane fx:id="imagePanelContainer" prefHeight="413.0" prefWidth="512.0" />
+            <ImageView fx:id="imagePanelContainer" fitHeight="413.0" fitWidth="512.0" pickOnBounds="true" preserveRatio="true" />
             <Separator HBox.hgrow="ALWAYS" />
             <ImageView fx:id="drawPanelContainer" fitHeight="413.0" fitWidth="512.0" pickOnBounds="true" preserveRatio="true" />
             <Separator prefHeight="1.0" prefWidth="30.0" />
@@ -21,7 +21,7 @@
       <HBox layoutY="451.0" prefHeight="36.0" prefWidth="383.0" />
       <HBox layoutX="448.0" layoutY="420.0" prefHeight="36.0" prefWidth="652.0">
          <children>
-            <Label prefHeight="21.0" prefWidth="132.0" text="Triangles:">
+            <Label fx:id="nTriangles" prefHeight="21.0" prefWidth="132.0" text="Triangles:">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin></Label>
@@ -55,9 +55,9 @@
       </HBox>
       <GridPane layoutY="538.0" prefHeight="36.0" prefWidth="1100.0">
         <columnConstraints>
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -65,13 +65,13 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#toggleRunning" prefWidth="160.0" text="Start" />
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#test" prefWidth="160.0" text="Start" />
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#next" prefWidth="160.0" text="Next Generation" GridPane.columnIndex="1" />
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#showGenomeTable" prefWidth="160.0" text="Show Genome Table" GridPane.columnIndex="2" />
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#readGenome" prefWidth="160.0" text="Read Genome" GridPane.columnIndex="3" />
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#writeGenome" prefWidth="160.0" text="Write Genome" GridPane.columnIndex="4" />
          </children>
       </GridPane>
-      <ComboBox fx:id="imageSelect" layoutX="21.0" layoutY="422.0" prefHeight="32.0" prefWidth="356.0" promptText="Select an Image..." />
+      <ComboBox fx:id="imageSelect" layoutX="21.0" layoutY="422.0" onAction="#imageSelected" prefHeight="32.0" prefWidth="356.0" promptText="Select an Image..." />
    </children>
 </AnchorPane>
