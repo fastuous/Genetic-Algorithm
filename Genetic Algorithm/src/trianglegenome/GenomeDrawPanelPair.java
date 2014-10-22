@@ -13,14 +13,14 @@ import trianglegenome.gui.DrawPanel;
  *  
  *  GenomeDrawPanelPair gdpp = new GenomeDrawPanelPair(g, d);
  *  
+ *  Genome gg = gdpp.genome;
+ *  DrawPanel dd = gdpp.drawPanel;
+ *  
  * </pre></code>
  * @author collinsd
  */
 public class GenomeDrawPanelPair
 {
-  /** A Genome meant to keep track of the previous state.
-   * Use {@link trianglegenome.Genome#clone() to set this initially. */
-  
   /** The {@link trianglegenome.Genome} in the genome to draw panel mapping */
   public Genome genome;
   
