@@ -26,7 +26,6 @@ public class HillClimbingUnitTests
   {
     initData();
     testHillClimbing();
-    stallingTest();
   }
   
   private void initData()
@@ -60,47 +59,6 @@ public class HillClimbingUnitTests
     newFitness = fitnessEvaluator.differenceSum(drawPanel.getSnapshot());
     
     assert initialFitness > newFitness;
-    
-    return;
-  }
-  
-  @SuppressWarnings("serial") // Justification: serial ID not needed.
-  private void stallingTest()
-  {
-    drawPanel = new DrawPanel(Constants.IMAGES[0].getWidth(), Constants.IMAGES[0].getHeight())
-    {
-      /**
-       * Always returns a blank image so that the hillClimber will never make progress.
-       */
-      @Override
-      public BufferedImage getSnapshot()
-      {
-        return new BufferedImage(Constants.width, Constants.height, BufferedImage.TYPE_INT_RGB);
-      }
-    };
-    genomeDrawPanelPair = new GenomeDrawPanelPair(genome, drawPanel);
-    genomeDrawPanelPairSingleton = new ArrayList<GenomeDrawPanelPair>(1);
-    genomeDrawPanelPairSingleton.add(genomeDrawPanelPair);
-    hillClimber = new HillClimbing(genomeDrawPanelPairSingleton, Constants.IMAGES[0]);
-    
-    boolean passed = false;
-    
-    try
-    {
-      hillClimber.start();
-      Thread.sleep(200);
-      hillClimber.pause();
-      
-      assert hillClimber.isPaused();
-      Thread.sleep(200);
-      Genome genomeClone = genome.clone();
-      Thread.sleep(200);
-      passed = genomeClone.equals(genome); // If this is not true, then HillClimbing is still running and is hung.
-      hillClimber.interrupt();
-    }
-    catch (Exception e) {}
-    
-    assert passed;
     
     return;
   }
