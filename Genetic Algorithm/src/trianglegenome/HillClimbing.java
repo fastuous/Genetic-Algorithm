@@ -2,8 +2,6 @@ package trianglegenome;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
-import trianglegenome.gui.DrawPanel;
-import trianglegenome.gui.ImagePanel;
 import trianglegenome.util.Constants;
 
 public class HillClimbing extends Thread
@@ -19,7 +17,7 @@ public class HillClimbing extends Thread
 
   private FitnessEvaluator fitnessEvaluator;
   private List<GenomeDrawPanelPair> genomeStates;
-  private boolean paused = false;
+  private volatile boolean paused = false;
 
   public HillClimbing(List<GenomeDrawPanelPair> genomeStates, BufferedImage target)
   {
