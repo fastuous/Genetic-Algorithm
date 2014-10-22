@@ -18,11 +18,11 @@ public class EvolutionManager extends Thread
   /** When true, this thread will not perform any actions. */
   private volatile boolean paused;
   
-  /** Will be true when a genome should be in a crossover. */
-  private volatile boolean crossoverFlag;
-  
   /** Used for keeping track of running time. */
   private volatile long startTime;
+  
+  /** Will be true when a genome should be in a crossover. */
+  private boolean crossoverFlag;
   
   /** The genomes on which hill climbing and crossovers will be performed. */
   private List<Genome> genomes;
@@ -175,6 +175,7 @@ public class EvolutionManager extends Thread
   @Override
   public void run()
   {
+    int iterations = 0;
     while (!super.isInterrupted())
     {
       if (!paused)
@@ -195,6 +196,14 @@ public class EvolutionManager extends Thread
           genomeCrossover.crossover(crossoverCount);
           hillClimberSpawner.unpauseHillClimbers();
         }
+        
+        // TODO put some real crossover conditions.
+        if (iterations > 2097152)
+        {
+          crossoverFlag = true;
+          iterations = 0;
+        }
+        iterations++;
       }
       else try { Thread.sleep(100); } catch (Exception e) {}
     }
