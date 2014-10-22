@@ -28,6 +28,9 @@ public class EvolutionManager extends Thread
    * {@link EvolutionManager#genomes}. */
   private HillClimberSpawner hillClimberSpawner;
   
+  /** The class that will perform crossovers on the genomes. */
+  private GenomeCrossover genomeCrossover;
+  
   /** The reference image that the triangles in each genome will eventually resemble through
    * hill climbing and crossover. */
   private BufferedImage target;
@@ -46,8 +49,10 @@ public class EvolutionManager extends Thread
   public EvolutionManager(int threadCount, List<Genome> genomes, BufferedImage target)
   {
     Objects.requireNonNull(genomes, "genomes cannot be null");
+    Objects.requireNonNull(target, "target cannot be null");
     this.genomes = genomes;
     this.threadCount = threadCount;
+    startTime = System.currentTimeMillis();
     init();
   }
   
@@ -56,10 +61,10 @@ public class EvolutionManager extends Thread
    */
   private void init()
   {
+    this.paused = true;
     if (hillClimberSpawner != null) hillClimberSpawner.stopHillClimbing();
     hillClimberSpawner = new HillClimberSpawner(threadCount, genomes, target);
-    startTime = System.currentTimeMillis();
-    this.paused = true;
+    genomeCrossover = new GenomeCrossover(genomes);
   }
   
   /**
@@ -89,13 +94,24 @@ public class EvolutionManager extends Thread
   }
   
   /**
-   * Returns the running time of this thread, according to the wall clock.
-   * @return
+   * Changes the reference image that this EvolutionManager will use when performing hill
+   * climbing and crossovers. This function also interrupts the current hill climbing
+   * threads and creates new ones.
+   * @param target The new BufferedImage that the EvolutionManager will use.
    */
-  public long getRunningTime()
+  public void setTargetImage(BufferedImage target)
   {
-    return System.currentTimeMillis() - startTime;
+    Objects.requireNonNull(target, "target cannot be null");
+    this.target = target;
+    init();
+    startTime = System.currentTimeMillis();
   }
+  
+  /**
+   * Returns the running time of this thread, according to the wall clock.
+   * @return The running time of this thread, according to the wall clock.
+   */
+  public long getRunningTime() { return System.currentTimeMillis() - startTime; }
   
   /**
    * Pauses the EvolutionManager after all atomic operations (e.g. the hill climbing
@@ -104,6 +120,7 @@ public class EvolutionManager extends Thread
   public void pause()
   {
     this.paused = true;
+    hillClimberSpawner.pauseHillClimbers();
   }
 
   /**
@@ -112,6 +129,7 @@ public class EvolutionManager extends Thread
   public void unpause()
   {
     this.paused = false;
+    hillClimberSpawner.unpauseHillClimbers();
   }
 
   /**
@@ -134,6 +152,11 @@ public class EvolutionManager extends Thread
     {
       if (!paused)
       {
+        if (hillClimberSpawner.anyHillClimberIsPaused())
+        {
+          throw new IllegalStateException(
+              "HillClimbing cannot be paused while EvolutionManager is running");
+        }
         if (crossoverFlag)
         {
           
