@@ -2,23 +2,31 @@ package trianglegenome;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
+
 import javafx.application.Application;
 import javafx.embed.swing.SwingNode;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 import javax.swing.SwingUtilities;
+
 import trianglegenome.gui.DrawPanel;
 import trianglegenome.gui.ImagePanel;
 import trianglegenome.util.Constants;
 
-public class MainController extends Application
+public class MainController extends Application implements Initializable
 {
 
   private List<Genome> globalPopulation;
@@ -33,8 +41,9 @@ public class MainController extends Application
   
   @FXML private Pane drawPanelContainer;
   @FXML private Pane imagePanelContainer;
+  @FXML private Text nTriangles;
 
-
+  @FXML
   public void toggleRunning()
   {
     if(!started){
@@ -73,7 +82,7 @@ public class MainController extends Application
     // TODO Take global genome table, sort it
   }
 
-  public void imageSelected()
+  public void imageSelected(ActionEvent event)
   {
     setup();
   }
@@ -97,17 +106,19 @@ public class MainController extends Application
     // TODO instantiate and setup everything necessary for problem space
   }
 
-  public void triangleSliderUpdate(int value)
+  @FXML
+  public void triangleSliderUpdate(ActionEvent event)
   {
-    // TODO you know what to do
+    Slider slider = (Slider) event.getSource();
+    nTriangles.setText("Triangles: "+ slider.getValue());
   }
 
-  public void tribeSelectorUpdate(int index)
+  public void tribeSelectorUpdate(ActionEvent event)
   {
     // TODO changes selected genome
   }
 
-  public void genomeSliderUpdate(int index)
+  public void genomeSliderUpdate(ActionEvent event)
   {
     // TODO changes selected genome
   }
@@ -122,8 +133,9 @@ public class MainController extends Application
     // TODO write selected genome to XML file
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public void start(Stage stage) throws Exception
+  public void start(Stage stage)
   {
     imagePanel = new ImagePanel(512, 413);
     drawPanel = new DrawPanel(512, 413);
@@ -141,8 +153,10 @@ public class MainController extends Application
 
       drawPanelContainer = (Pane)scene.lookup("#drawPanelContainer");
       imagePanelContainer = (Pane)scene.lookup("#imagePanelContainer");
+      final ComboBox<String> imageSelect = (ComboBox<String>)scene.lookup("#imageSelect");
       drawPanelContainer.getChildren().add(drawPanelNode);
       imagePanelContainer.getChildren().add(imagePanelNode);
+      imageSelect.getItems().addAll(Constants.IMAGE_FILES);
       
       stage.setTitle("Image Evolver");
       stage.setScene(scene);
@@ -158,7 +172,6 @@ public class MainController extends Application
     drawPanel.setSize(512, 384);
     imagePanel.updateImage();
     imagePanel.setSize(512, 384);
-    imagePanelContainer.setPrefHeight(384);
   }
 
   private void createAndSetSwingContent(final SwingNode drawPanelNode, final SwingNode imagePanelNode)
@@ -186,5 +199,11 @@ public class MainController extends Application
   private void test()
   {
     System.out.println("Test");
+  }
+
+  @Override
+  public void initialize(URL location, ResourceBundle resources)
+  {
+    
   }
 }

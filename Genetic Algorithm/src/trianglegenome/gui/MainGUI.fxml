@@ -21,13 +21,19 @@
       <HBox layoutY="451.0" prefHeight="36.0" prefWidth="383.0" />
       <HBox layoutX="448.0" layoutY="420.0" prefHeight="36.0" prefWidth="652.0">
          <children>
-            <Label prefHeight="21.0" prefWidth="129.0" text="Triangles: XXX/XXX" />
-            <Slider prefHeight="18.0" prefWidth="364.0">
+            <Label prefHeight="21.0" prefWidth="132.0" text="Triangles:">
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets top="5.0" />
+               </HBox.margin></Label>
+            <Slider fx:id="triangleSlider" max="200.0" onDragDropped="#triangleSliderUpdate" prefHeight="18.0" prefWidth="363.0" showTickMarks="true" value="200.0">
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
                </HBox.margin>
             </Slider>
-            <Label text="Fitness: XXXXXXX" />
+            <Label text="Fitness: XXXXXXX">
+               <HBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </HBox.margin></Label>
          </children>
          <padding>
             <Insets top="5.0" />
@@ -59,13 +65,13 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button alignment="CENTER" mnemonicParsing="false" prefWidth="160.0" text="Start" />
-            <Button mnemonicParsing="false" prefWidth="160.0" text="Next Generation" GridPane.columnIndex="1" />
-            <Button mnemonicParsing="false" prefWidth="160.0" text="Show Genome Table" GridPane.columnIndex="2" />
-            <Button mnemonicParsing="false" prefWidth="160.0" text="Read Genome" GridPane.columnIndex="3" />
-            <Button mnemonicParsing="false" prefWidth="160.0" text="Write Genome" GridPane.columnIndex="4" />
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#toggleRunning" prefWidth="160.0" text="Start" />
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#next" prefWidth="160.0" text="Next Generation" GridPane.columnIndex="1" />
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#showGenomeTable" prefWidth="160.0" text="Show Genome Table" GridPane.columnIndex="2" />
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#readGenome" prefWidth="160.0" text="Read Genome" GridPane.columnIndex="3" />
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#writeGenome" prefWidth="160.0" text="Write Genome" GridPane.columnIndex="4" />
          </children>
       </GridPane>
-      <ComboBox layoutX="21.0" layoutY="422.0" prefHeight="32.0" prefWidth="356.0" promptText="Select an Image..." />
+      <ComboBox fx:id="imageSelect" layoutX="21.0" layoutY="422.0" prefHeight="32.0" prefWidth="356.0" promptText="Select an Image..." />
    </children>
 </AnchorPane>
