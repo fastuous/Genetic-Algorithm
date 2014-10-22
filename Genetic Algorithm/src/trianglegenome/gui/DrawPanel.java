@@ -163,7 +163,17 @@ public class DrawPanel extends JPanel
   public Image getFXImage()
   {
     updateOffScreenBuffer();
-    return SwingFXUtils.toFXImage(getSnapshot(), fxImage);
+    
+    BufferedImage snapshot = offscreenBuffer
+        .getSnapshot()
+        .getSubimage(0, 0, Constants.width, Constants.height);
+    
+    BufferedImage croppedSnapshot = new BufferedImage(
+        Constants.width, Constants.height, BufferedImage.TYPE_INT_RGB);
+    
+    croppedSnapshot.getGraphics().drawImage(snapshot, 0, 0, null);
+    
+    return SwingFXUtils.toFXImage(croppedSnapshot, fxImage);
   }
   
   /**
