@@ -1,8 +1,12 @@
 package trianglegenome;
 
+import static java.lang.Math.max;
+
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Objects;
+
+import trianglegenome.util.Constants;
 
 /**
  * A class which extends {@link java.lang.Thread} to manage hill climbing and crossover of
@@ -152,18 +156,21 @@ public class EvolutionManager extends Thread
     {
       if (!paused)
       {
+        if (!hillClimberSpawner.hillClimbersAreRunning())
+        {
+          hillClimberSpawner.startHillClimbing();
+        }
         if (hillClimberSpawner.anyHillClimberIsPaused())
         {
           throw new IllegalStateException(
-              "HillClimbing cannot be paused while EvolutionManager is running");
+              "No HillClimbing can be paused while EvolutionManager is running");
         }
         if (crossoverFlag)
         {
-          
-        }
-        else
-        {
-          
+          hillClimberSpawner.pauseHillClimbers();
+          int crossoverCount = max(1, Constants.rand.nextInt(genomes.size() / 8));
+          genomeCrossover.crossover(crossoverCount);
+          hillClimberSpawner.unpauseHillClimbers();
         }
       }
       else try { Thread.sleep(100); } catch (Exception e) {}
