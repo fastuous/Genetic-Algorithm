@@ -96,14 +96,14 @@ public class HillClimbing extends Thread
     int location = genes.indexOf(tri);
     do
     {
-        if (evenOrOdd == 0)
-        {
-          tri.dna[successfulDNA] += successfulMultiplier * stepSize;
-        }
-        else
-        {
-          tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
-        }
+      if (evenOrOdd == 0)
+      {
+        tri.dna[successfulDNA] += successfulMultiplier * stepSize;
+      }
+      else
+      {
+        tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
+      }
     }
     while (!tri.isValidTriangle(tri));
     genes.set(location, tri);
