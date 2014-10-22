@@ -43,7 +43,7 @@ public class HillClimbing extends Thread
       {
         try
         {
-          this.notify();
+          synchronized (this) { this.notify(); }
           Thread.sleep(100);
         }
         catch (Exception e)

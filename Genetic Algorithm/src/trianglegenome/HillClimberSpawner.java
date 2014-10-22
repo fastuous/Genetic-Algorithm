@@ -86,7 +86,14 @@ public class HillClimberSpawner
     for (HillClimbing hc : hillClimbingThreads)
     {
       hc.pause();
-      if (!hc.isPaused()) try { hc.wait(); } catch (Exception e) {}
+      if (!hc.isPaused())
+      {
+        try
+        {
+          synchronized (hc) { hc.wait(); }
+        }
+        catch (Exception e) {}
+      }
     }
   }
 
