@@ -14,7 +14,7 @@
             <Separator prefHeight="1.0" prefWidth="30.0" />
             <Pane fx:id="imagePanelContainer" prefHeight="413.0" prefWidth="512.0" />
             <Separator HBox.hgrow="ALWAYS" />
-            <Pane fx:id="drawPanelContainer" prefHeight="413.0" prefWidth="512.0" />
+            <ImageView fx:id="drawPanelContainer" fitHeight="413.0" fitWidth="512.0" pickOnBounds="true" preserveRatio="true" />
             <Separator prefHeight="1.0" prefWidth="30.0" />
          </children>
       </HBox>
@@ -25,7 +25,7 @@
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin></Label>
-            <Slider fx:id="triangleSlider" max="200.0" onDragDropped="#triangleSliderUpdate" prefHeight="18.0" prefWidth="363.0" showTickMarks="true" value="200.0">
+            <Slider fx:id="triangleSlider" max="200.0" onDragDone="#triangleSliderUpdate" prefHeight="18.0" prefWidth="363.0" showTickMarks="true" value="200.0">
                <HBox.margin>
                   <Insets left="10.0" top="10.0" />
                </HBox.margin>

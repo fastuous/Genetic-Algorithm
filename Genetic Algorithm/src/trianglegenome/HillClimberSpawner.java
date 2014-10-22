@@ -28,6 +28,7 @@ public class HillClimberSpawner
     this.threadCount = threadCount;
     this.genomes = genomes;
     this.hillClimbingThreads = new LinkedList<HillClimbing>();
+    this.target = target;
 
     populateHillClimbingThreads(this.threadCount);
   }

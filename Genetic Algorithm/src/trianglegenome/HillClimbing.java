@@ -10,16 +10,11 @@ public class HillClimbing extends Thread
 {
   private int fitnessBefore = 0;
   private int fitnessAfter = 0;
-  private boolean successfulEvolution = false;
   private int successfulDNA = Constants.rand.nextInt(10);
-  private int successfulStepsize;
   private int successfulMultiplier = 1;
   private int evenOrOdd = Constants.rand.nextInt(100000) % 2;
   private int stepSize = Constants.rand.nextInt(2)+1;
-  private int triangle;
-  private ImagePanel imagePanel;
-  private DrawPanel drawPanel;
-  private BufferedImage imagePanelSnapshot;
+  private int triangle = Constants.rand.nextInt(Constants.TRIANGLE_COUNT);
   private BufferedImage targetImage;
 
   private FitnessEvaluator fitnessEvaluator;
@@ -91,7 +86,6 @@ public class HillClimbing extends Thread
   public void evolve(Genome genome)
   {
     List<Triangle> genes = genome.getGenes();
-    triangle = Constants.rand.nextInt(Constants.TRIANGLE_COUNT);
     Triangle tri = genes.get(triangle);
     int location = genes.indexOf(tri);
     do
@@ -138,16 +132,17 @@ public class HillClimbing extends Thread
       genomeState.drawPanel.repaint();
       drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSum(drawPanelSnapshot);
-      if (fitnessAfter >= fitnessBefore)
+      if (fitnessAfter > fitnessBefore)
       {
         devolve(genomeState.genome);
         successfulMultiplier = 1;
         successfulDNA = Constants.rand.nextInt(10);
         evenOrOdd = Constants.rand.nextInt(100000) % 2;
         stepSize = Constants.rand.nextInt(2)+1;
+        triangle = Constants.rand.nextInt(Constants.TRIANGLE_COUNT);
       }
     }
-    while (fitnessAfter >= fitnessBefore);
+    while (fitnessAfter > fitnessBefore);
     successfulMultiplier += .5;
   }
 }

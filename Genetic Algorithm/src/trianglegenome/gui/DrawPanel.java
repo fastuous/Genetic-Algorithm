@@ -62,7 +62,7 @@ public class DrawPanel extends JPanel
   
   /** Determines how many triangles will be drawn on the
    * {@link DrawPanel} */
-  private int triangleDrawLimit = 0;
+  private int triangleDrawLimit = Constants.TRIANGLE_COUNT;
   
   /** A {@link List} of {@link Triangle} objects for drawing on the
    * {@link DrawPanel#offscreenBuffer} */
