@@ -83,9 +83,9 @@ public class HillClimberSpawner
   
   public void pauseHillClimbers()
   {
-    hillClimbingThreads.forEach(t -> t.pause());
     for (HillClimbing hc : hillClimbingThreads)
     {
+      hc.pause();
       if (!hc.isPaused()) try { hc.wait(); } catch (Exception e) {}
     }
   }
