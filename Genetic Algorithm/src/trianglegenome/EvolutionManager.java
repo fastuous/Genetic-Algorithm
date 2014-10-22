@@ -86,6 +86,15 @@ public class EvolutionManager extends Thread
   }
   
   /**
+   * Returns the number of hill climbing threads.
+   * @return The number of hill climbing threads.
+   */
+  public int getThreadCount()
+  {
+    return threadCount;
+  }
+  
+  /**
    * Changes the genomes that this EvolutionManager will perform hill climbing and crossovers
    * on. This function also interrupts the current hill climbing threads and creates new ones.
    * @param genomes The new genomes that the EvolutionManager will manage.
@@ -143,6 +152,20 @@ public class EvolutionManager extends Thread
   public boolean isPaused()
   {
     return this.paused;
+  }
+  
+  /**
+   * Returns the genomes managed by a given thread, specified by index.
+   * @param threadIndex The thread from which the genomes will be taken.
+   * @return The genomes managed by a given thread, specified by index.
+   */
+  public List<Genome> getGenomesFromTribe(int threadIndex)
+  {
+    if (threadIndex >= threadCount)
+    {
+      throw new IllegalArgumentException("threadIndex exceeds hill climbing thread count.");
+    }
+    return hillClimberSpawner.getGenomesFromThread(threadIndex);
   }
   
   /*
