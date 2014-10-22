@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
+
 import javax.swing.JPanel;
 
 import trianglegenome.Triangle;
@@ -56,6 +60,10 @@ public class DrawPanel extends JPanel
    * method */
   private VolatileImage offscreenBuffer;
   
+  /** An image for use with {@link #getFXImage()} to get the triangles as
+   * a WritableImage. */
+  private WritableImage fxImage;
+  
   /** The GraphicsConfiguration used to validate the
    * {@link DrawPanel#offscreenBuffer} */
   private GraphicsConfiguration graphicsConfiguration;
@@ -82,6 +90,8 @@ public class DrawPanel extends JPanel
     triangles = new ArrayList<Triangle>();
     createOffScreenBuffer(width, height);
     graphicsConfiguration = super.getGraphicsConfiguration();
+    
+    fxImage = SwingFXUtils.toFXImage(getSnapshot(), null);
   }
   
   /**
@@ -144,6 +154,16 @@ public class DrawPanel extends JPanel
     croppedSnapshot.getGraphics().drawImage(snapshot, 0, 0, null);
     
     return croppedSnapshot;
+  }
+  
+  /**
+   * Returns the triangles painted to a {@link javafx.scene.image.Image}.
+   * @return The triangles painted to a {@link javafx.scene.image.Image}.
+   */
+  public Image getFXImage()
+  {
+    updateOffScreenBuffer();
+    return SwingFXUtils.toFXImage(getSnapshot(), fxImage);
   }
   
   /**
