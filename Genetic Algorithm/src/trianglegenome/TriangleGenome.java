@@ -37,6 +37,8 @@ public class TriangleGenome extends Application
 
   public static void main(String[] args)
   {
+    Constants.width = Constants.IMAGES[Constants.selectedImage].getWidth();
+    Constants.height = Constants.IMAGES[Constants.selectedImage].getHeight();
     launch(args);
   }
 
