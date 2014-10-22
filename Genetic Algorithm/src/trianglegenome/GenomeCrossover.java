@@ -19,8 +19,6 @@ import trianglegenome.util.Constants;
  *  // assume genomes is a List&lt;Genome&gt;
  *  // assume hcsp is a HillClimbingSpawner
  *  
- *  java.util.concurrent.locks.Lock lock = new java.util.concurrent.locks.Lock();
- *  
  *  GenomeCrossover gc = new GenomeCrossover(genomes);
  *  
  *  // While program is running
@@ -47,10 +45,8 @@ public class GenomeCrossover
   private List<Genome> genomes;
   
   /**
-   * Creates a GenomeCrossover given a list of {@link Genome} objects and
-   * a {@link java.util.concurrent.locks.Lock}.
+   * Creates a GenomeCrossover, given a list of {@link Genome}
    * @param genomes A list of all genomes from every tribe.
-   * @param genomeLock A lock for the genomes.
    */
   public GenomeCrossover(List<Genome> genomes)
   {
