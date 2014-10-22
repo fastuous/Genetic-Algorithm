@@ -22,10 +22,10 @@ import trianglegenome.gui.DrawPanel;
 public class GenomeDrawPanelPair
 {
   /** The {@link trianglegenome.Genome} in the genome to draw panel mapping */
-  public Genome genome;
+  public final Genome genome;
   
   /** The {@link trianglegenome.gui.DrawPanel} in the genome to draw panel mapping */
-  public DrawPanel drawPanel;
+  public final DrawPanel drawPanel;
   
   /**
    * Creates a new GenomePanelPair where {@link GenomeDrawPanelPair#previous}
