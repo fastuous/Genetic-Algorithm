@@ -8,18 +8,18 @@ import trianglegenome.util.Constants;
 
 public class HillClimbing extends Thread
 {
-  int fitnessBefore = 0;
-  int fitnessAfter = 0;
-  boolean successfulEvolution = false;
-  int successfulDNA = Constants.rand.nextInt(10);
-  int successfulStepsize;
-  int successfulMultiplier = 1;
-  int evenOrOdd = Constants.rand.nextInt(100000) % 2;
-  int stepSize = Constants.rand.nextInt(2)+1;
-  int triangle;
-  ImagePanel imagePanel;
-  DrawPanel drawPanel;
-  BufferedImage imagePanelSnapshot;
+  private int fitnessBefore = 0;
+  private int fitnessAfter = 0;
+  private boolean successfulEvolution = false;
+  private int successfulDNA = Constants.rand.nextInt(10);
+  private int successfulStepsize;
+  private int successfulMultiplier = 1;
+  private int evenOrOdd = Constants.rand.nextInt(100000) % 2;
+  private int stepSize = Constants.rand.nextInt(2)+1;
+  private int triangle;
+  private ImagePanel imagePanel;
+  private DrawPanel drawPanel;
+  private BufferedImage imagePanelSnapshot;
   private BufferedImage targetImage;
 
   private FitnessEvaluator fitnessEvaluator;
@@ -114,14 +114,14 @@ public class HillClimbing extends Thread
     List<Triangle> genes = genome.getGenes();
     Triangle tri = genes.get(triangle);
     int location = genes.indexOf(tri);
-        if (evenOrOdd == 1)
-        {
-          tri.dna[successfulDNA] += successfulMultiplier * stepSize;
-        }
-        else
-        {
-          tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
-        }
+    if (evenOrOdd == 1)
+    {
+      tri.dna[successfulDNA] += successfulMultiplier * stepSize;
+    }
+    else
+    {
+      tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
+    }
     genes.set(location, tri);
   }
   
