@@ -1,36 +1,26 @@
 package trianglegenome;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-
-import javax.swing.SwingUtilities;
-
 import trianglegenome.gui.DrawPanel;
 import trianglegenome.gui.ImagePanel;
 import trianglegenome.util.Constants;
 
-public class MainController extends Application implements Initializable
+public class MainController extends Control implements Initializable
 {
 
   private List<Genome> globalPopulation = new ArrayList<Genome>();
@@ -43,17 +33,14 @@ public class MainController extends Application implements Initializable
 
   // private MainGUI GUI
 
-  @FXML
-  private ImageView drawPanelContainer;
-  @FXML
-  private Pane imagePanelContainer;
-  @FXML
-  private Text nTriangles;
-  @FXML
-  private Slider triangleSlider;
+  @FXML private ImageView drawPanelContainer;
+  @FXML private ImageView imagePanelContainer;
+  @FXML private Label nTriangles;
+  @FXML private Slider triangleSlider;
+  @FXML private ComboBox<String>imageSelect;
 
   @FXML
-  public void toggleRunning()
+  private void toggleRunning()
   {
     if (!started)
     {
@@ -75,7 +62,8 @@ public class MainController extends Application implements Initializable
     // and stop
   }
 
-  public void next()
+  @FXML
+  private void next()
   {
     hillClimberSpawner.performOneEvolution();
   }
@@ -87,13 +75,16 @@ public class MainController extends Application implements Initializable
     return genomes;
   }
 
-  public void showGenomeTable()
+  @FXML
+  private void showGenomeTable()
   {
     // TODO Take global genome table, sort it
   }
 
-  public void imageSelected(ActionEvent event)
+  @FXML
+  private void imageSelected(ActionEvent event)
   {
+    System.out.println(imageSelect.getValue());
     setup();
   }
 
@@ -118,115 +109,96 @@ public class MainController extends Application implements Initializable
   }
 
   @FXML
-  public void triangleSliderUpdate(ActionEvent event)
+  private void triangleSliderUpdate(ActionEvent event)
   {
     nTriangles.setText("Triangles: " + triangleSlider.getValue());
   }
 
-  public void tribeSelectorUpdate(ActionEvent event)
+  @FXML
+  private void tribeSelectorUpdate(ActionEvent event)
   {
     // TODO changes selected genome
   }
 
-  public void genomeSliderUpdate(ActionEvent event)
+  @FXML
+  private void genomeSliderUpdate(ActionEvent event)
   {
     // TODO changes selected genome
   }
 
-  public void readGenome()
+  @FXML
+  private void readGenome()
   {
     // TODO read genome from XML into currently selected
   }
 
-  public void writeGenome()
+  @FXML
+  private void writeGenome()
   {
     // TODO write selected genome to XML file
   }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public void start(Stage stage)
-  {
-    imagePanel = new ImagePanel(512, 413);
-    drawPanel = new DrawPanel(512, 413);
-    final SwingNode drawPanelNode = new SwingNode();
-    final SwingNode imagePanelNode = new SwingNode();
-    try
-    {
-      Parent root = FXMLLoader.load(getClass().getResource("/trianglegenome/gui/MainGUI.fxml"));
+  // @SuppressWarnings("unchecked")
+  // @Override
+  // public void start(Stage stage)
+  // {
+  // imagePanel = new ImagePanel(512, 413);
+  // drawPanel = new DrawPanel(512, 413);
+  // final SwingNode drawPanelNode = new SwingNode();
+  // final SwingNode imagePanelNode = new SwingNode();
+  // try
+  // {
+  // Parent root = FXMLLoader.load(getClass().getResource("/trianglegenome/gui/MainGUI.fxml"));
+  //
+  // createAndSetSwingContent(drawPanelNode, imagePanelNode);
+  //
+  // Scene scene = new Scene(root, 1100, 700);
+  //
+  // final ComboBox<String> imageSelect = (ComboBox<String>) scene.lookup("#imageSelect");
+  // imagePanelContainer.getChildren().add(imagePanelNode);
+  // imageSelect.getItems().addAll(Constants.IMAGE_FILES);
+  //
+  //
+  // stage.setTitle("Image Evolver");
+  // stage.setScene(scene);
+  // stage.show();
+  // }
+  // catch (IOException e)
+  // {
+  // }
+  // setup();
+  //
+  // try
+  // {
+  // Thread.sleep(200);
+  // }
+  // catch (InterruptedException e)
+  // {
+  // e.printStackTrace();
+  // }
+  // drawPanel.setTriangles(globalPopulation.stream().findFirst().get().getGenes());
+  // drawPanel.repaint();
+  // drawPanelContainer.setImage(SwingFXUtils.toFXImage(drawPanel.getSnapshot(), null));
+  // imagePanel.updateImage();
+  //
+  // return;
+  //
+  // }
 
-      createAndSetSwingContent(drawPanelNode, imagePanelNode);
-
-      Scene scene = new Scene(root, 1100, 700);
-
-      drawPanelContainer = (ImageView) scene.lookup("#drawPanelContainer");
-      imagePanelContainer = (Pane) scene.lookup("#imagePanelContainer");
-      final ComboBox<String> imageSelect = (ComboBox<String>) scene.lookup("#imageSelect");
-      imagePanelContainer.getChildren().add(imagePanelNode);
-      imageSelect.getItems().addAll(Constants.IMAGE_FILES);
-      
-
-      stage.setTitle("Image Evolver");
-      stage.setScene(scene);
-      stage.show();
-    }
-    catch (IOException e)
-    {
-    }
-    setup();
-
-    try
-    {
-      Thread.sleep(200);
-    }
-    catch (InterruptedException e)
-    {
-      e.printStackTrace();
-    }
-    drawPanel.setTriangles(globalPopulation.stream().findFirst().get().getGenes());
-    drawPanel.repaint();
-    drawPanelContainer.setImage(SwingFXUtils.toFXImage(drawPanel.getSnapshot(), null));
-    imagePanel.updateImage();
-
-    return;
-
-  }
-
-  private void createAndSetSwingContent(final SwingNode drawPanelNode, final SwingNode imagePanelNode)
-  {
-    try
-    {
-      SwingUtilities.invokeAndWait(new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          drawPanelNode.setContent(drawPanel);
-          imagePanelNode.setContent(imagePanel);
-        }
-      });
-    }
-    catch (InvocationTargetException | InterruptedException e)
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-
-  public static void main(String[] args)
-  {
-    Constants.selectedImage = 0;
-    Constants.width = 512;
-    Constants.height = 413;
-    try
-    {
-      launch(args);
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
+  // public static void main(String[] args)
+  // {
+  // Constants.selectedImage = 0;
+  // Constants.width = 512;
+  // Constants.height = 413;
+  // try
+  // {
+  // launch(args);
+  // }
+  // catch (Exception e)
+  // {
+  // e.printStackTrace();
+  // }
+  // }
 
   @FXML
   private void test()
@@ -237,6 +209,9 @@ public class MainController extends Application implements Initializable
   @Override
   public void initialize(URL location, ResourceBundle resources)
   {
-
+    imagePanelContainer.setImage(SwingFXUtils.toFXImage(Constants.IMAGES[Constants.selectedImage], null));
+    imageSelect.getItems().addAll(Constants.IMAGE_FILES);
+    
   }
+
 }
