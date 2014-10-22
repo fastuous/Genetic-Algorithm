@@ -61,6 +61,20 @@ public class HillClimberSpawner
         .stream()
         .allMatch(t -> t.isPaused());
   }
+
+  public boolean hillClimbersAreRunning()
+  {
+    return hillClimbingThreads
+        .stream()
+        .allMatch(t -> t.isAlive());
+  }
+
+  public boolean anyHillClimberIsNotRunning()
+  {
+    return hillClimbingThreads
+        .stream()
+        .allMatch(t -> t.isAlive());
+  }
   
   public boolean anyHillClimberIsPaused()
   {
