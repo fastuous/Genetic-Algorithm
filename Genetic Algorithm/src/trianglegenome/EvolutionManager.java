@@ -56,6 +56,7 @@ public class EvolutionManager extends Thread
     Objects.requireNonNull(target, "target cannot be null");
     this.genomes = genomes;
     this.threadCount = threadCount;
+    this.target = target;
     startTime = System.currentTimeMillis();
     init();
   }

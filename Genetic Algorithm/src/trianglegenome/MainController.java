@@ -16,6 +16,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
+
+import javax.swing.JOptionPane;
+
 import trianglegenome.gui.DrawPanel;
 import trianglegenome.gui.ImagePanel;
 import trianglegenome.util.Constants;
@@ -35,12 +38,18 @@ public class MainController extends Control implements Initializable
 
   // private MainGUI GUI
 
-  @FXML private ImageView drawPanelContainer;
-  @FXML private ImageView imagePanelContainer;
-  @FXML private Label nTriangles;
-  @FXML private Label fitness;
-  @FXML private Slider triangleSlider;
-  @FXML private ComboBox<String>imageSelect;
+  @FXML
+  private ImageView drawPanelContainer;
+  @FXML
+  private ImageView imagePanelContainer;
+  @FXML
+  private Label nTriangles;
+  @FXML
+  private Label fitness;
+  @FXML
+  private Slider triangleSlider;
+  @FXML
+  private ComboBox<String> imageSelect;
 
   @FXML
   private void toggleRunning()
@@ -69,10 +78,10 @@ public class MainController extends Control implements Initializable
   private void next()
   {
     Genome seed = SeedGenome.generateSeed(Constants.IMAGES[Constants.selectedImage]);
-    
+
     drawPanel.setTriangles(seed.getGenes());
     drawPanelContainer.setImage(drawPanel.getFXImage());
-    
+
     evolutionManager.performOneEvolution();
   }
 
@@ -101,25 +110,49 @@ public class MainController extends Control implements Initializable
 
   private void setup()
   {
+    Constants.threadCount = getThreadCount();
     started = false;
     BufferedImage target = Constants.IMAGES[Constants.selectedImage];
     Constants.width = target.getWidth();
     Constants.height = target.getHeight();
-    evolutionManager = new EvolutionManager(Constants.threadCount, globalPopulation, target);
-    drawPanel = new DrawPanel(Constants.width, Constants.height);
     globalPopulation.clear();
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 100 * threadCount; ++i)
     {
       globalPopulation.add(SeedGenome.generateSeed(target));
     }
-    List<Triangle> test = globalPopulation.get(Constants.rand.nextInt(10)).getGenes();
-    drawPanel.setTriangles(test);
-    hillClimberSpawner = new HillClimberSpawner(10, globalPopulation, target);
+    evolutionManager = new EvolutionManager(Constants.threadCount, globalPopulation, target);
+    drawPanel = new DrawPanel(Constants.width, Constants.height);
 
     // Instantiate the Image and Draw Panels based on the Global Constants
     // Set The draw Panel and Image Panel for the GUI
     //
     // TODO instantiate and setup everything necessary for problem space
+  }
+
+  private int getThreadCount()
+  {
+    int threadCount = 0;
+    while (true)
+    {
+     String input = JOptionPane.showInputDialog("Input the number of threads:"); 
+     
+     try {
+       threadCount = Integer.parseInt(input);
+     }
+     catch(NumberFormatException e)
+     {
+       continue;
+     }
+     
+     if (threadCount < 1 || threadCount > 1000)
+     {
+       continue;
+     }
+     
+     break;
+    }
+    
+    return threadCount;
   }
 
   @FXML
@@ -159,7 +192,7 @@ public class MainController extends Control implements Initializable
   {
     System.out.println("Test");
   }
-  
+
   public void updateDisplay()
   {
     drawPanel.setTriangles(selectedGenome.getGenes());
@@ -173,7 +206,7 @@ public class MainController extends Control implements Initializable
     imagePanelContainer.setImage(SwingFXUtils.toFXImage(Constants.IMAGES[Constants.selectedImage], null));
     imageSelect.getItems().addAll(Constants.IMAGE_FILES);
     triangleSlider.valueProperty().addListener(e -> triangleSliderUpdate());
-    
+
     setup();
   }
 
