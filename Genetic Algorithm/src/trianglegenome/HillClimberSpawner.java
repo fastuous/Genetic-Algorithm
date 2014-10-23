@@ -2,7 +2,6 @@ package trianglegenome;
 
 import static java.lang.Math.ceil;
 
-import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,14 +20,15 @@ public class HillClimberSpawner
   private List<Genome> genomes;
   private int threadCount;
   private Collection<HillClimbing> hillClimbingThreads;
-  private BufferedImage target;
+  private FitnessEvaluator fitnessEvaluator;
 
-  public HillClimberSpawner(int threadCount, List<Genome> genomes, BufferedImage target)
+  public HillClimberSpawner(
+      int threadCount, List<Genome> genomes, FitnessEvaluator fitnessEvaluator)
   {
     this.threadCount = threadCount;
     this.genomes = genomes;
     this.hillClimbingThreads = new LinkedList<HillClimbing>();
-    this.target = target;
+    this.fitnessEvaluator = fitnessEvaluator;
 
     populateHillClimbingThreads(this.threadCount);
   }
@@ -50,7 +50,7 @@ public class HillClimberSpawner
           .map(g -> new GenomeDrawPanelPair(g, drawPanel))
           .collect(Collectors.toList());
 
-      HillClimbing hillClimbingThread = new HillClimbing(threadGenomes, target);
+      HillClimbing hillClimbingThread = new HillClimbing(threadGenomes, fitnessEvaluator);
       hillClimbingThreads.add(hillClimbingThread);
     }
   }
@@ -123,9 +123,20 @@ public class HillClimberSpawner
 
   public void stopHillClimbing()
   {
-    pauseHillClimbers();
-    hillClimbingThreads.forEach(t -> t.interrupt());
+    for (HillClimbing hc : hillClimbingThreads)
+    {
+      try
+      {
+        synchronized (hc)
+        {
+          hc.interrupt();
+          hc.wait();
+        }
+      }
+      catch (Exception e) {}
+    }
     hillClimbingThreads.clear();
+    synchronized (this) { this.notify(); }
   }
 
   public int getThreadCount()

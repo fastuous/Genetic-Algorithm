@@ -45,6 +45,7 @@ public class MainController extends Control implements Initializable
   @FXML private ImageView drawPanelContainer;
   @FXML private ImageView imagePanelContainer;
   @FXML private Label nTriangles;
+  @FXML private Label fitness;
   @FXML private Slider triangleSlider;
   @FXML private Slider genomeSlider;
   @FXML private ComboBox<String> imageSelect;
@@ -87,24 +88,16 @@ public class MainController extends Control implements Initializable
     SelectionModel<String> test = imageSelect.getSelectionModel();
     Constants.selectedImage = test.getSelectedIndex();
 
-    BufferedImage target = Constants.IMAGES[Constants.selectedImage];
-    Constants.width = target.getWidth();
-    Constants.height = target.getHeight();
+    BufferedImage targetImage = Constants.IMAGES[Constants.selectedImage];
+
+    imagePanelContainer.setImage(SwingFXUtils.toFXImage(targetImage, null));
     
-    imagePanelContainer.setImage(SwingFXUtils.toFXImage(target, null));
-    evolutionManager.pause();
-    drawPanel.setSize(Constants.width, Constants.height);
+    evolutionManager.interrupt();
+    try { synchronized (evolutionManager) { evolutionManager.wait(); } }
+    catch (Exception e) {}
     
-    globalPopulation.clear();
-    for (int i = 0; i < 40; ++i)
-    {
-      globalPopulation.add(SeedGenome.generateSeed(target));
-    }
-    selectedGenome = globalPopulation.stream().findFirst().get();
+    setup();
     
-    drawPanel.setTriangles(selectedGenome.getGenes());
-    
-    evolutionManager.setTargetImage(target);
   }
 
   private void setup()
@@ -123,10 +116,12 @@ public class MainController extends Control implements Initializable
     // TODO: set this elsewhere
     threadCount = 4;
     
+    tribeSelect.itemsProperty().get().clear();
     for (int i = 0; i < threadCount; i++) tribeSelect.itemsProperty().get().add(i);
     
     if (evolutionManager != null) evolutionManager.interrupt();
-    evolutionManager = new EvolutionManager(threadCount, globalPopulation, target);
+    evolutionManager = new EvolutionManager(
+        threadCount, globalPopulation, Constants.FITNESS_EVALUATORS[Constants.selectedImage]);
     evolutionManager.start();
 
     selectedTribePopulation = evolutionManager.getGenomesFromTribe(0);
@@ -195,6 +190,7 @@ public class MainController extends Control implements Initializable
   {
     drawPanel.setTriangles(selectedGenome.getGenes());
     drawPanelContainer.setImage(drawPanel.getFXImage());
+    fitness.textProperty().set("fitness: " + selectedGenome.getFitness());
   }
 
   @Override

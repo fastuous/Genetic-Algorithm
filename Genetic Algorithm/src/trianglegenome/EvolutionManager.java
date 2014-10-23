@@ -35,12 +35,11 @@ public class EvolutionManager extends Thread
   /** The class that will perform crossovers on the genomes. */
   private GenomeCrossover genomeCrossover;
   
-  /** The reference image that the triangles in each genome will eventually resemble through
-   * hill climbing and crossover. */
-  private BufferedImage target;
-  
   /** The number of threads that will perform the hill climbing. */
   private int threadCount;
+  
+  /** The fitness evaluator that each hill climbing thread will use. */
+  private FitnessEvaluator fitnessEvaluator;
   
   /**
    * Given an initial thread count, a list of genomes and a reference image, create an
@@ -50,17 +49,65 @@ public class EvolutionManager extends Thread
    * @param genomes The genomes that this EvolutionManager will manage.
    * @param target The image that the genomes should resemble.
    */
-  public EvolutionManager(int threadCount, List<Genome> genomes, BufferedImage target)
+  public EvolutionManager(
+      int threadCount, List<Genome> genomes, FitnessEvaluator fitnessEvaluator)
   {
     super("EvloutionManager-Thread");
     Objects.requireNonNull(genomes, "genomes cannot be null");
-    Objects.requireNonNull(target, "target cannot be null");
+    Objects.requireNonNull(fitnessEvaluator, "fitnessEvaluator cannot be null");
     this.genomes = genomes;
     this.threadCount = threadCount;
-    this.target = target;
+    this.fitnessEvaluator = fitnessEvaluator;
     startTime = System.currentTimeMillis();
     init();
     this.paused = false;
+  }
+  
+  /*
+   * (non-Javadoc)
+   * @see java.lang.Thread#run()
+   */
+  @Override
+  public void run()
+  {
+    //int iterations = 0;
+    hillClimberSpawner.startHillClimbing();
+    hillClimberSpawner.unpauseHillClimbers();
+    while (!super.isInterrupted())
+    {
+      if (!paused)
+      {
+        /*
+        if (hillClimberSpawner.anyHillClimberIsPaused())
+        {
+          throw new IllegalStateException(
+              "No HillClimbing thread can be paused while EvolutionManager is running");
+        }*/
+        if (crossoverFlag)
+        {
+          hillClimberSpawner.pauseHillClimbers();
+          int crossoverCount = max(1, Constants.rand.nextInt(genomes.size() / 8));
+          genomeCrossover.crossover(crossoverCount);
+          hillClimberSpawner.unpauseHillClimbers();
+        }
+        
+        /*
+        // TODO put some real crossover conditions.
+        if (false && iterations > 20000000)
+        {
+          crossoverFlag = true;
+          iterations = 0;
+        }
+        iterations++; */
+      }
+      else
+      {
+        try { Thread.sleep(200); }
+        catch (Exception e) { hillClimberSpawner.stopHillClimbing(); }
+      }
+    }
+    hillClimberSpawner.stopHillClimbing();
+    synchronized (this) { this.notify(); }
   }
   
   /**
@@ -69,9 +116,22 @@ public class EvolutionManager extends Thread
   private void init()
   {
     this.paused = true;
-    if (hillClimberSpawner != null) hillClimberSpawner.stopHillClimbing();
-    hillClimberSpawner = new HillClimberSpawner(threadCount, genomes, target);
+    if (hillClimberSpawner != null)
+    {
+      try
+      {
+        synchronized (hillClimberSpawner)
+        {
+          hillClimberSpawner.stopHillClimbing();
+          this.wait();
+        }
+      }
+      catch (Exception e) { }
+    }
+    hillClimberSpawner = new HillClimberSpawner(threadCount, genomes, fitnessEvaluator);
     genomeCrossover = new GenomeCrossover(genomes);
+    
+    this.paused = false;
   }
   
   /**
@@ -85,6 +145,7 @@ public class EvolutionManager extends Thread
     {
       this.threadCount = threadCount;
       init();
+      hillClimberSpawner.startHillClimbing();
     }
   }
   
@@ -116,20 +177,7 @@ public class EvolutionManager extends Thread
     Objects.requireNonNull(genomes, "genomes cannot be null");
     this.genomes = genomes;
     init();
-  }
-  
-  /**
-   * Changes the reference image that this EvolutionManager will use when performing hill
-   * climbing and crossovers. This function also interrupts the current hill climbing
-   * threads and creates new ones.
-   * @param target The new BufferedImage that the EvolutionManager will use.
-   */
-  public void setTargetImage(BufferedImage target)
-  {
-    Objects.requireNonNull(target, "target cannot be null");
-    this.target = target;
-    init();
-    startTime = System.currentTimeMillis();
+    hillClimberSpawner.startHillClimbing();
   }
   
   /**
@@ -178,52 +226,6 @@ public class EvolutionManager extends Thread
       throw new IllegalArgumentException("threadIndex exceeds hill climbing thread count.");
     }
     return hillClimberSpawner.getGenomesFromThread(threadIndex);
-  }
-  
-  /*
-   * (non-Javadoc)
-   * @see java.lang.Thread#run()
-   */
-  @Override
-  public void run()
-  {
-    //int iterations = 0;
-    hillClimberSpawner.startHillClimbing();
-    hillClimberSpawner.unpauseHillClimbers();
-    while (!super.isInterrupted())
-    {
-      if (!paused)
-      {
-        /*
-        if (hillClimberSpawner.anyHillClimberIsPaused())
-        {
-          throw new IllegalStateException(
-              "No HillClimbing thread can be paused while EvolutionManager is running");
-        }*/
-        if (crossoverFlag)
-        {
-          hillClimberSpawner.pauseHillClimbers();
-          int crossoverCount = max(1, Constants.rand.nextInt(genomes.size() / 8));
-          genomeCrossover.crossover(crossoverCount);
-          hillClimberSpawner.unpauseHillClimbers();
-        }
-        
-        /*
-        // TODO put some real crossover conditions.
-        if (false && iterations > 20000000)
-        {
-          crossoverFlag = true;
-          iterations = 0;
-        }
-        iterations++; */
-      }
-      else
-      {
-        try { Thread.sleep(200); }
-        catch (Exception e) { hillClimberSpawner.stopHillClimbing(); }
-      }
-    }
-    hillClimberSpawner.stopHillClimbing();
   }
   
   /*

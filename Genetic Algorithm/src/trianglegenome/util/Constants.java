@@ -8,6 +8,8 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import trianglegenome.FitnessEvaluator;
+
 /**
  * Centralized place to keep hard-coded variables. Like in AntWorld
  * 
@@ -51,6 +53,16 @@ public class Constants
       {
         e.printStackTrace();
       }
+    }
+  }
+  
+  public static final FitnessEvaluator[] FITNESS_EVALUATORS;
+  static
+  {
+    FITNESS_EVALUATORS = new FitnessEvaluator[IMAGE_FILES.length];
+    for (int i = 0; i < IMAGES.length; i++)
+    {
+      FITNESS_EVALUATORS[i] = new FitnessEvaluator(IMAGES[i]);
     }
   }
   

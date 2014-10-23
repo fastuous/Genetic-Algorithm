@@ -14,16 +14,15 @@ public class HillClimbing extends Thread
   private int evenOrOdd = Constants.rand.nextInt(100000) % 2;
   private int stepSize = Constants.rand.nextInt(2)+1;
   private int triangle = Constants.rand.nextInt(Constants.TRIANGLE_COUNT);
-  private BufferedImage targetImage;
 
   private FitnessEvaluator fitnessEvaluator;
   private List<GenomeDrawPanelPair> genomeStates;
   private volatile boolean paused = false;
 
-  public HillClimbing(List<GenomeDrawPanelPair> genomeStates, BufferedImage target)
+  public HillClimbing(List<GenomeDrawPanelPair> genomeStates, FitnessEvaluator fitnessEvaluator)
   {
-    targetImage = target;
-    fitnessEvaluator = new FitnessEvaluator(targetImage);
+    super("HillClimbing-Thread");
+    this.fitnessEvaluator = fitnessEvaluator;
     this.genomeStates = genomeStates;
   }
 
@@ -54,6 +53,7 @@ public class HillClimbing extends Thread
         }
       }
     }
+    synchronized (this) { this.notify(); }
   }
 
   public void pause()
@@ -97,6 +97,7 @@ public class HillClimbing extends Thread
       
       do
       {
+        if (super.isInterrupted()) return;
         val = tri.dna[successfulDNA];
         upperBound = 0;
         lowerBound = 0;
@@ -149,6 +150,7 @@ public class HillClimbing extends Thread
     fitnessBefore = fitnessEvaluator.differenceSum(drawPanelSnapshot);
     do
     {
+      if (super.isInterrupted()) return;
       evolve(genomeState.genome);
       genomeState.drawPanel.repaint();
       drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
