@@ -87,6 +87,10 @@ public class EvolutionManager extends Thread
     }
   }
   
+  /**
+   * Performs one evolution on each of the hill climbing threads, regardless of any thread
+   * state.
+   */
   public void performOneEvolution()
   {
     hillClimberSpawner.performOneEvolution();
