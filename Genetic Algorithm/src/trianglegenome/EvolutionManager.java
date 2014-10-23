@@ -255,6 +255,60 @@ public class EvolutionManager extends Thread
     return getCrossoverGenerations() + getHillClimbGenerations();
   }
   
+  /**
+   * Returns the most fit genome's fitness value from the global population.
+   * @return The most fit genome's fitness value from the global population.
+   */
+  public long getBestFitnessValue()
+  {
+    return genomes
+        .stream()
+        .mapToLong(g -> g.getFitness())
+        .min()
+        .getAsLong();
+  }
+  
+  /**
+   * Returns the most fit genome's fitness value from the given tribe number.
+   * @param The tribe from which to get the best fitness value.
+   * @return The most fit genome's fitness value from the given tribe number.
+   */
+  public long getBestFitnessValue(int tribeIndex)
+  {
+    return getGenomesFromTribe(tribeIndex)
+        .stream()
+        .mapToLong(g -> g.getFitness())
+        .min()
+        .getAsLong();
+  }
+  
+  /**
+   * Returns the least fit genome's fitness value from the global population.
+   * @return The least fit genome's fitness value from the global population.
+   */
+  public long getWorstFitnessValue()
+  {
+    return genomes
+        .stream()
+        .mapToLong(g -> g.getFitness())
+        .max()
+        .getAsLong();
+  }
+  
+  /**
+   * Returns the least fit genome's fitness value from the given tribe number.
+   * @param The tribe from which to get the least fitness value.
+   * @return The least fit genome's fitness value from the given tribe number.
+   */
+  public long getWorstFitnessValue(int tribeIndex)
+  {
+    return getGenomesFromTribe(tribeIndex)
+        .stream()
+        .mapToLong(g -> g.getFitness())
+        .max()
+        .getAsLong();
+  }
+  
   /*
    * (non-Javadoc)
    * @see java.lang.Object#finalize()
