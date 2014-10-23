@@ -30,6 +30,7 @@ public class MainController extends Control implements Initializable
 {
 
   private List<Genome> globalPopulation = new ArrayList<Genome>();
+  List<Genome> selectedTribePopulation;
   private int threadCount;
   private DrawPanel drawPanel;
   private ImagePanel imagePanel;
@@ -44,7 +45,9 @@ public class MainController extends Control implements Initializable
   @FXML private ImageView imagePanelContainer;
   @FXML private Label nTriangles;
   @FXML private Slider triangleSlider;
-  @FXML private ComboBox<String>imageSelect;
+  @FXML private Slider genomeSlider;
+  @FXML private ComboBox<String> imageSelect;
+  @FXML private ComboBox<Integer> tribeSelect;
 
   @FXML
   private void toggleRunning()
@@ -92,17 +95,22 @@ public class MainController extends Control implements Initializable
     Constants.height = target.getHeight();
     drawPanel = new DrawPanel(Constants.width, Constants.height);
     globalPopulation.clear();
-    for (int i = 0; i < 1; ++i)
+    for (int i = 0; i < 10; ++i)
     {
       globalPopulation.add(SeedGenome.generateSeed(target));
     }
-    List<Triangle> test = globalPopulation.get(Constants.rand.nextInt(1)).getGenes();
-    drawPanel.setTriangles(test);
     selectedGenome = globalPopulation.stream().findFirst().get();
     
+    // TODO: set this elsewhere
+    threadCount = 4;
+    
+    for (int i = 0; i < threadCount; i++) tribeSelect.itemsProperty().get().add(i);
+    
     if (evolutionManager != null) evolutionManager.interrupt();
-    evolutionManager = new EvolutionManager(1, globalPopulation, target);
+    evolutionManager = new EvolutionManager(threadCount, globalPopulation, target);
     evolutionManager.start();
+
+    selectedTribePopulation = evolutionManager.getGenomesFromTribe(0);
     
     return;
     
@@ -123,13 +131,13 @@ public class MainController extends Control implements Initializable
   @FXML
   private void tribeSelectorUpdate(ActionEvent event)
   {
-    // TODO changes selected genome
+    selectedTribePopulation = evolutionManager.getGenomesFromTribe(tribeSelect.getValue());
   }
 
   @FXML
   private void genomeSliderUpdate(ActionEvent event)
   {
-    // TODO changes selected genome
+    selectedGenome = selectedTribePopulation.get((int)genomeSlider.getValue());
   }
 
   @FXML
