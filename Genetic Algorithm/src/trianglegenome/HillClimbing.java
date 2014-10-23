@@ -13,6 +13,8 @@ public class HillClimbing extends Thread
   private int evenOrOdd = Constants.rand.nextInt(100000) % 2;
   private int stepSize = Constants.rand.nextInt(2)+1;
   private int triangle = Constants.rand.nextInt(Constants.TRIANGLE_COUNT);
+  private int upperBound;
+  private int lowerBound = 0;
   private BufferedImage targetImage;
 
   private FitnessEvaluator fitnessEvaluator;
@@ -84,11 +86,13 @@ public class HillClimbing extends Thread
   
   public void evolve(Genome genome)
   {
+      if (successfulDNA >= 0 && successfulDNA < 3) upperBound = Constants.width;
+      else if (successfulDNA >= 3 && successfulDNA < 6) upperBound = Constants.height;
+      else if (successfulDNA >= 6 && successfulDNA < 10) upperBound = Constants.MAX_RGBA;
     synchronized (genome.getGenes())
     {
       List<Triangle> genes = genome.getGenes();
       Triangle tri = genes.get(triangle);
-      Triangle original = tri;
       int location = genes.indexOf(tri);
       do
       {
@@ -100,7 +104,7 @@ public class HillClimbing extends Thread
         {
           tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
         }
-        if(!tri.isValidTriangle(tri))
+        if(tri.dna[successfulDNA] > upperBound || tri.dna[successfulDNA] < lowerBound)
         {
           if (evenOrOdd == 1)
           {
@@ -111,8 +115,13 @@ public class HillClimbing extends Thread
             tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
           }
           evenOrOdd = (evenOrOdd+1) % 2;
+          successfulMultiplier = 1;
+          successfulDNA = Constants.rand.nextInt(10);
+          evenOrOdd = Constants.rand.nextInt(100000) % 2;
+          stepSize = Constants.rand.nextInt(2)+1;
+          triangle = Constants.rand.nextInt(Constants.TRIANGLE_COUNT);
         }
-      } while (!tri.isValidTriangle(tri));
+      } while (tri.dna[successfulDNA] > upperBound || tri.dna[successfulDNA] < lowerBound);
       genes.set(location, tri);
     }
   }
