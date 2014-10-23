@@ -30,7 +30,7 @@
                   <Insets left="10.0" top="10.0" />
                </HBox.margin>
             </Slider>
-            <Label text="Fitness: XXXXXXX">
+            <Label fx:id="fitness" text="Fitness:">
                <HBox.margin>
                   <Insets left="5.0" top="5.0" />
                </HBox.margin></Label>
@@ -46,7 +46,7 @@
                   <Insets left="20.0" />
                </HBox.margin>
             </ComboBox>
-            <Slider prefHeight="18.0" prefWidth="888.0">
+            <Slider prefHeight="18.0" prefWidth="888.0" showTickMarks="true" snapToTicks="true">
                <HBox.margin>
                   <Insets left="20.0" top="5.0" />
                </HBox.margin>
@@ -65,7 +65,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#test" prefWidth="160.0" text="Start" />
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#toggleRunning" prefWidth="160.0" text="Start" />
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#next" prefWidth="160.0" text="Next Generation" GridPane.columnIndex="1" />
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#showGenomeTable" prefWidth="160.0" text="Show Genome Table" GridPane.columnIndex="2" />
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#readGenome" prefWidth="160.0" text="Read Genome" GridPane.columnIndex="3" />

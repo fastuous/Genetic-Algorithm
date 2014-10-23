@@ -11,24 +11,31 @@ import javafx.stage.Stage;
 
 public class TriangleGenome extends Application
 {
+  static MainController controller;
+
   @Override
   public void start(Stage stage)
   {
 
     Parent root;
+
     try
     {
-      root = FXMLLoader.load(getClass().getResource("/trianglegenome/gui/MainGUI.fxml"));
+      FXMLLoader loader = new FXMLLoader();
+      root = loader.load(getClass().getResource("/trianglegenome/gui/MainGUI.fxml").openStream());
+      controller = (MainController) loader.getController();
 
       Scene scene = new Scene(root, 1100, 700);
 
       stage.setTitle("Image Evolver");
       stage.setScene(scene);
       stage.show();
+
     }
     catch (IOException e)
     {
-
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
 
     return;
@@ -40,6 +47,7 @@ public class TriangleGenome extends Application
     Constants.width = Constants.IMAGES[Constants.selectedImage].getWidth();
     Constants.height = Constants.IMAGES[Constants.selectedImage].getHeight();
     launch(args);
+
   }
 
 }
