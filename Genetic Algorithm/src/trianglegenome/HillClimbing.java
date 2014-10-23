@@ -149,7 +149,7 @@ public class HillClimbing extends Thread
     do
     {
       evolve(genomeState.genome);
-      genomeState.drawPanel.setTriangles(genomeState.genome.getGenes());
+      genomeState.drawPanel.repaint();
       drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSum(drawPanelSnapshot);
       if (fitnessAfter > fitnessBefore)

@@ -187,21 +187,19 @@ public class EvolutionManager extends Thread
   @Override
   public void run()
   {
-    int iterations = 0;
+    //int iterations = 0;
+    hillClimberSpawner.startHillClimbing();
+    hillClimberSpawner.unpauseHillClimbers();
     while (!super.isInterrupted())
     {
       if (!paused)
       {
-        if (!hillClimberSpawner.hillClimbersAreRunning())
-        {
-          hillClimberSpawner.startHillClimbing();
-          hillClimberSpawner.unpauseHillClimbers();
-        }
+        /*
         if (hillClimberSpawner.anyHillClimberIsPaused())
         {
           throw new IllegalStateException(
               "No HillClimbing thread can be paused while EvolutionManager is running");
-        }
+        }*/
         if (crossoverFlag)
         {
           hillClimberSpawner.pauseHillClimbers();
@@ -210,15 +208,16 @@ public class EvolutionManager extends Thread
           hillClimberSpawner.unpauseHillClimbers();
         }
         
+        /*
         // TODO put some real crossover conditions.
         if (false && iterations > 20000000)
         {
           crossoverFlag = true;
           iterations = 0;
         }
-        iterations++;
+        iterations++; */
       }
-      else try { Thread.sleep(100); } catch (Exception e) {}
+      else try { Thread.sleep(200); } catch (Exception e) {}
     }
   }
   
