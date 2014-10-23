@@ -59,6 +59,7 @@ public class EvolutionManager extends Thread
     this.target = target;
     startTime = System.currentTimeMillis();
     init();
+    this.paused = false;
   }
   
   /**
@@ -189,6 +190,7 @@ public class EvolutionManager extends Thread
         if (!hillClimberSpawner.hillClimbersAreRunning())
         {
           hillClimberSpawner.startHillClimbing();
+          hillClimberSpawner.unpauseHillClimbers();
         }
         if (hillClimberSpawner.anyHillClimberIsPaused())
         {
