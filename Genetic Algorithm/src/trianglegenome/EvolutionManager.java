@@ -18,11 +18,11 @@ public class EvolutionManager extends Thread
   /** When true, this thread will not perform any actions. */
   private volatile boolean paused;
   
-  /** Will be true when a genome should be in a crossover. */
-  private volatile boolean crossoverFlag;
-  
   /** Used for keeping track of running time. */
   private volatile long startTime;
+  
+  /** Will be true when a genome should be in a crossover. */
+  private boolean crossoverFlag;
   
   /** The genomes on which hill climbing and crossovers will be performed. */
   private List<Genome> genomes;
@@ -85,6 +85,20 @@ public class EvolutionManager extends Thread
     }
   }
   
+  public void performOneEvolution()
+  {
+    hillClimberSpawner.performOneEvolution();
+  }
+  
+  /**
+   * Returns the number of hill climbing threads.
+   * @return The number of hill climbing threads.
+   */
+  public int getThreadCount()
+  {
+    return threadCount;
+  }
+  
   /**
    * Changes the genomes that this EvolutionManager will perform hill climbing and crossovers
    * on. This function also interrupts the current hill climbing threads and creates new ones.
@@ -145,6 +159,20 @@ public class EvolutionManager extends Thread
     return this.paused;
   }
   
+  /**
+   * Returns the genomes managed by a given thread, specified by index.
+   * @param threadIndex The thread from which the genomes will be taken.
+   * @return The genomes managed by a given thread, specified by index.
+   */
+  public List<Genome> getGenomesFromTribe(int threadIndex)
+  {
+    if (threadIndex >= threadCount)
+    {
+      throw new IllegalArgumentException("threadIndex exceeds hill climbing thread count.");
+    }
+    return hillClimberSpawner.getGenomesFromThread(threadIndex);
+  }
+  
   /*
    * (non-Javadoc)
    * @see java.lang.Thread#run()
@@ -152,6 +180,7 @@ public class EvolutionManager extends Thread
   @Override
   public void run()
   {
+    int iterations = 0;
     while (!super.isInterrupted())
     {
       if (!paused)
@@ -172,6 +201,14 @@ public class EvolutionManager extends Thread
           genomeCrossover.crossover(crossoverCount);
           hillClimberSpawner.unpauseHillClimbers();
         }
+        
+        // TODO put some real crossover conditions.
+        if (iterations > 2097152)
+        {
+          crossoverFlag = true;
+          iterations = 0;
+        }
+        iterations++;
       }
       else try { Thread.sleep(100); } catch (Exception e) {}
     }

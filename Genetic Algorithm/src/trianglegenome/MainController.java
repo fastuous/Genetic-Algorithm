@@ -31,6 +31,7 @@ public class MainController extends Control implements Initializable
   private HillClimberSpawner hillClimberSpawner;
   private Genome selectedGenome;
   private boolean started = false;
+  private EvolutionManager evolutionManager;
 
   // private MainGUI GUI
 
@@ -46,19 +47,19 @@ public class MainController extends Control implements Initializable
   {
     if (!started)
     {
-      if (hillClimberSpawner.hillClimbersArePaused())
+      if (!evolutionManager.isPaused())
       {
-        hillClimberSpawner.unpauseHillClimbers();
+        evolutionManager.pause();
       }
-      else if (!hillClimberSpawner.hillClimbersArePaused())
+      else if (evolutionManager.isPaused())
       {
-        hillClimberSpawner.pauseHillClimbers();
+        evolutionManager.unpause();
       }
     }
     else
     {
       started = true;
-      hillClimberSpawner.startHillClimbing();
+      evolutionManager.run();
     }
     // TODO if hill climbing, pause hill-climbing threads, if performing crossover, finish crossover
     // and stop
@@ -72,7 +73,7 @@ public class MainController extends Control implements Initializable
     drawPanel.setTriangles(seed.getGenes());
     drawPanelContainer.setImage(drawPanel.getFXImage());
     
-    //    hillClimberSpawner.performOneEvolution();
+    evolutionManager.performOneEvolution();
   }
 
   private List<Genome> getSortedPopulation()
@@ -94,7 +95,7 @@ public class MainController extends Control implements Initializable
     SelectionModel<String> test = imageSelect.getSelectionModel();
     Constants.selectedImage = test.getSelectedIndex();
     imagePanelContainer.setImage(SwingFXUtils.toFXImage(Constants.IMAGES[Constants.selectedImage], null));
-    
+
     setup();
   }
 
@@ -103,6 +104,7 @@ public class MainController extends Control implements Initializable
     BufferedImage target = Constants.IMAGES[Constants.selectedImage];
     Constants.width = target.getWidth();
     Constants.height = target.getHeight();
+    evolutionManager = new EvolutionManager(Constants.threadCount, globalPopulation, target);
     drawPanel = new DrawPanel(Constants.width, Constants.height);
     globalPopulation.clear();
     for (int i = 0; i < 10; ++i)

@@ -62,6 +62,7 @@ public class Constants
 
   public static final int MAX_RGBA = 255;
 
+  public static int threadCount;
   /** The width of the target image. */
   public static int width;
   /** The height of the target image. */
