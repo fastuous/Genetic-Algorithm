@@ -52,6 +52,7 @@ public class EvolutionManager extends Thread
    */
   public EvolutionManager(int threadCount, List<Genome> genomes, BufferedImage target)
   {
+    super("EvloutionManager-Thread");
     Objects.requireNonNull(genomes, "genomes cannot be null");
     Objects.requireNonNull(target, "target cannot be null");
     this.genomes = genomes;
@@ -201,7 +202,7 @@ public class EvolutionManager extends Thread
           throw new IllegalStateException(
               "No HillClimbing thread can be paused while EvolutionManager is running");
         }
-        if (false && crossoverFlag)
+        if (crossoverFlag)
         {
           hillClimberSpawner.pauseHillClimbers();
           int crossoverCount = max(1, Constants.rand.nextInt(genomes.size() / 8));
@@ -210,7 +211,7 @@ public class EvolutionManager extends Thread
         }
         
         // TODO put some real crossover conditions.
-        if (iterations > Integer.MAX_VALUE)
+        if (false && iterations > 20000000)
         {
           crossoverFlag = true;
           iterations = 0;
