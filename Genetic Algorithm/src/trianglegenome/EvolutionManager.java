@@ -85,6 +85,11 @@ public class EvolutionManager extends Thread
     }
   }
   
+  public void performOneEvolution()
+  {
+    hillClimberSpawner.performOneEvolution();
+  }
+  
   /**
    * Changes the genomes that this EvolutionManager will perform hill climbing and crossovers
    * on. This function also interrupts the current hill climbing threads and creates new ones.
