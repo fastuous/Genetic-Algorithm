@@ -195,7 +195,7 @@ public class EvolutionManager extends Thread
         if (hillClimberSpawner.anyHillClimberIsPaused())
         {
           throw new IllegalStateException(
-              "No HillClimbing can be paused while EvolutionManager is running");
+              "No HillClimbing thread can be paused while EvolutionManager is running");
         }
         if (crossoverFlag)
         {
