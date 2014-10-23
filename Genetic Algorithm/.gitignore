@@ -4,3 +4,4 @@
 .classpath
 .project
 *.class
+hs_err*.log
