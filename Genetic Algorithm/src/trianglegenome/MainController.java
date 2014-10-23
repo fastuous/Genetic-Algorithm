@@ -113,7 +113,8 @@ public class MainController extends Control implements Initializable
 
     selectedTribePopulation = evolutionManager.getGenomesFromTribe(0);
     genomeSlider.setMax(selectedTribePopulation.size() - 1);
-    genomeSlider.setSnapToTicks(true);
+    genomeSlider.setMajorTickUnit(selectedTribePopulation.size() - 1);
+    genomeSlider.setMinorTickCount(selectedTribePopulation.size() - 2);
     genomeSlider.setMin(0);
     
     return;
@@ -136,11 +137,20 @@ public class MainController extends Control implements Initializable
   private void tribeSelectorUpdate(ActionEvent event)
   {
     selectedTribePopulation = evolutionManager.getGenomesFromTribe(tribeSelect.getValue());
-    genomeSlider.setMax(selectedTribePopulation.size());
+    genomeSlider.setMax(selectedTribePopulation.size() - 1);
+    genomeSlider.setMajorTickUnit(selectedTribePopulation.size() - 1);
+    genomeSlider.setMinorTickCount(selectedTribePopulation.size() - 2);
+    genomeSlider.setMin(0);
+    genomeSliderUpdate();
   }
 
   @FXML
   private void genomeSliderUpdate(MouseEvent event)
+  {
+    genomeSliderUpdate();
+  }
+  
+  private void genomeSliderUpdate()
   {
     selectedGenome = selectedTribePopulation.get((int)genomeSlider.getValue());
   }
@@ -175,6 +185,7 @@ public class MainController extends Control implements Initializable
     imagePanelContainer.setImage(SwingFXUtils.toFXImage(Constants.IMAGES[Constants.selectedImage], null));
     imageSelect.getItems().addAll(Constants.IMAGE_FILES);
     triangleSlider.valueProperty().addListener(e -> triangleSliderUpdate());
+    genomeSlider.valueProperty().addListener(e -> genomeSliderUpdate());
     
     guiUpdater = new Thread(
         () ->
