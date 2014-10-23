@@ -82,6 +82,8 @@ public class GenomeCrossover
         parentIndex1 = (int)(geneCount*abs(rnd.nextDouble() - rnd.nextDouble()));
         parentIndex2 = (int)(geneCount*abs(rnd.nextDouble() - rnd.nextDouble()));
       } while (alreadyCrossed.contains(parentIndex1) || alreadyCrossed.contains(parentIndex2));
+      alreadyCrossed.add(parentIndex1);
+      alreadyCrossed.add(parentIndex2);
       
       Genome p1 = genomes.get(parentIndex1);
       Genome p2 = genomes.get(parentIndex2);
