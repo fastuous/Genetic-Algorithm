@@ -45,7 +45,7 @@ public class MainController extends Control implements Initializable
   @FXML
   private void toggleRunning()
   {
-    if (!started)
+    if (started)
     {
       if (!evolutionManager.isPaused())
       {
@@ -101,6 +101,7 @@ public class MainController extends Control implements Initializable
 
   private void setup()
   {
+    started = false;
     BufferedImage target = Constants.IMAGES[Constants.selectedImage];
     Constants.width = target.getWidth();
     Constants.height = target.getHeight();
