@@ -22,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import trianglegenome.gui.DrawPanel;
 import trianglegenome.gui.ImagePanel;
 import trianglegenome.util.Constants;
@@ -95,7 +96,7 @@ public class MainController extends Control implements Initializable
     Constants.height = target.getHeight();
     drawPanel = new DrawPanel(Constants.width, Constants.height);
     globalPopulation.clear();
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 40; ++i)
     {
       globalPopulation.add(SeedGenome.generateSeed(target));
     }
@@ -111,6 +112,9 @@ public class MainController extends Control implements Initializable
     evolutionManager.start();
 
     selectedTribePopulation = evolutionManager.getGenomesFromTribe(0);
+    genomeSlider.setMax(selectedTribePopulation.size() - 1);
+    genomeSlider.setSnapToTicks(true);
+    genomeSlider.setMin(0);
     
     return;
     
@@ -132,10 +136,11 @@ public class MainController extends Control implements Initializable
   private void tribeSelectorUpdate(ActionEvent event)
   {
     selectedTribePopulation = evolutionManager.getGenomesFromTribe(tribeSelect.getValue());
+    genomeSlider.setMax(selectedTribePopulation.size());
   }
 
   @FXML
-  private void genomeSliderUpdate(ActionEvent event)
+  private void genomeSliderUpdate(MouseEvent event)
   {
     selectedGenome = selectedTribePopulation.get((int)genomeSlider.getValue());
   }
