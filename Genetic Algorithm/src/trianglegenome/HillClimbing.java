@@ -157,7 +157,7 @@ public class HillClimbing extends Thread
       genomeState.drawPanel.repaint();
       drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSum(drawPanelSnapshot);
-      if (fitnessAfter > fitnessBefore)
+      if (fitnessAfter >= fitnessBefore)
       {
         devolve(genomeState.genome);
         successfulMultiplier = 1;
@@ -166,7 +166,7 @@ public class HillClimbing extends Thread
         stepSize = Constants.rand.nextInt(2)+1;
         triangle = Constants.rand.nextInt(Constants.TRIANGLE_COUNT);
       }
-    } while (fitnessAfter > fitnessBefore);
+    } while (fitnessAfter >= fitnessBefore);
     genomeState.genome.setFitness(fitnessAfter);
     successfulMultiplier += .5;
   }
