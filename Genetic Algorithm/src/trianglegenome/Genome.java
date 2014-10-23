@@ -90,8 +90,67 @@ public class Genome implements Cloneable
       Genome child1, Genome child2,
       int start, int end)
   {
+    synchronized (parent1.genes)
+    {
+      if (parent1.genes.isEmpty())
+      {
+        System.out.println("big problem here.");
+      }
+    }
+    synchronized (parent2.genes)
+    {
+      if (parent2.genes.isEmpty())
+      {
+        System.out.println("big problem here.");
+      }
+    }
+    synchronized (child1.genes)
+    {
+      if (child1.genes.isEmpty())
+      {
+        System.out.println("big problem here.");
+      }
+    }
+    synchronized (child2.genes)
+    {
+      if (child2.genes.isEmpty())
+      {
+        System.out.println("big problem here.");
+      }
+    }
+    
     child1.copyFrom(parent1);
     child2.copyFrom(parent2);
+    
+    synchronized (parent1.genes)
+    {
+      if (parent1.genes.isEmpty())
+      {
+        System.out.println("big problem here.");
+      }
+    }
+    synchronized (parent2.genes)
+    {
+      if (parent2.genes.isEmpty())
+      {
+        System.out.println("big problem here.");
+      }
+    }
+    synchronized (child1.genes)
+    {
+      if (child1.genes.isEmpty())
+      {
+        System.out.println("big problem here.");
+      }
+    }
+    synchronized (child2.genes)
+    {
+      if (child2.genes.isEmpty())
+      {
+        System.out.println("big problem here.");
+      }
+    }
+    
     doublePointCrossoverInPlace(child2, child1, start, end);
   }
   
@@ -181,7 +240,7 @@ public class Genome implements Cloneable
   public void copyFrom(Genome other)
   {
     this.genes.clear();
-    other.genes.forEach(t -> this.addGene(t.clone()));
+    for (Triangle t : other.genes) this.addGene(t.clone());
   }
   
   /**
