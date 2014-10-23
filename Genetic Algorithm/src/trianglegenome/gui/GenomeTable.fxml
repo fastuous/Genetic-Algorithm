@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TableView fx:id="table" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="870.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+  <columns>
+    <TableColumn prefWidth="120.0" text="Index" />
+    <TableColumn prefWidth="75.0" text="x1" />
+      <TableColumn prefWidth="75.0" text="x2" />
+      <TableColumn prefWidth="75.0" text="x3" />
+      <TableColumn prefWidth="75.0" text="y1" />
+      <TableColumn prefWidth="75.0" text="y2" />
+      <TableColumn prefWidth="75.0" text="y3" />
+      <TableColumn prefWidth="75.0" text="red" />
+      <TableColumn prefWidth="75.0" text="green" />
+      <TableColumn prefWidth="75.0" text="blue" />
+      <TableColumn prefWidth="75.0" text="alpha" />
+  </columns>
+</TableView>
