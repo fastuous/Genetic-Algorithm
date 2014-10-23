@@ -1,6 +1,9 @@
 package trianglegenome;
 
+import java.awt.Rectangle;
 import java.util.Arrays;
+import java.util.List;
+
 import trianglegenome.util.Constants;
 
 /**
@@ -85,6 +88,21 @@ public class Triangle implements Cloneable
       return Arrays.equals(this.dna, ((Triangle)other).dna);
     }
     else return false;
+  }
+  
+  public Rectangle getBoundingBox()
+  {
+    int[] xs = Arrays.copyOfRange(dna, 0, 3);
+    Arrays.sort(xs);
+    int lowestX = xs[0];
+    int highestX = xs[2];
+    
+    int[] ys = Arrays.copyOfRange(dna, 3, 6);
+    Arrays.sort(ys);
+    int lowestY = ys[0];
+    int highestY = ys[2];
+    
+    return new Rectangle(lowestX, lowestY, highestX - lowestX, highestY - lowestY);
   }
   
   /**

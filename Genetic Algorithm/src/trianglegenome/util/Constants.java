@@ -56,7 +56,7 @@ public class Constants
   
   public static int selectedImage = 0;
   
-  public static final boolean useVolatileImage = false;
+  public static final boolean useVolatileImage = true;
   
   public static boolean useOpenCL = true;
   
