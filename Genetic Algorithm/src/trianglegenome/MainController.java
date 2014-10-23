@@ -30,29 +30,24 @@ public class MainController extends Control implements Initializable
 
   private List<Genome> globalPopulation = new ArrayList<Genome>();
   private DrawPanel drawPanel;
-  private ImagePanel imagePanel;
-  private HillClimberSpawner hillClimberSpawner;
   private Genome selectedGenome;
   private boolean started = false;
+  private boolean running = false;
   private EvolutionManager evolutionManager;
 
   // private MainGUI GUI
 
-  @FXML
-  private ImageView drawPanelContainer, imagePanelContainer;
-  @FXML
-  private Label nTriangles, fitness;
-  @FXML
-  private Slider triangleSlider;
-  @FXML
-  private ComboBox<String> imageSelect;
-  
-  @FXML
-  private Button toggleRunning, nextGeneration, genomeTable, readGenome, writeGenome;
+  @FXML private ImageView drawPanelContainer, imagePanelContainer;
+  @FXML private Label nTriangles, fitness;
+  @FXML private Slider triangleSlider, genomeSlider;
+  @FXML private ComboBox<String> imageSelect, tribeSelect;
+  @FXML private Button toggleRunning, nextGeneration, genomeTable, readGenome, writeGenome;
 
   @FXML
   private void toggleRunning()
   {
+    running = !running;
+    toggleControls();
     if (started)
     {
       if (!evolutionManager.isPaused())
@@ -71,6 +66,40 @@ public class MainController extends Control implements Initializable
     }
     // TODO if hill climbing, pause hill-climbing threads, if performing crossover, finish crossover
     // and stop
+  }
+
+  private void toggleControls()
+  {
+    if (!running)
+    {
+      toggleRunning.setText("Start");
+      
+      imageSelect.setDisable(false);
+      triangleSlider.setDisable(false);
+      tribeSelect.setDisable(false);
+      genomeSlider.setDisable(false);
+      nextGeneration.setDisable(false);
+      genomeTable.setDisable(false);
+      readGenome.setDisable(false);
+      writeGenome.setDisable(false);
+      nTriangles.setDisable(false);
+      fitness.setDisable(false);
+    }
+    else
+    {
+      toggleRunning.setText("Pause");
+      
+      imageSelect.setDisable(true);
+      triangleSlider.setDisable(true);
+      tribeSelect.setDisable(true);
+      genomeSlider.setDisable(true);
+      nextGeneration.setDisable(true);
+      genomeTable.setDisable(true);
+      readGenome.setDisable(true);
+      writeGenome.setDisable(true);
+      nTriangles.setDisable(true);
+      fitness.setDisable(true);
+    }
   }
 
   @FXML
@@ -119,6 +148,7 @@ public class MainController extends Control implements Initializable
     {
       globalPopulation.add(SeedGenome.generateSeed(target));
     }
+
     evolutionManager = new EvolutionManager(Constants.threadCount, globalPopulation, target);
     drawPanel = new DrawPanel(Constants.width, Constants.height);
 
@@ -206,6 +236,7 @@ public class MainController extends Control implements Initializable
     imageSelect.getItems().addAll(Constants.IMAGE_FILES);
     triangleSlider.valueProperty().addListener(e -> triangleSliderUpdate());
 
+    toggleControls();
     setup();
   }
 
