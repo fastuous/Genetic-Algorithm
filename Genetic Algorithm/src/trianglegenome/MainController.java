@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +19,7 @@ import javafx.scene.image.ImageView;
 import trianglegenome.gui.DrawPanel;
 import trianglegenome.gui.ImagePanel;
 import trianglegenome.util.Constants;
+import trianglegenome.util.XMLParser;
 
 public class MainController extends Control implements Initializable
 {
@@ -37,6 +37,7 @@ public class MainController extends Control implements Initializable
   @FXML private ImageView drawPanelContainer;
   @FXML private ImageView imagePanelContainer;
   @FXML private Label nTriangles;
+  @FXML private Label fitness;
   @FXML private Slider triangleSlider;
   @FXML private ComboBox<String>imageSelect;
 
@@ -93,6 +94,8 @@ public class MainController extends Control implements Initializable
     SelectionModel<String> test = imageSelect.getSelectionModel();
     Constants.selectedImage = test.getSelectedIndex();
     imagePanelContainer.setImage(SwingFXUtils.toFXImage(Constants.IMAGES[Constants.selectedImage], null));
+    
+    setup();
   }
 
   private void setup()
@@ -139,19 +142,26 @@ public class MainController extends Control implements Initializable
   @FXML
   private void readGenome()
   {
-    // TODO read genome from XML into currently selected
+    selectedGenome = XMLParser.readGenome();
   }
 
   @FXML
   private void writeGenome()
   {
-    // TODO write selected genome to XML file
+    XMLParser.writeGenome(selectedGenome);
   }
 
   @FXML
   private void test()
   {
     System.out.println("Test");
+  }
+  
+  public void updateDisplay()
+  {
+    drawPanel.setTriangles(selectedGenome.getGenes());
+    drawPanelContainer.setImage(drawPanel.getFXImage());
+    fitness.setText("Fitness: " + selectedGenome.getFitness());
   }
 
   @Override

@@ -30,7 +30,7 @@
                   <Insets left="10.0" top="10.0" />
                </HBox.margin>
             </Slider>
-            <Label text="Fitness: XXXXXXX">
+            <Label fx:id="fitness" text="Fitness:">
                <HBox.margin>
                   <Insets left="5.0" top="5.0" />
                </HBox.margin></Label>
@@ -46,7 +46,7 @@
                   <Insets left="20.0" />
                </HBox.margin>
             </ComboBox>
-            <Slider prefHeight="18.0" prefWidth="888.0">
+            <Slider prefHeight="18.0" prefWidth="888.0" showTickMarks="true" snapToTicks="true">
                <HBox.margin>
                   <Insets left="20.0" top="5.0" />
                </HBox.margin>
