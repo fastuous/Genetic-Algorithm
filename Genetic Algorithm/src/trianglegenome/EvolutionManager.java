@@ -86,12 +86,15 @@ public class EvolutionManager extends Thread
         }
         
         // TODO put some real crossover conditions.
-        if (iterations > 20000000)
+        if (iterations > 500)
         {
           crossoverFlag = true;
           iterations = 0;
         }
         iterations++;
+        
+        try { Thread.sleep(2000); }
+        catch (Exception e) { hillClimberSpawner.stopHillClimbing(); }
       }
       else
       {
@@ -230,5 +233,6 @@ public class EvolutionManager extends Thread
   {
     hillClimberSpawner.stopHillClimbing();
     this.interrupt();
+    synchronized (this) { this.notify(); }
   }
 }
