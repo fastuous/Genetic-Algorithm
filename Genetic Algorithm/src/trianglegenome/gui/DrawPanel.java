@@ -7,11 +7,13 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -169,6 +171,29 @@ public abstract class DrawPanel extends JPanel
     int [] xs = Arrays.copyOfRange(t.dna, 0, 3);
     int [] ys = Arrays.copyOfRange(t.dna, 3, 6);
     offscreenGraphics.fillPolygon(xs, ys, 3);
+  }
+  
+  /**
+   * Updates the DrawPanel only in the specified bound
+   * @param bound The bound in the DrawPanel to update.
+   */
+  public void updateRegion(Rectangle bound)
+  {
+    offscreenGraphics.setClip(bound);
+    offscreenGraphics.clearRect(bound.x, bound.y, bound.width, bound.height);
+    
+    Predicate<Triangle> intersectsBound = t ->
+    {
+      return
+          bound.intersectsLine(t.dna[0], t.dna[3], t.dna[1], t.dna[4]) ||
+          bound.intersectsLine(t.dna[0], t.dna[3], t.dna[2], t.dna[5]) ||
+          bound.intersectsLine(t.dna[1], t.dna[4], t.dna[2], t.dna[5]);
+    };
+    
+    triangles
+        .stream()
+        .filter(intersectsBound)
+        .forEach(t -> drawTriangle(t));
   }
   
   /*
