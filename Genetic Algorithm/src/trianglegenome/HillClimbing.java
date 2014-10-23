@@ -2,6 +2,7 @@ package trianglegenome;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
+
 import trianglegenome.util.Constants;
 
 public class HillClimbing extends Thread
@@ -152,7 +153,7 @@ public class HillClimbing extends Thread
       genomeState.drawPanel.repaint();
       drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSum(drawPanelSnapshot);
-      if (fitnessAfter >= fitnessBefore)
+      if (fitnessAfter > fitnessBefore)
       {
         devolve(genomeState.genome);
         successfulMultiplier = 1;
