@@ -123,9 +123,20 @@ public class HillClimberSpawner
 
   public void stopHillClimbing()
   {
-    pauseHillClimbers();
-    hillClimbingThreads.forEach(t -> t.interrupt());
+    for (HillClimbing hc : hillClimbingThreads)
+    {
+      try
+      {
+        synchronized (hc)
+        {
+          hc.interrupt();
+          hc.wait();
+        }
+      }
+      catch (Exception e) {}
+    }
     hillClimbingThreads.clear();
+    synchronized (this) { this.notify(); }
   }
 
   public int getThreadCount()

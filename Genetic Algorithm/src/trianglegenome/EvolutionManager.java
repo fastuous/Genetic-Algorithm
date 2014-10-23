@@ -94,12 +94,20 @@ public class EvolutionManager extends Thread
         iterations++;
         
         try { Thread.sleep(2000); }
-        catch (Exception e) { hillClimberSpawner.stopHillClimbing(); }
+        catch (Exception e)
+        {
+          hillClimberSpawner.stopHillClimbing();
+          synchronized (this) { this.notify(); }
+        }
       }
       else
       {
         try { Thread.sleep(200); }
-        catch (Exception e) { hillClimberSpawner.stopHillClimbing(); }
+        catch (Exception e)
+        {
+          hillClimberSpawner.stopHillClimbing();
+          synchronized (this) { this.notify(); }
+        }
       }
     }
     hillClimberSpawner.stopHillClimbing();

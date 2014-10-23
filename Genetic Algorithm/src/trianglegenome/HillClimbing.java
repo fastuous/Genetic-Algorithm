@@ -1,7 +1,6 @@
 package trianglegenome;
 
 import java.awt.image.BufferedImage;
-import java.util.Collections;
 import java.util.List;
 
 import trianglegenome.util.Constants;
@@ -23,6 +22,7 @@ public class HillClimbing extends Thread
 
   public HillClimbing(List<GenomeDrawPanelPair> genomeStates, BufferedImage target)
   {
+    super("HillClimbing-Thread");
     targetImage = target;
     fitnessEvaluator = new FitnessEvaluator(targetImage);
     this.genomeStates = genomeStates;
@@ -98,6 +98,7 @@ public class HillClimbing extends Thread
       
       do
       {
+        if (super.isInterrupted() || this.isPaused()) return;
         val = tri.dna[successfulDNA];
         upperBound = 0;
         lowerBound = 0;
@@ -151,6 +152,7 @@ public class HillClimbing extends Thread
     genomeState.genome.setFitness(fitnessBefore);
     do
     {
+      if (super.isInterrupted() || this.isPaused()) return;
       evolve(genomeState.genome);
       genomeState.drawPanel.repaint();
       drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
