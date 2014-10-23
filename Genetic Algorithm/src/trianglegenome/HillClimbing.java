@@ -154,6 +154,8 @@ public class HillClimbing extends Thread
     {
       if (super.isInterrupted() || this.isPaused()) return;
       evolve(genomeState.genome);
+      //Triangle t = genomeState.genome.getGenes().get(triangle);
+      //genomeState.drawPanel.updateRegion(t.getBoundingBox());
       genomeState.drawPanel.repaint();
       drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSum(drawPanelSnapshot);

@@ -182,13 +182,7 @@ public abstract class DrawPanel extends JPanel
     offscreenGraphics.setClip(bound);
     offscreenGraphics.clearRect(bound.x, bound.y, bound.width, bound.height);
     
-    Predicate<Triangle> intersectsBound = t ->
-    {
-      return
-          bound.intersectsLine(t.dna[0], t.dna[3], t.dna[1], t.dna[4]) ||
-          bound.intersectsLine(t.dna[0], t.dna[3], t.dna[2], t.dna[5]) ||
-          bound.intersectsLine(t.dna[1], t.dna[4], t.dna[2], t.dna[5]);
-    };
+    Predicate<Triangle> intersectsBound = t -> t.getBoundingBox().intersects(bound);
     
     triangles
         .stream()
