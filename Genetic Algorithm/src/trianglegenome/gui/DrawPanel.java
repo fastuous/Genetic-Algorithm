@@ -187,7 +187,6 @@ public class DrawPanel extends JPanel
     GraphicsDevice gd = ge.getDefaultScreenDevice();
     GraphicsConfiguration gc = gd.getDefaultConfiguration();
     offscreenBuffer = gc.createCompatibleVolatileImage(width, height);
-    updateOffScreenBuffer();
   }
   
   /**
@@ -195,17 +194,33 @@ public class DrawPanel extends JPanel
    */
   private void updateOffScreenBuffer()
   {
-    Graphics2D offscreenGraphics = offscreenBuffer.createGraphics();
-    offscreenGraphics.clearRect(0, 0, getWidth(), getHeight());
-    synchronized (triangles)
+    do
     {
-      triangles
-          .stream()
-          .limit(triangleDrawLimit)
-          .forEach(t -> drawTriangle(offscreenGraphics, t));
-    }
+      if (offscreenBuffer == null) createOffScreenBuffer(getWidth(), getHeight());
+      
+      int validationCode = offscreenBuffer.validate(graphicsConfiguration);
+      if (validationCode == VolatileImage.IMAGE_INCOMPATIBLE)
+      {
+        createOffScreenBuffer(getWidth(), getHeight());
+        updateOffScreenBuffer();
+      }
+
+      if (offscreenBuffer.contentsLost()) continue; 
+      
+      Graphics2D offscreenGraphics = offscreenBuffer.createGraphics();
+      offscreenGraphics.clearRect(0, 0, getWidth(), getHeight());
+      synchronized (triangles)
+      {
+        triangles
+            .stream()
+            .limit(triangleDrawLimit)
+            .forEach(t -> drawTriangle(offscreenGraphics, t));
+      }
+      
+      offscreenGraphics.dispose();
+      
+    } while (offscreenBuffer.contentsLost());
     
-    offscreenGraphics.dispose();
   }
   
   /**
@@ -250,6 +265,7 @@ public class DrawPanel extends JPanel
       if (validationCode == VolatileImage.IMAGE_INCOMPATIBLE)
       {
         createOffScreenBuffer(getWidth(), getHeight());
+        updateOffScreenBuffer();
       }
       
       g.drawImage(offscreenBuffer, 0, 0, this);
