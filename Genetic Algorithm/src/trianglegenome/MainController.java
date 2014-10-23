@@ -88,15 +88,15 @@ public class MainController extends Control implements Initializable
     Constants.height = target.getHeight();
     drawPanel = new DrawPanel(Constants.width, Constants.height);
     globalPopulation.clear();
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 1; ++i)
     {
       globalPopulation.add(SeedGenome.generateSeed(target));
     }
-    List<Triangle> test = globalPopulation.get(Constants.rand.nextInt(10)).getGenes();
+    List<Triangle> test = globalPopulation.get(Constants.rand.nextInt(1)).getGenes();
     drawPanel.setTriangles(test);
     
     if (evolutionManager != null) evolutionManager.interrupt();
-    evolutionManager = new EvolutionManager(10, globalPopulation, target);
+    evolutionManager = new EvolutionManager(1, globalPopulation, target);
     evolutionManager.start();
     
     return;
