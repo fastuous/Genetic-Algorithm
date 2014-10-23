@@ -90,66 +90,8 @@ public class Genome implements Cloneable
       Genome child1, Genome child2,
       int start, int end)
   {
-    synchronized (parent1.genes)
-    {
-      if (parent1.genes.isEmpty())
-      {
-        System.out.println("big problem here.");
-      }
-    }
-    synchronized (parent2.genes)
-    {
-      if (parent2.genes.isEmpty())
-      {
-        System.out.println("big problem here.");
-      }
-    }
-    synchronized (child1.genes)
-    {
-      if (child1.genes.isEmpty())
-      {
-        System.out.println("big problem here.");
-      }
-    }
-    synchronized (child2.genes)
-    {
-      if (child2.genes.isEmpty())
-      {
-        System.out.println("big problem here.");
-      }
-    }
-    
     child1.copyFrom(parent1);
     child2.copyFrom(parent2);
-    
-    synchronized (parent1.genes)
-    {
-      if (parent1.genes.isEmpty())
-      {
-        System.out.println("big problem here.");
-      }
-    }
-    synchronized (parent2.genes)
-    {
-      if (parent2.genes.isEmpty())
-      {
-        System.out.println("big problem here.");
-      }
-    }
-    synchronized (child1.genes)
-    {
-      if (child1.genes.isEmpty())
-      {
-        System.out.println("big problem here.");
-      }
-    }
-    synchronized (child2.genes)
-    {
-      if (child2.genes.isEmpty())
-      {
-        System.out.println("big problem here.");
-      }
-    }
     
     doublePointCrossoverInPlace(child2, child1, start, end);
   }
@@ -184,37 +126,43 @@ public class Genome implements Cloneable
    */
   public static void doublePointCrossoverInPlace(Genome a, Genome b, int start, int end)
   {
-    // The swap ending point for the last triangle pair to be swapped.
-    int end2 = end % Triangle.DNA_LENGTH;
+    synchronized (a.genes)
+    {
+      synchronized (b.genes)
+      {
+        // The swap ending point for the last triangle pair to be swapped.
+        int end2 = end % Triangle.DNA_LENGTH;
 
-    // The swap starting point for the first triangle pair to be swapped.
-    int start1 = start % Triangle.DNA_LENGTH;
-    
-    // Number of triangles that can be fully swapped.
-    int fullSwaps = ((end - end2) - (start + start1)) / Triangle.DNA_LENGTH;
-    
-    // The first triangle that will be swapped.
-    int firstTriangle = start / Triangle.DNA_LENGTH;
-    
-    // The last triangle to be swapped.
-    int lastTriangle = end / Triangle.DNA_LENGTH;
-    
-    List<Triangle> aSubList = a.genes.subList(firstTriangle, lastTriangle);
-    List<Triangle> bSubList = b.genes.subList(firstTriangle, lastTriangle);
-    Iterator<Triangle> aIterator = aSubList.iterator();
-    Iterator<Triangle> bIterator = bSubList.iterator();
-    
-    if (start1 != 0 && aIterator.hasNext() && bIterator.hasNext())
-    {
-      Triangle.swapDNA(aIterator.next(), bIterator.next(), start1, Triangle.DNA_LENGTH);
-    }
-    for (int i = 0; i < fullSwaps && aIterator.hasNext() && bIterator.hasNext(); i++)
-    {
-      Triangle.swapDNA(aIterator.next(), bIterator.next());
-    }
-    if (aIterator.hasNext() && bIterator.hasNext())
-    {
-      Triangle.swapDNA(aIterator.next(), bIterator.next(), 0, end2);
+        // The swap starting point for the first triangle pair to be swapped.
+        int start1 = start % Triangle.DNA_LENGTH;
+
+        // Number of triangles that can be fully swapped.
+        int fullSwaps = ((end - end2) - (start + start1)) / Triangle.DNA_LENGTH;
+
+        // The first triangle that will be swapped.
+        int firstTriangle = start / Triangle.DNA_LENGTH;
+
+        // The last triangle to be swapped.
+        int lastTriangle = end / Triangle.DNA_LENGTH;
+
+        List<Triangle> aSubList = a.genes.subList(firstTriangle, lastTriangle);
+        List<Triangle> bSubList = b.genes.subList(firstTriangle, lastTriangle);
+        Iterator<Triangle> aIterator = aSubList.iterator();
+        Iterator<Triangle> bIterator = bSubList.iterator();
+
+        if (start1 != 0 && aIterator.hasNext() && bIterator.hasNext())
+        {
+          Triangle.swapDNA(aIterator.next(), bIterator.next(), start1, Triangle.DNA_LENGTH);
+        }
+        for (int i = 0; i < fullSwaps && aIterator.hasNext() && bIterator.hasNext(); i++)
+        {
+          Triangle.swapDNA(aIterator.next(), bIterator.next());
+        }
+        if (aIterator.hasNext() && bIterator.hasNext())
+        {
+          Triangle.swapDNA(aIterator.next(), bIterator.next(), 0, end2);
+        }
+      }
     }
   }
   
@@ -239,8 +187,18 @@ public class Genome implements Cloneable
    */
   public void copyFrom(Genome other)
   {
-    this.genes.clear();
-    for (Triangle t : other.genes) this.addGene(t.clone());
+    if (this == other)
+    {
+      throw new IllegalArgumentException("other must different from this instance.");
+    }
+    synchronized (this.genes)
+    {
+      synchronized (other.genes)
+      {
+        this.genes.clear();
+        for (Triangle t : other.genes) this.genes.add(t.clone());
+      }
+    }
   }
   
   /**
@@ -251,7 +209,10 @@ public class Genome implements Cloneable
   public Genome clone()
   {
     Genome copy = new Genome();
-    this.genes.forEach(t -> copy.addGene(t.clone()));
+    synchronized (this.genes)
+    {
+      for (Triangle t : this.genes) copy.addGene(t.clone());
+    }
     return copy;
   }
   
