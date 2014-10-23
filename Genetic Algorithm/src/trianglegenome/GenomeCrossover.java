@@ -81,8 +81,7 @@ public class GenomeCrossover
       {
         parentIndex1 = (int)(geneCount*abs(rnd.nextDouble() - rnd.nextDouble()));
         parentIndex2 = (int)(geneCount*abs(rnd.nextDouble() - rnd.nextDouble()));
-      }
-      while (!(alreadyCrossed.contains(parentIndex1) || alreadyCrossed.contains(parentIndex2)));
+      } while (alreadyCrossed.contains(parentIndex1) || alreadyCrossed.contains(parentIndex2));
       
       Genome p1 = genomes.get(parentIndex1);
       Genome p2 = genomes.get(parentIndex2);
@@ -94,8 +93,7 @@ public class GenomeCrossover
         {
           childIndex1 = (int)(geneCount - geneCount*abs(rnd.nextDouble() - rnd.nextDouble()));
           childIndex2 = (int)(geneCount - geneCount*abs(rnd.nextDouble() - rnd.nextDouble()));
-        }
-        while (!(alreadyCrossed.contains(childIndex1) || alreadyCrossed.contains(childIndex2)));
+        } while (alreadyCrossed.contains(childIndex1) || alreadyCrossed.contains(childIndex2));
         Genome c1 = genomes.get(childIndex1);
         Genome c2 = genomes.get(childIndex2);
         Genome.doublePointCrossover(p1, p2, c1, c2, genomeLength, genomeLength * 2);
