@@ -11,6 +11,7 @@ import trianglegenome.HillClimbing;
 import trianglegenome.RandomGenome;
 import trianglegenome.Triangle;
 import trianglegenome.gui.DrawPanel;
+import trianglegenome.gui.DrawPanelVolatileImage;
 import trianglegenome.util.Constants;
 
 public class HillClimbingUnitTests
@@ -34,7 +35,8 @@ public class HillClimbingUnitTests
     Constants.height = Constants.IMAGES[0].getHeight();
     genome = RandomGenome.generateGenome();
     fitnessEvaluator = new FitnessEvaluator(Constants.IMAGES[0]);
-    drawPanel = new DrawPanel(Constants.IMAGES[0].getWidth(), Constants.IMAGES[0].getHeight());
+    drawPanel = new DrawPanelVolatileImage(
+        Constants.IMAGES[0].getWidth(), Constants.IMAGES[0].getHeight());
     genomeDrawPanelPair = new GenomeDrawPanelPair(genome, drawPanel);
     genomeDrawPanelPairSingleton = new ArrayList<GenomeDrawPanelPair>(1);
     genomeDrawPanelPairSingleton.add(genomeDrawPanelPair);

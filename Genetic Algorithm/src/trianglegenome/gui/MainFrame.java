@@ -115,7 +115,7 @@ public class MainFrame extends javax.swing.JFrame
     jLabel4 = new javax.swing.JLabel("Fitness:                   ");
     jLabel5 = new javax.swing.JLabel("Triangle " + Constants.TRIANGLE_COUNT + "/" +Constants.TRIANGLE_COUNT);
     imagePanel = new ImagePanel(512, 413);
-    drawPanel = new DrawPanel(512, 413);
+    drawPanel = new DrawPanelVolatileImage(512, 413);
     triangleSlider = new javax.swing.JSlider(0, Constants.TRIANGLE_COUNT, Constants.TRIANGLE_COUNT);
     triangleSlider.setValue(Constants.TRIANGLE_COUNT);
     tribeSlider = new javax.swing.JSlider();
@@ -191,7 +191,7 @@ public class MainFrame extends javax.swing.JFrame
       Constants.height = Constants.IMAGES[Constants.selectedImage].getHeight();
       controller.reset();
       imagePanel.updateImage();
-      drawPanel = new DrawPanel(Constants.width, Constants.height);
+      drawPanel = new DrawPanelVolatileImage(Constants.width, Constants.height);
       controller.setDrawPanel(drawPanel);
       controller.setImagePanel(imagePanel);
       }

@@ -56,7 +56,7 @@ public class Constants
   
   public static int selectedImage = 0;
   
-  public static final int MAX_CONCURRENT_OPENCL_EVALS = 8;
+  public static final boolean useVolatileImage = false;
   
   public static boolean useOpenCL = true;
   

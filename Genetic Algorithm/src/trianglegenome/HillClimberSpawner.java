@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import trianglegenome.gui.DrawPanel;
+import trianglegenome.gui.DrawPanelBufferedImage;
+import trianglegenome.gui.DrawPanelVolatileImage;
 import trianglegenome.util.Constants;
 
 /**
@@ -41,7 +43,9 @@ public class HillClimberSpawner
 
     for (int i = 0; i < threadCount; i++)
     {
-      DrawPanel drawPanel = new DrawPanel(Constants.width, Constants.height);
+      DrawPanel drawPanel = (Constants.useVolatileImage)
+          ? new DrawPanelVolatileImage(Constants.width, Constants.height)
+          : new DrawPanelBufferedImage(Constants.width, Constants.height);
 
       List<GenomeDrawPanelPair> threadGenomes = genomes
           .stream()

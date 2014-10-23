@@ -22,6 +22,8 @@ import javafx.scene.image.ImageView;
 import javax.swing.JOptionPane;
 
 import trianglegenome.gui.DrawPanel;
+import trianglegenome.gui.DrawPanelBufferedImage;
+import trianglegenome.gui.DrawPanelVolatileImage;
 import trianglegenome.gui.GenomeTable;
 import trianglegenome.gui.ImagePanel;
 import trianglegenome.util.Constants;
@@ -127,7 +129,9 @@ public class MainController extends Control implements Initializable
     Constants.width = target.getWidth();
     Constants.height = target.getHeight();
     Constants.threadCount = getThreadCount();
-    drawPanel = new DrawPanel(Constants.width, Constants.height);
+    drawPanel = (Constants.useVolatileImage)
+        ? new DrawPanelVolatileImage(Constants.width, Constants.height)
+        : new DrawPanelBufferedImage(Constants.width, Constants.height);
     globalPopulation.clear();
     for (int i = 0; i < 40; ++i)
     {

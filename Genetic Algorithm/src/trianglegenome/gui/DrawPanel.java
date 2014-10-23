@@ -28,7 +28,7 @@ import trianglegenome.util.Constants;
  * <br /><br />
  * Example code:<br/>
  * <code><pre>
- *  DrawPanel p = new DrawPanel(640, 480);
+ *  // Assume DrawPanel p is initialized.
  *  
  *  // Add DrawPanel p to a JFrame or something similar.
  *  
@@ -50,34 +50,34 @@ import trianglegenome.util.Constants;
  * 
  * @author David Collins
  */
-public class DrawPanel extends JPanel
+public abstract class DrawPanel extends JPanel
 {
   /** The version of this draw panel (starting with 1). */
-  private static final long serialVersionUID = 1L;
+  protected static final long serialVersionUID = 1L;
 
-  /** A {@link VolatileImage} that this panel will
+  /** An {@link Image} that this panel will
    * draw in the {@link DrawPanel#paintComponent(Graphics)} method.
    * method */
-  private VolatileImage offscreenBuffer;
+  protected Image offscreenBuffer;
   
   /** The graphics of the {@link DrawPanel#offscreenBuffer} */
-  private Graphics2D offscreenGraphics;
+  protected Graphics2D offscreenGraphics;
   
   /** An image for use with {@link #getFXImage()} to get the triangles as
    * a WritableImage. */
-  private WritableImage fxImage;
+  protected WritableImage fxImage;
   
   /** The GraphicsConfiguration used to validate the
    * {@link DrawPanel#offscreenBuffer} */
-  private GraphicsConfiguration graphicsConfiguration;
+  protected GraphicsConfiguration graphicsConfiguration;
   
   /** Determines how many triangles will be drawn on the
    * {@link DrawPanel} */
-  private int triangleDrawLimit = Constants.TRIANGLE_COUNT;
+  protected int triangleDrawLimit = Constants.TRIANGLE_COUNT;
   
   /** A {@link List} of {@link Triangle} objects for drawing on the
    * {@link DrawPanel#offscreenBuffer} */
-  private List<Triangle> triangles;
+  protected List<Triangle> triangles;
   
   /**
    * Creates a new {@link DrawPanel} with a given width and height.
@@ -138,106 +138,37 @@ public class DrawPanel extends JPanel
    * Returns a snapshot containing all of the triangles.
    * @return A snapshot containing all of the triangles.
    */
-  public BufferedImage getSnapshot()
-  {
-    int oldTriangleDrawLimit = triangleDrawLimit;
-    
-    triangleDrawLimit = Constants.TRIANGLE_COUNT;
-    updateOffScreenBuffer();
-    BufferedImage snapshot = offscreenBuffer
-        .getSnapshot()
-        .getSubimage(0, 0, Constants.width, Constants.height);
-    
-    triangleDrawLimit = oldTriangleDrawLimit;
-    updateOffScreenBuffer();
-    
-    BufferedImage croppedSnapshot = new BufferedImage(
-        Constants.width, Constants.height, BufferedImage.TYPE_INT_RGB);
-    
-    croppedSnapshot.getGraphics().drawImage(snapshot, 0, 0, null);
-    
-    return croppedSnapshot;
-  }
+  public abstract BufferedImage getSnapshot();
   
   /**
    * Returns the triangles painted to a {@link javafx.scene.image.Image}.
    * @return The triangles painted to a {@link javafx.scene.image.Image}.
    */
-  public Image getFXImage()
-  {
-    updateOffScreenBuffer();
-    
-    BufferedImage snapshot = offscreenBuffer
-        .getSnapshot()
-        .getSubimage(0, 0, Constants.width, Constants.height);
-    
-    BufferedImage croppedSnapshot = new BufferedImage(
-        Constants.width, Constants.height, BufferedImage.TYPE_INT_RGB);
-    
-    croppedSnapshot.getGraphics().drawImage(snapshot, 0, 0, null);
-    
-    return SwingFXUtils.toFXImage(croppedSnapshot, fxImage);
-  }
+  public abstract Image getFXImage();
   
   /**
    * Initializes the {@link DrawPanel#offscreenBuffer}
    * @param width The width of the offscreen buffer. 
    * @param height The height of the offscreen buffer. 
    */
-  private void createOffScreenBuffer(int width, int height)
-  {
-    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-    GraphicsDevice gd = ge.getDefaultScreenDevice();
-    GraphicsConfiguration gc = gd.getDefaultConfiguration();
-    offscreenBuffer = gc.createCompatibleVolatileImage(width, height);
-    offscreenGraphics = offscreenBuffer.createGraphics();
-  }
+  protected abstract void createOffScreenBuffer(int width, int height);
   
   /**
    * Paints each of the triangles on the {@link DrawPanel#offscreenBuffer}.
    */
-  private void updateOffScreenBuffer()
-  {
-    do
-    {
-      if (offscreenBuffer == null) createOffScreenBuffer(getWidth(), getHeight());
-      
-      int validationCode = offscreenBuffer.validate(graphicsConfiguration);
-      if (validationCode == VolatileImage.IMAGE_INCOMPATIBLE)
-      {
-        createOffScreenBuffer(getWidth(), getHeight());
-      }
-
-      if (offscreenBuffer.contentsLost()) continue; 
-      
-      offscreenGraphics.clearRect(0, 0, getWidth(), getHeight());
-      synchronized (triangles)
-      {
-        int trianglesDrawn = 0;
-        for (Triangle t : triangles)
-        {
-          if (trianglesDrawn == triangleDrawLimit) break;
-          drawTriangle(offscreenGraphics, t);
-          trianglesDrawn++;
-        }
-      }
-      
-    } while (offscreenBuffer.contentsLost());
-    
-  }
+  protected abstract void updateOffScreenBuffer();
   
   /**
    * Draws a given {@link Triangle} on the given {@link Graphics2D}.
    * @param t The triangle to draw on the given Graphics2D.
-   * @param g The Graphics2D on which to draw the triangle.
    */
-  private void drawTriangle(Graphics2D g, Triangle t)
+  protected void drawTriangle(Triangle t)
   {
     Color c = new Color(t.dna[6], t.dna[7], t.dna[8], t.dna[9]);
-    g.setColor(c);
+    offscreenGraphics.setColor(c);
     int [] xs = Arrays.copyOfRange(t.dna, 0, 3);
     int [] ys = Arrays.copyOfRange(t.dna, 3, 6);
-    g.fillPolygon(xs, ys, 3);
+    offscreenGraphics.fillPolygon(xs, ys, 3);
   }
   
   /*
@@ -259,19 +190,5 @@ public class DrawPanel extends JPanel
   protected void paintComponent(Graphics g)
   {
     super.paintComponent(g);
-    
-    do
-    {
-      if (offscreenBuffer == null) createOffScreenBuffer(getWidth(), getHeight());
-      
-      int validationCode = offscreenBuffer.validate(graphicsConfiguration);
-      if (validationCode == VolatileImage.IMAGE_INCOMPATIBLE)
-      {
-        createOffScreenBuffer(getWidth(), getHeight());
-      }
-
-      g.drawImage(offscreenBuffer, 0, 0, this);
-      
-    } while (offscreenBuffer.contentsLost());
   }
 }
