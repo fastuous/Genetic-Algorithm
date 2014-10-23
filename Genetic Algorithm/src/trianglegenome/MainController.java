@@ -86,7 +86,25 @@ public class MainController extends Control implements Initializable
   {
     SelectionModel<String> test = imageSelect.getSelectionModel();
     Constants.selectedImage = test.getSelectedIndex();
-    imagePanelContainer.setImage(SwingFXUtils.toFXImage(Constants.IMAGES[Constants.selectedImage], null));
+
+    BufferedImage target = Constants.IMAGES[Constants.selectedImage];
+    Constants.width = target.getWidth();
+    Constants.height = target.getHeight();
+    
+    imagePanelContainer.setImage(SwingFXUtils.toFXImage(target, null));
+    evolutionManager.pause();
+    drawPanel.setSize(Constants.width, Constants.height);
+    
+    globalPopulation.clear();
+    for (int i = 0; i < 40; ++i)
+    {
+      globalPopulation.add(SeedGenome.generateSeed(target));
+    }
+    selectedGenome = globalPopulation.stream().findFirst().get();
+    
+    drawPanel.setTriangles(selectedGenome.getGenes());
+    
+    evolutionManager.setTargetImage(target);
   }
 
   private void setup()
