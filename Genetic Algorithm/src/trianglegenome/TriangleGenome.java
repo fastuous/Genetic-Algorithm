@@ -21,9 +21,7 @@ public class TriangleGenome extends Application
 
     try
     {
-      FXMLLoader loader = new FXMLLoader();
-      root = loader.load(getClass().getResource("/trianglegenome/gui/MainGUI.fxml").openStream());
-      controller = (MainController) loader.getController();
+      root = FXMLLoader.load(getClass().getResource("/trianglegenome/gui/MainGUI.fxml"));
 
       Scene scene = new Scene(root, 1100, 700);
 
@@ -38,7 +36,6 @@ public class TriangleGenome extends Application
       e.printStackTrace();
     }
 
-    return;
 
   }
 
