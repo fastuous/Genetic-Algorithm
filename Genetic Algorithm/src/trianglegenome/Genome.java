@@ -17,7 +17,7 @@ public class Genome implements Cloneable
 {
   private List<Triangle> genes = new LinkedList<>();
   
-  private long fitness;
+  private long fitness = Integer.MAX_VALUE;
   
   public Genome()
   {
@@ -244,12 +244,12 @@ public class Genome implements Cloneable
   
   public long getFitness()
   {
-    return this.fitness;
+    return fitness;
   }
   
   public void setFitness(long value)
   {
-    this.fitness = value;
+    fitness = value;
   }
   
   /**
