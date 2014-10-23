@@ -45,6 +45,7 @@ public class MainController extends Control implements Initializable
   @FXML private ImageView drawPanelContainer;
   @FXML private ImageView imagePanelContainer;
   @FXML private Label nTriangles;
+  @FXML private Label fitness;
   @FXML private Slider triangleSlider;
   @FXML private Slider genomeSlider;
   @FXML private ComboBox<String> imageSelect;
@@ -186,6 +187,7 @@ public class MainController extends Control implements Initializable
   {
     drawPanel.setTriangles(selectedGenome.getGenes());
     drawPanelContainer.setImage(drawPanel.getFXImage());
+    fitness.textProperty().set("fitness: " + selectedGenome.getFitness());
   }
 
   @Override
