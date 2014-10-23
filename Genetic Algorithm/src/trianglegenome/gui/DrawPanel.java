@@ -197,10 +197,13 @@ public class DrawPanel extends JPanel
   {
     Graphics2D offscreenGraphics = offscreenBuffer.createGraphics();
     offscreenGraphics.clearRect(0, 0, getWidth(), getHeight());
-    triangles
-        .stream()
-        .limit(triangleDrawLimit)
-        .forEach(t -> drawTriangle(offscreenGraphics, t));
+    synchronized (triangles)
+    {
+      triangles
+          .stream()
+          .limit(triangleDrawLimit)
+          .forEach(t -> drawTriangle(offscreenGraphics, t));
+    }
     
     offscreenGraphics.dispose();
   }
