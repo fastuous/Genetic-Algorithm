@@ -60,6 +60,9 @@ public class DrawPanel extends JPanel
    * method */
   private VolatileImage offscreenBuffer;
   
+  /** The graphics of the {@link DrawPanel#offscreenBuffer} */
+  private Graphics2D offscreenGraphics;
+  
   /** An image for use with {@link #getFXImage()} to get the triangles as
    * a WritableImage. */
   private WritableImage fxImage;
@@ -187,6 +190,7 @@ public class DrawPanel extends JPanel
     GraphicsDevice gd = ge.getDefaultScreenDevice();
     GraphicsConfiguration gc = gd.getDefaultConfiguration();
     offscreenBuffer = gc.createCompatibleVolatileImage(width, height);
+    offscreenGraphics = offscreenBuffer.createGraphics();
   }
   
   /**
@@ -202,12 +206,10 @@ public class DrawPanel extends JPanel
       if (validationCode == VolatileImage.IMAGE_INCOMPATIBLE)
       {
         createOffScreenBuffer(getWidth(), getHeight());
-        updateOffScreenBuffer();
       }
 
       if (offscreenBuffer.contentsLost()) continue; 
       
-      Graphics2D offscreenGraphics = offscreenBuffer.createGraphics();
       offscreenGraphics.clearRect(0, 0, getWidth(), getHeight());
       synchronized (triangles)
       {
@@ -216,8 +218,6 @@ public class DrawPanel extends JPanel
             .limit(triangleDrawLimit)
             .forEach(t -> drawTriangle(offscreenGraphics, t));
       }
-      
-      offscreenGraphics.dispose();
       
     } while (offscreenBuffer.contentsLost());
     
@@ -265,9 +265,8 @@ public class DrawPanel extends JPanel
       if (validationCode == VolatileImage.IMAGE_INCOMPATIBLE)
       {
         createOffScreenBuffer(getWidth(), getHeight());
-        updateOffScreenBuffer();
       }
-      
+
       g.drawImage(offscreenBuffer, 0, 0, this);
       
     } while (offscreenBuffer.contentsLost());

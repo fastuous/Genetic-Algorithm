@@ -201,7 +201,7 @@ public class EvolutionManager extends Thread
           throw new IllegalStateException(
               "No HillClimbing thread can be paused while EvolutionManager is running");
         }
-        if (crossoverFlag)
+        if (false && crossoverFlag)
         {
           hillClimberSpawner.pauseHillClimbers();
           int crossoverCount = max(1, Constants.rand.nextInt(genomes.size() / 8));
@@ -210,7 +210,7 @@ public class EvolutionManager extends Thread
         }
         
         // TODO put some real crossover conditions.
-        if (iterations > 2097152)
+        if (iterations > Integer.MAX_VALUE)
         {
           crossoverFlag = true;
           iterations = 0;
