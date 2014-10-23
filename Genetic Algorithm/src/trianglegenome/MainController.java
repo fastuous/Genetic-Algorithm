@@ -10,6 +10,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
@@ -28,7 +29,6 @@ public class MainController extends Control implements Initializable
 {
 
   private List<Genome> globalPopulation = new ArrayList<Genome>();
-  private int threadCount;
   private DrawPanel drawPanel;
   private ImagePanel imagePanel;
   private HillClimberSpawner hillClimberSpawner;
@@ -39,17 +39,16 @@ public class MainController extends Control implements Initializable
   // private MainGUI GUI
 
   @FXML
-  private ImageView drawPanelContainer;
+  private ImageView drawPanelContainer, imagePanelContainer;
   @FXML
-  private ImageView imagePanelContainer;
-  @FXML
-  private Label nTriangles;
-  @FXML
-  private Label fitness;
+  private Label nTriangles, fitness;
   @FXML
   private Slider triangleSlider;
   @FXML
   private ComboBox<String> imageSelect;
+  
+  @FXML
+  private Button toggleRunning, nextGeneration, genomeTable, readGenome, writeGenome;
 
   @FXML
   private void toggleRunning()
@@ -116,7 +115,7 @@ public class MainController extends Control implements Initializable
     Constants.width = target.getWidth();
     Constants.height = target.getHeight();
     globalPopulation.clear();
-    for (int i = 0; i < 100 * threadCount; ++i)
+    for (int i = 0; i < 100 * Constants.threadCount; ++i)
     {
       globalPopulation.add(SeedGenome.generateSeed(target));
     }

@@ -65,11 +65,11 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#toggleRunning" prefWidth="160.0" text="Start" />
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#next" prefWidth="160.0" text="Next Generation" GridPane.columnIndex="1" />
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#showGenomeTable" prefWidth="160.0" text="Show Genome Table" GridPane.columnIndex="2" />
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#readGenome" prefWidth="160.0" text="Read Genome" GridPane.columnIndex="3" />
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#writeGenome" prefWidth="160.0" text="Write Genome" GridPane.columnIndex="4" />
+            <Button fx:id="toggleRunning" alignment="CENTER" mnemonicParsing="false" onAction="#toggleRunning" prefWidth="160.0" text="Start" />
+            <Button fx:id="nextGeneration" alignment="CENTER" mnemonicParsing="false" onAction="#next" prefWidth="160.0" text="Next Generation" GridPane.columnIndex="1" />
+            <Button fx:id="genomeTable" alignment="CENTER" mnemonicParsing="false" onAction="#showGenomeTable" prefWidth="160.0" text="Show Genome Table" GridPane.columnIndex="2" />
+            <Button fx:id="readGenome" alignment="CENTER" mnemonicParsing="false" onAction="#readGenome" prefWidth="160.0" text="Read Genome" GridPane.columnIndex="3" />
+            <Button fx:id="writeGenome" alignment="CENTER" mnemonicParsing="false" onAction="#writeGenome" prefWidth="160.0" text="Write Genome" GridPane.columnIndex="4" />
          </children>
       </GridPane>
       <ComboBox fx:id="imageSelect" layoutX="21.0" layoutY="422.0" onAction="#imageSelected" prefHeight="32.0" prefWidth="356.0" promptText="Select an Image..." />
