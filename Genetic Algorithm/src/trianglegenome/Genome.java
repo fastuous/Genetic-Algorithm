@@ -247,6 +247,11 @@ public class Genome implements Cloneable
     return this.fitness;
   }
   
+  public void setFitness(long value)
+  {
+    this.fitness = value;
+  }
+  
   /**
    * Returns a string representation of this genome.
    * @return A string representation of this genome.

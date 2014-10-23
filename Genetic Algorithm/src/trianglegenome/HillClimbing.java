@@ -162,6 +162,7 @@ public class HillClimbing extends Thread
         triangle = Constants.rand.nextInt(Constants.TRIANGLE_COUNT);
       }
     } while (fitnessAfter >= fitnessBefore);
+    genomeState.genome.setFitness(fitnessAfter);
     successfulMultiplier += .5;
   }
 }
