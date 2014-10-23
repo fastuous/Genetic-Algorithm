@@ -213,10 +213,13 @@ public class DrawPanel extends JPanel
       offscreenGraphics.clearRect(0, 0, getWidth(), getHeight());
       synchronized (triangles)
       {
-        triangles
-            .stream()
-            .limit(triangleDrawLimit)
-            .forEach(t -> drawTriangle(offscreenGraphics, t));
+        int trianglesDrawn = 0;
+        for (Triangle t : triangles)
+        {
+          if (trianglesDrawn == triangleDrawLimit) break;
+          drawTriangle(offscreenGraphics, t);
+          trianglesDrawn++;
+        }
       }
       
     } while (offscreenBuffer.contentsLost());
