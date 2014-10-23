@@ -68,6 +68,8 @@ public class Constants
   
   public static int selectedImage = 0;
   
+  public static final int MAX_CONCURRENT_OPENCL_EVALS = 8;
+  
   public static boolean useOpenCL = true;
   
   public static final int TRIANGLE_COUNT = 200;

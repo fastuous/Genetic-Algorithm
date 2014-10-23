@@ -5,6 +5,7 @@ import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.IntBuffer;
+import java.util.concurrent.Semaphore;
 
 import trianglegenome.util.Constants;
 
@@ -74,6 +75,8 @@ public class FitnessEvaluator
   
   private final String ERROR_SIZE = "Reference and triangle images must be the same size"; 
   private final String ERROR_TYPE = "Image must be of type BufferedImage.TYPE_INT_RGB"; 
+  
+  private static Semaphore semaphore = new Semaphore(Constants.MAX_CONCURRENT_OPENCL_EVALS);
   
   /**
    * Creates a new fitness evaluator.
@@ -146,6 +149,9 @@ public class FitnessEvaluator
    */
   public int differenceSumCL(BufferedImage triangles)
   {
+    try { semaphore.acquire(); }
+    catch (Exception e) {}
+    
     CLBuffer<IntBuffer> trianglesCLBuffer;
     DataBufferInt trtianglesBufferInt;
 
@@ -169,6 +175,8 @@ public class FitnessEvaluator
     for (int i = 0; i < elementCount; i++) sum += differences.get();
     
     trianglesCLBuffer.release();
+
+    semaphore.release();
     
     return sum;
   }
@@ -244,5 +252,15 @@ public class FitnessEvaluator
     int mwSize = device.getMaxWorkGroupSize();
     int wgs = mwSize / elementCount + 1; 
     return wgs * elementCount;
+  }
+  
+  @Override
+  public void finalize()
+  {
+    referenceCLBuffer.release();
+    context.release();
+    kernel.release();
+    queue.release();
+    program.release();
   }
 }
