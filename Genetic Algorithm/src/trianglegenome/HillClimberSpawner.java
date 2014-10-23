@@ -123,6 +123,7 @@ public class HillClimberSpawner
 
   public void stopHillClimbing()
   {
+    pauseHillClimbers();
     hillClimbingThreads.forEach(t -> t.interrupt());
     hillClimbingThreads.clear();
   }

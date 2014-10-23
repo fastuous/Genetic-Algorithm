@@ -217,8 +217,13 @@ public class EvolutionManager extends Thread
         }
         iterations++; */
       }
-      else try { Thread.sleep(200); } catch (Exception e) {}
+      else
+      {
+        try { Thread.sleep(200); }
+        catch (Exception e) { hillClimberSpawner.stopHillClimbing(); }
+      }
     }
+    hillClimberSpawner.stopHillClimbing();
   }
   
   /*
