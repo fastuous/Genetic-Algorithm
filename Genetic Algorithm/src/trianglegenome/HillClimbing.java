@@ -102,11 +102,17 @@ public class HillClimbing extends Thread
         }
         if(!tri.isValidTriangle(tri))
         {
-          tri = original;
+          if (evenOrOdd == 1)
+          {
+            tri.dna[successfulDNA] += successfulMultiplier * stepSize;
+          }
+          else
+          {
+            tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
+          }
           evenOrOdd = (evenOrOdd+1) % 2;
         }
-      }
-      while (!tri.isValidTriangle(tri));
+      } while (!tri.isValidTriangle(tri));
       genes.set(location, tri);
     }
   }
