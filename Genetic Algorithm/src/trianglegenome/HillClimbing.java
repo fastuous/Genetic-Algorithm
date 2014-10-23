@@ -86,6 +86,7 @@ public class HillClimbing extends Thread
   {
     List<Triangle> genes = genome.getGenes();
     Triangle tri = genes.get(triangle);
+    Triangle original = tri;
     int location = genes.indexOf(tri);
     do
     {
@@ -96,6 +97,11 @@ public class HillClimbing extends Thread
       else
       {
         tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
+      }
+      if(!tri.isValidTriangle(tri))
+      {
+        tri = original;
+        evenOrOdd = (evenOrOdd+1) % 2;
       }
     }
     while (!tri.isValidTriangle(tri));
