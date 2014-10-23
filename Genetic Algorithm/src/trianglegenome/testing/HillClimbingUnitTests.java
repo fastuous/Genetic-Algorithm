@@ -38,7 +38,7 @@ public class HillClimbingUnitTests
     genomeDrawPanelPair = new GenomeDrawPanelPair(genome, drawPanel);
     genomeDrawPanelPairSingleton = new ArrayList<GenomeDrawPanelPair>(1);
     genomeDrawPanelPairSingleton.add(genomeDrawPanelPair);
-    hillClimber = new HillClimbing(genomeDrawPanelPairSingleton, Constants.FITNESS_EVALUATORS[0]);
+    hillClimber = new HillClimbing(genomeDrawPanelPairSingleton, Constants.IMAGES[0]);
   }
   
   private void testHillClimbing()

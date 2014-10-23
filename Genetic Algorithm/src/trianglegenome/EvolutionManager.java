@@ -35,11 +35,12 @@ public class EvolutionManager extends Thread
   /** The class that will perform crossovers on the genomes. */
   private GenomeCrossover genomeCrossover;
   
+  /** The reference image that the triangles in each genome will eventually resemble through
+   * hill climbing and crossover. */
+  private BufferedImage target;
+  
   /** The number of threads that will perform the hill climbing. */
   private int threadCount;
-  
-  /** The fitness evaluator that each hill climbing thread will use. */
-  private FitnessEvaluator fitnessEvaluator;
   
   /**
    * Given an initial thread count, a list of genomes and a reference image, create an
@@ -49,15 +50,14 @@ public class EvolutionManager extends Thread
    * @param genomes The genomes that this EvolutionManager will manage.
    * @param target The image that the genomes should resemble.
    */
-  public EvolutionManager(
-      int threadCount, List<Genome> genomes, FitnessEvaluator fitnessEvaluator)
+  public EvolutionManager(int threadCount, List<Genome> genomes, BufferedImage target)
   {
     super("EvloutionManager-Thread");
     Objects.requireNonNull(genomes, "genomes cannot be null");
-    Objects.requireNonNull(fitnessEvaluator, "fitnessEvaluator cannot be null");
+    Objects.requireNonNull(target, "target cannot be null");
     this.genomes = genomes;
     this.threadCount = threadCount;
-    this.fitnessEvaluator = fitnessEvaluator;
+    this.target = target;
     startTime = System.currentTimeMillis();
     init();
     this.paused = false;
@@ -112,22 +112,9 @@ public class EvolutionManager extends Thread
   private void init()
   {
     this.paused = true;
-    if (hillClimberSpawner != null)
-    {
-      try
-      {
-        synchronized (hillClimberSpawner)
-        {
-          hillClimberSpawner.stopHillClimbing();
-          this.wait();
-        }
-      }
-      catch (Exception e) { }
-    }
-    hillClimberSpawner = new HillClimberSpawner(threadCount, genomes, fitnessEvaluator);
+    if (hillClimberSpawner != null) hillClimberSpawner.stopHillClimbing();
+    hillClimberSpawner = new HillClimberSpawner(threadCount, genomes, target);
     genomeCrossover = new GenomeCrossover(genomes);
-    
-    this.paused = false;
   }
   
   /**
@@ -141,7 +128,6 @@ public class EvolutionManager extends Thread
     {
       this.threadCount = threadCount;
       init();
-      hillClimberSpawner.startHillClimbing();
     }
   }
   
@@ -173,7 +159,20 @@ public class EvolutionManager extends Thread
     Objects.requireNonNull(genomes, "genomes cannot be null");
     this.genomes = genomes;
     init();
-    hillClimberSpawner.startHillClimbing();
+  }
+  
+  /**
+   * Changes the reference image that this EvolutionManager will use when performing hill
+   * climbing and crossovers. This function also interrupts the current hill climbing
+   * threads and creates new ones.
+   * @param target The new BufferedImage that the EvolutionManager will use.
+   */
+  public void setTargetImage(BufferedImage target)
+  {
+    Objects.requireNonNull(target, "target cannot be null");
+    this.target = target;
+    init();
+    startTime = System.currentTimeMillis();
   }
   
   /**
