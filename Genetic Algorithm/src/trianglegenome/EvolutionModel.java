@@ -14,7 +14,7 @@ import trianglegenome.util.Constants;
  * the genomes.
  * @author collinsd
  */
-public class EvolutionManager extends Thread
+public class EvolutionModel extends Thread
 {
   /** When true, this thread will not perform any actions. */
   private volatile boolean paused;
@@ -30,7 +30,7 @@ public class EvolutionManager extends Thread
   
   /** The {@link HillClimberSpawner} that is responsible for spawning the
    * {@link HillClimbing} threads that perform hill climbing on the
-   * {@link EvolutionManager#genomes}. */
+   * {@link EvolutionModel#genomes}. */
   private HillClimberSpawner hillClimberSpawner;
   
   /** The class that will perform crossovers on the genomes. */
@@ -54,7 +54,7 @@ public class EvolutionManager extends Thread
    * @param genomes The genomes that this EvolutionManager will manage.
    * @param target The image that the genomes should resemble.
    */
-  public EvolutionManager(int threadCount, List<Genome> genomes, BufferedImage target)
+  public EvolutionModel(int threadCount, List<Genome> genomes, BufferedImage target)
   {
     super("EvloutionManager-Thread");
     Objects.requireNonNull(genomes, "genomes cannot be null");

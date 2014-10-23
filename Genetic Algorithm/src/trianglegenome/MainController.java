@@ -37,7 +37,7 @@ public class MainController extends Control implements Initializable
   private DrawPanel drawPanel;
   private ImagePanel imagePanel;
   private Genome selectedGenome;
-  private EvolutionManager evolutionManager;
+  private EvolutionModel evolutionManager;
   private boolean running = false;
   private Thread guiUpdater;
 
@@ -146,7 +146,7 @@ public class MainController extends Control implements Initializable
     }
 
     if (evolutionManager != null) evolutionManager.interrupt();
-    evolutionManager = new EvolutionManager(Constants.threadCount, globalPopulation, target);
+    evolutionManager = new EvolutionModel(Constants.threadCount, globalPopulation, target);
     evolutionManager.pause();
     evolutionManager.start();
     selectedTribePopulation = evolutionManager.getGenomesFromTribe(0);
