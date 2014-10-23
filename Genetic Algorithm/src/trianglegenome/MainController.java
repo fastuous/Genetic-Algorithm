@@ -8,7 +8,10 @@ import java.util.ResourceBundle;
 
 import javax.swing.SwingUtilities;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,6 +36,7 @@ public class MainController extends Control implements Initializable
   private Genome selectedGenome;
   private EvolutionManager evolutionManager;
   private boolean started = false;
+  private Thread guiUpdater;
 
   // private MainGUI GUI
 
@@ -94,6 +98,7 @@ public class MainController extends Control implements Initializable
     }
     List<Triangle> test = globalPopulation.get(Constants.rand.nextInt(1)).getGenes();
     drawPanel.setTriangles(test);
+    selectedGenome = globalPopulation.stream().findFirst().get();
     
     if (evolutionManager != null) evolutionManager.interrupt();
     evolutionManager = new EvolutionManager(1, globalPopulation, target);
@@ -131,12 +136,6 @@ public class MainController extends Control implements Initializable
   private void readGenome()
   {
     // TODO read genome from XML into currently selected
-    
-    selectedGenome = globalPopulation.stream().findFirst().get();
-   
-    
-    drawPanel.setTriangles(selectedGenome.getGenes());
-    drawPanelContainer.setImage(drawPanel.getFXImage());
   }
 
   @FXML
@@ -150,6 +149,12 @@ public class MainController extends Control implements Initializable
   {
     System.out.println("Test");
   }
+  
+  private void updateDrawPanel()
+  {
+    drawPanel.setTriangles(selectedGenome.getGenes());
+    drawPanelContainer.setImage(drawPanel.getFXImage());
+  }
 
   @Override
   public void initialize(URL location, ResourceBundle resources)
@@ -157,6 +162,17 @@ public class MainController extends Control implements Initializable
     imagePanelContainer.setImage(SwingFXUtils.toFXImage(Constants.IMAGES[Constants.selectedImage], null));
     imageSelect.getItems().addAll(Constants.IMAGE_FILES);
     triangleSlider.valueProperty().addListener(e -> triangleSliderUpdate());
+    
+    guiUpdater = new Thread(
+        () ->
+        {
+          while (true)
+          {
+            Platform.runLater(() -> updateDrawPanel());
+            try { Thread.sleep(200); } catch (Exception e) {}
+          }
+        });
+    guiUpdater.start();
     
     setup();
   }
