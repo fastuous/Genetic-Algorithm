@@ -280,21 +280,21 @@ public class MainController extends Control implements Initializable
     triangleSlider.valueProperty().addListener(e -> triangleSliderUpdate());
     genomeSlider.valueProperty().addListener(e -> genomeSliderUpdate());
 
-//    guiUpdater = new Thread(() ->
-//    {
-//      while (true)
-//      {
-//        Platform.runLater(() -> updateDrawPanel());
-//        try
-//        {
-//          Thread.sleep(200);
-//        }
-//        catch (Exception e)
-//        {
-//        }
-//      }
-//    });
-//    guiUpdater.start();
+    guiUpdater = new Thread(() ->
+    {
+      while (true)
+      {
+        Platform.runLater(() -> updateDrawPanel());
+        try
+        {
+          Thread.sleep(5000);
+        }
+        catch (Exception e)
+        {
+        }
+      }
+    });
+    guiUpdater.start();
 
     setup();
   }

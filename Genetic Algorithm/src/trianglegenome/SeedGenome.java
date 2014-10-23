@@ -53,6 +53,14 @@ public class SeedGenome
     Color leftTriangleColor = averageColors(topLeftColor, leftColor, middleColor, bottomLeftColor);
     Color rightTriangleColor = averageColors(topRightColor, middleColor, rightColor, bottomRightColor);
     Color bottomTriangleColor = averageColors(middleColor, bottomLeftColor, bottomColor, bottomRightColor);
+    
+    Color averageColor = averageColors(topTriangleColor.getRGB(), leftTriangleColor.getRGB(), rightTriangleColor.getRGB(), bottomTriangleColor.getRGB());
+    
+    int averageRGB = averageColor.getRGB();
+    System.out.println(averageRGB);
+    
+    int differenceRGB = (Constants.MAX_RGBA - averageRGB)/2;
+    
 
     int leftX = 0;
     int rightX = image.getWidth() - 1;
@@ -77,18 +85,19 @@ public class SeedGenome
     seed.addGene(rightTriangle);
     seed.addGene(bottomTriangle);
 
-    for (int i = 0; i < Constants.TRIANGLE_COUNT - 4; i++)
+
+    for (int i = 0; i < Constants.TRIANGLE_COUNT/2 - 2; i++)
     {
       int xPoints[] = new int[3];
       for (int j = 0; j < xPoints.length; j++)
       {
-        xPoints[j] = Constants.rand.nextInt(Constants.width);
+        xPoints[j] = (int) (Math.floor(Constants.width)*Math.pow(Math.random(), 2.0));
       }
 
       int yPoints[] = new int[3];
       for (int j = 0; j < yPoints.length; j++)
       {
-        yPoints[j] = Constants.rand.nextInt(Constants.height);
+        yPoints[j] = (int) (Math.floor(Constants.height)*Math.pow(Math.random(), 2.0));
       }
 
       int rgba[] = new int[4];
@@ -97,7 +106,33 @@ public class SeedGenome
         rgba[j] = Constants.rand.nextInt(Constants.MAX_RGBA);
       }
 
-      rgba[3] = Constants.rand.nextInt(100);
+      rgba[3] = 0;
+
+      Triangle gene = new Triangle(xPoints, yPoints, rgba);
+      seed.addGene(gene);
+    }
+    
+    for (int i = Constants.TRIANGLE_COUNT/2 - 2; i < Constants.TRIANGLE_COUNT - 4; i++)
+    {
+      int xPoints[] = new int[3];
+      for (int j = 0; j < xPoints.length; j++)
+      {
+        xPoints[j] = (int) (Math.sqrt(Constants.rand.nextInt(Constants.width*Constants.width)));
+      }
+
+      int yPoints[] = new int[3];
+      for (int j = 0; j < yPoints.length; j++)
+      {
+        yPoints[j] = (int) (Math.sqrt(Constants.rand.nextInt(Constants.height*Constants.height)));
+      }
+
+      int rgba[] = new int[4];
+      for (int j = 0; j < rgba.length - 1; j++)
+      {
+    	  Constants.rand.nextInt(Constants.MAX_RGBA);
+      }
+
+      rgba[3] = 0;
 
       Triangle gene = new Triangle(xPoints, yPoints, rgba);
       seed.addGene(gene);
