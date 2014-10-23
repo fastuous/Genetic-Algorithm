@@ -84,13 +84,41 @@ public class HillClimbing extends Thread
   
   public void evolve(Genome genome)
   {
-    List<Triangle> genes = genome.getGenes();
-    Triangle tri = genes.get(triangle);
-    Triangle original = tri;
-    int location = genes.indexOf(tri);
-    do
+    synchronized (genome.getGenes())
     {
-      if (evenOrOdd == 0)
+      List<Triangle> genes = genome.getGenes();
+      Triangle tri = genes.get(triangle);
+      Triangle original = tri;
+      int location = genes.indexOf(tri);
+      do
+      {
+        if (evenOrOdd == 0)
+        {
+          tri.dna[successfulDNA] += successfulMultiplier * stepSize;
+        }
+        else
+        {
+          tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
+        }
+        if(!tri.isValidTriangle(tri))
+        {
+          tri = original;
+          evenOrOdd = (evenOrOdd+1) % 2;
+        }
+      }
+      while (!tri.isValidTriangle(tri));
+      genes.set(location, tri);
+    }
+  }
+  
+  public void devolve(Genome genome)
+  {
+    synchronized (genome.getGenes())
+    {
+      List<Triangle> genes = genome.getGenes();
+      Triangle tri = genes.get(triangle);
+      int location = genes.indexOf(tri);
+      if (evenOrOdd == 1)
       {
         tri.dna[successfulDNA] += successfulMultiplier * stepSize;
       }
@@ -98,43 +126,19 @@ public class HillClimbing extends Thread
       {
         tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
       }
-      if(!tri.isValidTriangle(tri))
-      {
-        tri = original;
-        evenOrOdd = (evenOrOdd+1) % 2;
-      }
+      genes.set(location, tri);
     }
-    while (!tri.isValidTriangle(tri));
-    genes.set(location, tri);
-  }
-  
-  public void devolve(Genome genome)
-  {
-    List<Triangle> genes = genome.getGenes();
-    Triangle tri = genes.get(triangle);
-    int location = genes.indexOf(tri);
-    if (evenOrOdd == 1)
-    {
-      tri.dna[successfulDNA] += successfulMultiplier * stepSize;
-    }
-    else
-    {
-      tri.dna[successfulDNA] -= successfulMultiplier * stepSize;
-    }
-    genes.set(location, tri);
   }
   
   public void performEvolution(GenomeDrawPanelPair genomeState)
   {
     genomeState.drawPanel.setTriangles(genomeState.genome.getGenes());
-    genomeState.drawPanel.repaint();
     BufferedImage drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
     fitnessBefore = fitnessEvaluator.differenceSum(drawPanelSnapshot);
     do
     {
       evolve(genomeState.genome);
       genomeState.drawPanel.setTriangles(genomeState.genome.getGenes());
-      genomeState.drawPanel.repaint();
       drawPanelSnapshot = genomeState.drawPanel.getSnapshot();
       fitnessAfter = fitnessEvaluator.differenceSum(drawPanelSnapshot);
       if (fitnessAfter > fitnessBefore)
