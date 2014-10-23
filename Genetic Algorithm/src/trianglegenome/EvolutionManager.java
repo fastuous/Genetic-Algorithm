@@ -1,6 +1,7 @@
 package trianglegenome;
 
 import static java.lang.Math.max;
+import static java.lang.Math.abs;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -42,6 +43,9 @@ public class EvolutionManager extends Thread
   /** The number of threads that will perform the hill climbing. */
   private int threadCount;
   
+  /** The average fitness of all genomes in all tribes. */
+  int averageFitness;
+  
   /**
    * Given an initial thread count, a list of genomes and a reference image, create an
    * Evolution manager that will try to evolve the genomes to look like the reference image
@@ -70,7 +74,8 @@ public class EvolutionManager extends Thread
   @Override
   public void run()
   {
-    int iterations = 0;
+    int fitnessDelta = 0;
+    int maxFitnessDelta = 0;
     hillClimberSpawner.startHillClimbing();
     hillClimberSpawner.unpauseHillClimbers();
     while (!super.isInterrupted())
@@ -83,15 +88,8 @@ public class EvolutionManager extends Thread
           int crossoverCount = max(1, Constants.rand.nextInt(genomes.size() / 8));
           genomeCrossover.crossover(crossoverCount);
           hillClimberSpawner.unpauseHillClimbers();
+          crossoverFlag = false;
         }
-        
-        // TODO put some real crossover conditions.
-        if (iterations > 500)
-        {
-          crossoverFlag = true;
-          iterations = 0;
-        }
-        iterations++;
         
         try { Thread.sleep(2000); }
         catch (Exception e)
@@ -99,6 +97,19 @@ public class EvolutionManager extends Thread
           hillClimberSpawner.stopHillClimbing();
           synchronized (this) { this.notify(); }
         }
+        
+        int newAverageFitness = (int)genomes
+            .stream()
+            .mapToLong(g -> g.getFitness())
+            .average()
+            .getAsDouble();
+        fitnessDelta = abs(newAverageFitness - averageFitness);
+        if (fitnessDelta > maxFitnessDelta) maxFitnessDelta = fitnessDelta;
+        else if (fitnessDelta < maxFitnessDelta / 2)
+        {
+          if (averageFitness != 0) crossoverFlag = true;
+        }
+        averageFitness = newAverageFitness;
       }
       else
       {
