@@ -44,6 +44,9 @@ public class GenomeCrossover
    * This list should consist of every genome from every tribe. */
   private List<Genome> genomes;
   
+  /** The total number of crossovers performed by this GenomeCrossover */
+  private long stepCount;
+  
   /**
    * Creates a GenomeCrossover, given a list of {@link Genome}
    * @param genomes A list of all genomes from every tribe.
@@ -51,6 +54,7 @@ public class GenomeCrossover
   public GenomeCrossover(List<Genome> genomes)
   {
     this.genomes = genomes;
+    stepCount = 0;
   }
   
   /**
@@ -106,6 +110,17 @@ public class GenomeCrossover
       
       alreadyCrossed.add(parentIndex1);
       alreadyCrossed.add(parentIndex2);
+      
+      stepCount++;
     }
+  }
+  
+  /**
+   * Returns the number of crossovers performed by this GenomeCrossover instance.
+   * @return The number of crossovers performed by this GenomeCrossover instance.
+   */
+  public long getGenerationCount()
+  {
+    return stepCount;
   }
 }

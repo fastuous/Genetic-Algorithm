@@ -157,6 +157,18 @@ public class HillClimberSpawner
         .limit(genomesPerThread)
         .collect(Collectors.toList());
   }
+  
+  /**
+   * Returns the number of hill climbs performed by all HillClimbing threads.
+   * @return The number of hill climbs performed by all HillClimbing threads.
+   */
+  public long getHillClimbGenerations()
+  {
+    return hillClimbingThreads
+        .stream()
+        .mapToLong(hc -> hc.getGenerationCount())
+        .sum();
+  }
 
   @Override
   public void finalize()

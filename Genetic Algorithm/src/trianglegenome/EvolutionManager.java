@@ -181,26 +181,6 @@ public class EvolutionManager extends Thread
   }
   
   /**
-   * Changes the reference image that this EvolutionManager will use when performing hill
-   * climbing and crossovers. This function also interrupts the current hill climbing
-   * threads and creates new ones.
-   * @param target The new BufferedImage that the EvolutionManager will use.
-   */
-  public void setTargetImage(BufferedImage target)
-  {
-    Objects.requireNonNull(target, "target cannot be null");
-    this.target = target;
-    init();
-    startTime = System.currentTimeMillis();
-  }
-  
-  /**
-   * Returns the running time of this thread, according to the wall clock.
-   * @return The running time of this thread, according to the wall clock.
-   */
-  public long getRunningTime() { return System.currentTimeMillis() - startTime; }
-  
-  /**
    * Pauses the EvolutionManager after all atomic operations (e.g. the hill climbing
    * of a tribe) are finished.
    */
@@ -229,6 +209,12 @@ public class EvolutionManager extends Thread
   }
   
   /**
+   * Returns the running time of this thread, according to the wall clock.
+   * @return The running time of this thread, according to the wall clock.
+   */
+  public long getElapsedTime() { return System.currentTimeMillis() - startTime; }
+  
+  /**
    * Returns the genomes managed by a given thread, specified by index.
    * @param threadIndex The thread from which the genomes will be taken.
    * @return The genomes managed by a given thread, specified by index.
@@ -240,6 +226,33 @@ public class EvolutionManager extends Thread
       throw new IllegalArgumentException("threadIndex exceeds hill climbing thread count.");
     }
     return hillClimberSpawner.getGenomesFromThread(threadIndex);
+  }
+  
+  /**
+   * Returns the number of hill climbs performed by all HillClimbing threads.
+   * @return The number of hill climbs performed by all HillClimbing threads.
+   */
+  public long getHillClimbGenerations()
+  {
+    return hillClimberSpawner.getHillClimbGenerations();
+  }
+  
+  /**
+   * Returns the number of crossovers performed.
+   * @return The number of crossovers performed.
+   */
+  public long getCrossoverGenerations()
+  {
+    return genomeCrossover.getGenerationCount();
+  }
+  
+  /**
+   * Returns the number of generations created from both hill climbing and crossover.
+   * @return The number of generations created from both hill climbing and crossover.
+   */
+  public long getTotalGenerations()
+  {
+    return getCrossoverGenerations() + getHillClimbGenerations();
   }
   
   /*

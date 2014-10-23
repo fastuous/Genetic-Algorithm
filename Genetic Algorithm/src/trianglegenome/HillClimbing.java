@@ -19,6 +19,8 @@ public class HillClimbing extends Thread
   private FitnessEvaluator fitnessEvaluator;
   private List<GenomeDrawPanelPair> genomeStates;
   private volatile boolean paused = false;
+  
+  private volatile long stepCount;
 
   public HillClimbing(List<GenomeDrawPanelPair> genomeStates, BufferedImage target)
   {
@@ -26,6 +28,7 @@ public class HillClimbing extends Thread
     targetImage = target;
     fitnessEvaluator = new FitnessEvaluator(targetImage);
     this.genomeStates = genomeStates;
+    stepCount = 0;
   }
 
   @Override
@@ -71,6 +74,11 @@ public class HillClimbing extends Thread
   {
     if (this.paused) return true;
     return false;
+  }
+  
+  public long getGenerationCount()
+  {
+    return stepCount;
   }
   
   public void performOneEvolution()
@@ -171,5 +179,6 @@ public class HillClimbing extends Thread
     } while (fitnessAfter >= fitnessBefore);
     genomeState.genome.setFitness(fitnessAfter);
     successfulMultiplier += .5;
+    stepCount++;
   }
 }
