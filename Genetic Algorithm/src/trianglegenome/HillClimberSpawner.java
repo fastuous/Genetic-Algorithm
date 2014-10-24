@@ -133,6 +133,7 @@ public class HillClimberSpawner
       {
         synchronized (hc)
         {
+          hc.pause();
           hc.interrupt();
           hc.wait();
         }
