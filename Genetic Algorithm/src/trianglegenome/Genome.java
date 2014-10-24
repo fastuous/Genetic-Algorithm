@@ -12,6 +12,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import trianglegenome.util.Constants;
 
+/**
+ * 
+ * @author Truman DeYoung
+ *
+ */
 @XmlRootElement(name="genome")
 public class Genome implements Cloneable
 {

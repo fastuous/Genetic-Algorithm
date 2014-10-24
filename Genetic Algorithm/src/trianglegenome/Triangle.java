@@ -89,6 +89,10 @@ public class Triangle implements Cloneable
     else return false;
   }
   
+  /**
+   * Returns the smallest possible {@link Rectangle} that bounds this triangle.
+   * @return The smallest possible {@link Rectangle} that bounds this triangle.
+   */
   public Rectangle getBoundingBox()
   {
     int[] xs = Arrays.copyOfRange(dna, 0, 3);
