@@ -87,12 +87,10 @@ public class MainController extends Control implements Initializable
   @FXML
   private void next()
   {
-    Genome seed = SeedGenome.generateSeed(Constants.IMAGES[Constants.selectedImage]);
-
-    drawPanel.setTriangles(seed.getGenes());
-    drawPanelContainer.setImage(drawPanel.getFXImage());
-
-    // hillClimberSpawner.performOneEvolution();
+    if(!running)
+    {
+      evolutionModel.performOneEvolution();
+    }
   }
 
   private List<Genome> getSortedPopulation()
