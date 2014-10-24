@@ -54,7 +54,7 @@ public class Constants
     }
   }
   
-  public static int selectedImage = 2;
+  public static int selectedImage = 0;
   
   public static final boolean useVolatileImage = true;
   
