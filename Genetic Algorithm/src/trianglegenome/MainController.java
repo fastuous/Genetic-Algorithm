@@ -45,16 +45,27 @@ public class MainController extends Control implements Initializable
   private boolean running = false;
   private Thread guiUpdater;
   private int minuteCounter = 0;
+  private long nPreviousGenerations = 0;
+  private long tribeFitness;
+  private long totalFitness;
 
   // private MainGUI GUI
 
-  @FXML private ImageView drawPanelContainer;
-  @FXML private ImageView imagePanelContainer;
-  @FXML private Label nTriangles, fitness;
-  @FXML private Slider triangleSlider, genomeSlider;
-  @FXML private ComboBox<String> imageSelect, tribeSelect;
-  @FXML private Button toggleRunning, nextGeneration, genomeTable, readGenome, writeGenome;
-  @FXML private Label elapsedTime, totalGen, hillClimbGen, crossGen, genPerSecond, tribeFitPerMin, totalFitPerMin, tribeDiversity, totalDiversity;
+  @FXML
+  private ImageView drawPanelContainer;
+  @FXML
+  private ImageView imagePanelContainer;
+  @FXML
+  private Label nTriangles, fitness;
+  @FXML
+  private Slider triangleSlider, genomeSlider;
+  @FXML
+  private ComboBox<String> imageSelect, tribeSelect;
+  @FXML
+  private Button toggleRunning, nextGeneration, genomeTable, readGenome, writeGenome;
+  @FXML
+  private Label elapsedTime, totalGen, hillClimbGen, crossGen, genPerSecond, tribeFitPerMin, totalFitPerMin,
+      tribeDiversity, totalDiversity;
 
   @FXML
   private void toggleRunning()
@@ -129,8 +140,7 @@ public class MainController extends Control implements Initializable
     Constants.width = target.getWidth();
     Constants.height = target.getHeight();
     Constants.threadCount = getThreadCount();
-    drawPanel = (Constants.useVolatileImage)
-        ? new DrawPanelVolatileImage(Constants.width, Constants.height)
+    drawPanel = (Constants.useVolatileImage) ? new DrawPanelVolatileImage(Constants.width, Constants.height)
         : new DrawPanelBufferedImage(Constants.width, Constants.height);
     globalPopulation.clear();
     for (int i = 0; i < 40; ++i)
@@ -139,7 +149,7 @@ public class MainController extends Control implements Initializable
     }
     selectedGenome = globalPopulation.get(0);
     tribeSelect.itemsProperty().get().clear();
-    
+
     for (int i = 0; i < Constants.threadCount; i++)
     {
       tribeSelect.itemsProperty().get().add("Tribe " + i);
@@ -169,8 +179,7 @@ public class MainController extends Control implements Initializable
   private void tribeSelectorUpdate()
   {
     SelectionModel<String> selectedTribe = tribeSelect.getSelectionModel();
-    selectedTribePopulation = evolutionModel
-        .getGenomesFromTribe(selectedTribe.getSelectedIndex());
+    selectedTribePopulation = evolutionModel.getGenomesFromTribe(selectedTribe.getSelectedIndex());
     genomeSlider.setMax(selectedTribePopulation.size() - 1);
     genomeSlider.setMajorTickUnit(selectedTribePopulation.size() - 1);
     genomeSlider.setMinorTickCount(selectedTribePopulation.size() - 2);
@@ -205,20 +214,27 @@ public class MainController extends Control implements Initializable
 
   private void updateGUI()
   {
-    minuteCounter++;
-    
+   
+    long generationDelta = (evolutionModel.getTotalGenerations() - nPreviousGenerations) / 5;
+
     drawPanel.setTriangles(selectedGenome.getGenes());
     drawPanelContainer.setImage(drawPanel.getFXImage());
     fitness.textProperty().set("fitness: " + selectedGenome.getFitness());
-    
+
     int elapsedMinutes = (int) (evolutionModel.getElapsedTime() / 1000 / 60);
     int elapsedSeconds = (int) ((evolutionModel.getElapsedTime() / 1000) % 60);
     elapsedTime.setText("Elapsed Time: " + elapsedMinutes + "m " + elapsedSeconds + "s");
     totalGen.setText("Total Generations: " + evolutionModel.getTotalGenerations());
     hillClimbGen.setText("HillClimb Gens.: " + evolutionModel.getHillClimbGenerations());
     crossGen.setText("Crossover Gens.: " + evolutionModel.getCrossoverGenerations());
-    
-    
+    genPerSecond.setText("Gens. Per Second: " + generationDelta);
+
+    if (minuteCounter == 12)
+    {
+      minuteCounter = 0;
+      tribeFitPerMin.setText("Test " + nPreviousGenerations);
+    }
+
   }
 
   private void toggleControls()
@@ -281,19 +297,16 @@ public class MainController extends Control implements Initializable
   @Override
   public void initialize(URL location, ResourceBundle resources)
   {
-    imagePanelContainer.setImage(SwingFXUtils.toFXImage(Constants.IMAGES[Constants.selectedImage],
-        null));
+    imagePanelContainer.setImage(SwingFXUtils.toFXImage(Constants.IMAGES[Constants.selectedImage], null));
     imageSelect.getItems().addAll(Constants.IMAGE_FILES);
     triangleSlider.valueProperty().addListener(e -> triangleSliderUpdate());
     genomeSlider.valueProperty().addListener(e -> genomeSliderUpdate());
     genomeSlider.setShowTickLabels(true);
 
-
     guiUpdater = new Thread(() ->
     {
       while (true)
       {
-        Platform.runLater(() -> updateGUI());
         try
         {
           Thread.sleep(5000);
@@ -301,19 +314,22 @@ public class MainController extends Control implements Initializable
         catch (Exception e)
         {
         }
+        minuteCounter++;
+        Platform.runLater(() -> updateGUI());
+        nPreviousGenerations = evolutionModel.getTotalGenerations();
       }
     });
     guiUpdater.start();
 
     setup();
   }
-  
+
   public List<Thread> getThreads()
   {
     List<Thread> threadList = new LinkedList<>();
     threadList.add(evolutionModel);
     threadList.add(guiUpdater);
-    
+
     return threadList;
   }
 
