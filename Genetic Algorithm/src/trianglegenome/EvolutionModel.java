@@ -90,6 +90,7 @@ public class EvolutionModel extends Thread
           hillClimberSpawner.unpauseHillClimbers();
           crossoverFlag = false;
           averageFitness = 0;
+          firstFitnessDelta = 0;
         }
         
         try { Thread.sleep(10000); }
