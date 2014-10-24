@@ -75,7 +75,7 @@ public class EvolutionModel extends Thread
   public void run()
   {
     int fitnessDelta = 0;
-    int maxFitnessDelta = 0;
+    int firstFitnessDelta = 0;
     hillClimberSpawner.startHillClimbing();
     if (!paused) hillClimberSpawner.startHillClimbing();
     while (!super.isInterrupted())
@@ -92,7 +92,7 @@ public class EvolutionModel extends Thread
           averageFitness = 0;
         }
         
-        try { Thread.sleep(2000); }
+        try { Thread.sleep(10000); }
         catch (Exception e)
         {
           hillClimberSpawner.stopHillClimbing();
@@ -105,8 +105,8 @@ public class EvolutionModel extends Thread
             .average()
             .getAsDouble();
         fitnessDelta = abs(newAverageFitness - averageFitness);
-        if (fitnessDelta > maxFitnessDelta) maxFitnessDelta = fitnessDelta;
-        else if (fitnessDelta < maxFitnessDelta / 16)
+        if (firstFitnessDelta == 0) firstFitnessDelta = fitnessDelta;
+        else if (fitnessDelta < firstFitnessDelta / 64)
         {
           if (averageFitness != 0) crossoverFlag = true;
         }
