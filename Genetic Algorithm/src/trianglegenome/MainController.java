@@ -117,11 +117,11 @@ public class MainController extends Control implements Initializable
 
     imagePanelContainer.setImage(SwingFXUtils.toFXImage(target, null));
 
-    evolutionModel.interrupt();
     try
     {
       synchronized (evolutionModel)
       {
+        evolutionModel.interrupt();
         evolutionModel.wait();
       }
     }

@@ -322,7 +322,7 @@ public class EvolutionModel extends Thread
   public void finalize()
   {
     hillClimberSpawner.stopHillClimbing();
-    this.interrupt();
+    super.interrupt();
     synchronized (this) { this.notify(); }
   }
 }
