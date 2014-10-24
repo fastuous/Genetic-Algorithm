@@ -1,3 +1,8 @@
+/**
+ * Given two buffers with int values representing RGBA, compare their similarity.
+ * Each element in the triangles buffer will be overwritten with it's difference
+ * to the corresponding reference buffer element.
+ */
 __kernel void fitness(
     __global const int * reference,
     __global int * triangles,
