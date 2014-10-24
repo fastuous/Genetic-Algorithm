@@ -89,7 +89,6 @@ public class EvolutionModel extends Thread
           genomeCrossover.crossover(crossoverCount);
           hillClimberSpawner.unpauseHillClimbers();
           crossoverFlag = false;
-          averageFitness = 0;
           firstFitnessDelta = 0;
         }
         
@@ -109,7 +108,7 @@ public class EvolutionModel extends Thread
         if (firstFitnessDelta == 0) firstFitnessDelta = fitnessDelta;
         else if (fitnessDelta < firstFitnessDelta / 64)
         {
-          if (averageFitness != 0) crossoverFlag = true;
+          crossoverFlag = true;
         }
         averageFitness = newAverageFitness;
       }
