@@ -42,7 +42,7 @@
       </HBox>
       <HBox layoutY="474.0" prefHeight="36.0" prefWidth="1100.0" AnchorPane.bottomAnchor="190.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="474.0">
          <children>
-            <ComboBox value="Tribe 0" fx:id="tribeSelect" onAction="#tribeSelectorUpdate" prefHeight="32.0" prefWidth="155.0" promptText="Tribe 0">
+            <ComboBox fx:id="tribeSelect" onAction="#tribeSelectorUpdate" prefHeight="32.0" prefWidth="155.0" promptText="Select a Tribe..." value="Tribe 0">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
@@ -95,8 +95,9 @@
             <Label fx:id="genPerSecond" text="Gens. per Second: " GridPane.columnIndex="4" />
             <Label fx:id="tribeFitPerMin" text="Tribe Fitness per Min.:" GridPane.rowIndex="1" />
             <Label fx:id="totalFitPerMin" text="Total Fitness per Min.:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="tribeDiversity" text="Tribe Diversity:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label fx:id="totalDiversity" text="Total Diversity:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label fx:id="tribeDiversity" text="Tribe Diversity*::" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label fx:id="totalDiversity" text="Total Diversity*:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label text="*not normalized" GridPane.columnIndex="2" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>
