@@ -51,11 +51,7 @@ public class HillClimbing extends Thread
           synchronized (this) { this.notify(); }
           Thread.sleep(100);
         }
-        catch (Exception e)
-        {
-          this.pause();
-          e.printStackTrace();
-        }
+        catch (Exception e) {}
       }
     }
   }
