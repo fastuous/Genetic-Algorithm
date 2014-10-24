@@ -9,7 +9,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import trianglegenome.Genome;
-import trianglegenome.RandomGenome;
 
 /**
  * A class to handle reading and writing genomes to a file of the user's choosing. Assumes good

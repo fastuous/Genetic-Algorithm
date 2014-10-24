@@ -1,6 +1,5 @@
 package trianglegenome.testing;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,11 +7,10 @@ import trianglegenome.FitnessEvaluator;
 import trianglegenome.Genome;
 import trianglegenome.GenomeDrawPanelPair;
 import trianglegenome.HillClimbing;
-import trianglegenome.RandomGenome;
-import trianglegenome.Triangle;
 import trianglegenome.gui.DrawPanel;
 import trianglegenome.gui.DrawPanelVolatileImage;
 import trianglegenome.util.Constants;
+import trianglegenome.util.RandomGenome;
 
 public class HillClimbingUnitTests
 {

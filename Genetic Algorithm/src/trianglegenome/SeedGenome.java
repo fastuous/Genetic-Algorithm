@@ -16,7 +16,7 @@ import trianglegenome.util.Constants;
  * generated, with their opacity restricted so as to get more color-interaction between overlapping
  * triangles.
  * 
- * @author Truman DeYoung
+ * @author Truman DeYoung, Mason Banning
  */
 public class SeedGenome
 {
@@ -53,15 +53,13 @@ public class SeedGenome
     Color leftTriangleColor = averageColors(topLeftColor, leftColor, middleColor, bottomLeftColor);
     Color rightTriangleColor = averageColors(topRightColor, middleColor, rightColor, bottomRightColor);
     Color bottomTriangleColor = averageColors(middleColor, bottomLeftColor, bottomColor, bottomRightColor);
-    
-    Color averageColor = averageColors(topTriangleColor.getRGB(), leftTriangleColor.getRGB(), rightTriangleColor.getRGB(), bottomTriangleColor.getRGB());
-    int averageRGB[] = new int[3]; 
+
+    Color averageColor = averageColors(topTriangleColor.getRGB(), leftTriangleColor.getRGB(),
+        rightTriangleColor.getRGB(), bottomTriangleColor.getRGB());
+    int averageRGB[] = new int[3];
     averageRGB[0] = averageColor.getRed();
-    averageRGB[1] =  averageColor.getGreen();
+    averageRGB[1] = averageColor.getGreen();
     averageRGB[2] = averageColor.getBlue();
-    System.out.println("red: " + averageRGB[0] + " green: " + averageRGB[1] + " blue: " + averageRGB[2]);
-    
-    
 
     int leftX = 0;
     int rightX = image.getWidth() - 1;
@@ -86,19 +84,18 @@ public class SeedGenome
     seed.addGene(rightTriangle);
     seed.addGene(bottomTriangle);
 
-
-    for (int i = 0; i < Constants.TRIANGLE_COUNT/2 - 2; i++)
+    for (int i = 0; i < Constants.TRIANGLE_COUNT / 2 - 2; i++)
     {
       int xPoints[] = new int[3];
       for (int j = 0; j < xPoints.length; j++)
       {
-        xPoints[j] = (int) (Math.floor(Constants.width)*Math.pow(Math.random(), 2.0));
+        xPoints[j] = (int) (Math.floor(Constants.width) * Math.pow(Math.random(), 2.0));
       }
 
       int yPoints[] = new int[3];
       for (int j = 0; j < yPoints.length; j++)
       {
-        yPoints[j] = (int)  Constants.rand.nextInt(Constants.height);
+        yPoints[j] = (int) Constants.rand.nextInt(Constants.height);
       }
 
       int rgba[] = new int[4];
@@ -107,18 +104,19 @@ public class SeedGenome
         rgba[j] = averageRGB[j] + (40 - Constants.rand.nextInt(80));
       }
 
-      rgba[3] = (int) Math.sqrt(Constants.rand.nextInt(150*150));;
+      rgba[3] = (int) Math.sqrt(Constants.rand.nextInt(150 * 150));
+      ;
 
       Triangle gene = new Triangle(xPoints, yPoints, rgba);
       seed.addGene(gene);
     }
-    
-    for (int i = Constants.TRIANGLE_COUNT/2 - 2; i < Constants.TRIANGLE_COUNT - 4; i++)
+
+    for (int i = Constants.TRIANGLE_COUNT / 2 - 2; i < Constants.TRIANGLE_COUNT - 4; i++)
     {
       int xPoints[] = new int[3];
       for (int j = 0; j < xPoints.length; j++)
       {
-        xPoints[j] = (int) (Math.sqrt(Constants.rand.nextInt(Constants.width*Constants.width)));
+        xPoints[j] = (int) (Math.sqrt(Constants.rand.nextInt(Constants.width * Constants.width)));
       }
 
       int yPoints[] = new int[3];
@@ -133,7 +131,7 @@ public class SeedGenome
         rgba[j] = averageRGB[j] + (40 - Constants.rand.nextInt(80));
       }
 
-      rgba[3] = (int) Math.sqrt(Constants.rand.nextInt(150*150));
+      rgba[3] = (int) Math.sqrt(Constants.rand.nextInt(150 * 150));
 
       Triangle gene = new Triangle(xPoints, yPoints, rgba);
       seed.addGene(gene);

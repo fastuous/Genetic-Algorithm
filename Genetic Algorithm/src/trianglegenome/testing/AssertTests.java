@@ -1,10 +1,11 @@
 package trianglegenome.testing;
 
 import java.util.List;
+
 import trianglegenome.Genome;
-import trianglegenome.RandomGenome;
 import trianglegenome.Triangle;
 import trianglegenome.util.Constants;
+import trianglegenome.util.RandomGenome;
 
 /**
  * Unit testing for Lab 5 specifications.

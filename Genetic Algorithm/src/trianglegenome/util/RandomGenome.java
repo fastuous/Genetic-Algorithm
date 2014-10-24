@@ -1,6 +1,7 @@
-package trianglegenome;
+package trianglegenome.util;
 
-import trianglegenome.util.Constants;
+import trianglegenome.Genome;
+import trianglegenome.Triangle;
 
 /**
  * Utility class to satisfy requirements for Milestone 1

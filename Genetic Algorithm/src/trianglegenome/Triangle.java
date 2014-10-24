@@ -2,7 +2,6 @@ package trianglegenome;
 
 import java.awt.Rectangle;
 import java.util.Arrays;
-import java.util.List;
 
 import trianglegenome.util.Constants;
 

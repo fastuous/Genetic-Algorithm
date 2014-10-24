@@ -1,11 +1,13 @@
 package trianglegenome;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.IntBuffer;
-import java.util.concurrent.Semaphore;
 
 import trianglegenome.util.Constants;
 
@@ -14,11 +16,8 @@ import com.jogamp.opencl.CLCommandQueue;
 import com.jogamp.opencl.CLContext;
 import com.jogamp.opencl.CLDevice;
 import com.jogamp.opencl.CLKernel;
+import com.jogamp.opencl.CLMemory.Mem;
 import com.jogamp.opencl.CLProgram;
-
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
-import static com.jogamp.opencl.CLMemory.Mem;
 
 /**
  * Calculates fitness using java or by calling an opencl kernel,

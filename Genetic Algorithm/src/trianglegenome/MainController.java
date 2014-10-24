@@ -3,6 +3,7 @@ package trianglegenome;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -25,36 +26,35 @@ import trianglegenome.gui.DrawPanel;
 import trianglegenome.gui.DrawPanelBufferedImage;
 import trianglegenome.gui.DrawPanelVolatileImage;
 import trianglegenome.gui.GenomeTable;
-import trianglegenome.gui.ImagePanel;
 import trianglegenome.util.Constants;
 import trianglegenome.util.XMLParser;
 
+/**
+ * A centralized controller class, with methods that are called by JavaFX GUI controls.
+ * 
+ * @author Truman DeYoung
+ */
 public class MainController extends Control implements Initializable
 {
 
   private List<Genome> globalPopulation = new ArrayList<Genome>();
   List<Genome> selectedTribePopulation;
   private DrawPanel drawPanel;
-  private ImagePanel imagePanel;
   private Genome selectedGenome;
-  private EvolutionModel evolutionManager;
+  private EvolutionModel evolutionModel;
   private boolean running = false;
   private Thread guiUpdater;
+  private int minuteCounter = 0;
 
   // private MainGUI GUI
 
-  @FXML
-  private ImageView drawPanelContainer;
-  @FXML
-  private ImageView imagePanelContainer;
-  @FXML
-  private Label nTriangles, fitness;
-  @FXML
-  private Slider triangleSlider, genomeSlider;
-  @FXML
-  private ComboBox<String> imageSelect, tribeSelect;
-  @FXML
-  private Button toggleRunning, nextGeneration, genomeTable, readGenome, writeGenome;
+  @FXML private ImageView drawPanelContainer;
+  @FXML private ImageView imagePanelContainer;
+  @FXML private Label nTriangles, fitness;
+  @FXML private Slider triangleSlider, genomeSlider;
+  @FXML private ComboBox<String> imageSelect, tribeSelect;
+  @FXML private Button toggleRunning, nextGeneration, genomeTable, readGenome, writeGenome;
+  @FXML private Label elapsedTime, totalGen, hillClimbGen, crossGen, genPerSecond, tribeFitPerMin, totalFitPerMin, tribeDiversity, totalDiversity;
 
   @FXML
   private void toggleRunning()
@@ -62,13 +62,13 @@ public class MainController extends Control implements Initializable
     running = !running;
     toggleControls();
 
-    if (!evolutionManager.isPaused())
+    if (!evolutionModel.isPaused())
     {
-      evolutionManager.pause();
+      evolutionModel.pause();
     }
-    else if (evolutionManager.isPaused())
+    else if (evolutionModel.isPaused())
     {
-      evolutionManager.unpause();
+      evolutionModel.unpause();
     }
 
   }
@@ -108,12 +108,12 @@ public class MainController extends Control implements Initializable
 
     imagePanelContainer.setImage(SwingFXUtils.toFXImage(target, null));
 
-    evolutionManager.interrupt();
+    evolutionModel.interrupt();
     try
     {
-      synchronized (evolutionManager)
+      synchronized (evolutionModel)
       {
-        evolutionManager.wait();
+        evolutionModel.wait();
       }
     }
     catch (Exception e)
@@ -145,11 +145,11 @@ public class MainController extends Control implements Initializable
       tribeSelect.itemsProperty().get().add("Tribe " + i);
     }
 
-    if (evolutionManager != null) evolutionManager.interrupt();
-    evolutionManager = new EvolutionModel(Constants.threadCount, globalPopulation, target);
-    evolutionManager.pause();
-    evolutionManager.start();
-    selectedTribePopulation = evolutionManager.getGenomesFromTribe(0);
+    if (evolutionModel != null) evolutionModel.interrupt();
+    evolutionModel = new EvolutionModel(Constants.threadCount, globalPopulation, target);
+    evolutionModel.pause();
+    evolutionModel.start();
+    selectedTribePopulation = evolutionModel.getGenomesFromTribe(0);
     genomeSlider.setMax(selectedTribePopulation.size() - 1);
     genomeSlider.setMajorTickUnit(selectedTribePopulation.size() - 1);
     genomeSlider.setMinorTickCount(selectedTribePopulation.size() - 2);
@@ -169,7 +169,7 @@ public class MainController extends Control implements Initializable
   private void tribeSelectorUpdate()
   {
     SelectionModel<String> selectedTribe = tribeSelect.getSelectionModel();
-    selectedTribePopulation = evolutionManager
+    selectedTribePopulation = evolutionModel
         .getGenomesFromTribe(selectedTribe.getSelectedIndex());
     genomeSlider.setMax(selectedTribePopulation.size() - 1);
     genomeSlider.setMajorTickUnit(selectedTribePopulation.size() - 1);
@@ -182,6 +182,7 @@ public class MainController extends Control implements Initializable
   private void genomeSliderUpdate()
   {
     selectedGenome = selectedTribePopulation.get((int) genomeSlider.getValue());
+    updateGUI();
   }
 
   @FXML
@@ -193,8 +194,7 @@ public class MainController extends Control implements Initializable
   @FXML
   private void writeGenome()
   {
-//    XMLParser.writeGenome(selectedGenome);
-    updateDrawPanel();
+    XMLParser.writeGenome(selectedGenome);
   }
 
   @FXML
@@ -203,11 +203,22 @@ public class MainController extends Control implements Initializable
     System.out.println("Test");
   }
 
-  private void updateDrawPanel()
+  private void updateGUI()
   {
+    minuteCounter++;
+    
     drawPanel.setTriangles(selectedGenome.getGenes());
     drawPanelContainer.setImage(drawPanel.getFXImage());
     fitness.textProperty().set("fitness: " + selectedGenome.getFitness());
+    
+    int elapsedMinutes = (int) (evolutionModel.getElapsedTime() / 1000 / 60);
+    int elapsedSeconds = (int) ((evolutionModel.getElapsedTime() / 1000) % 60);
+    elapsedTime.setText("Elapsed Time: " + elapsedMinutes + "m " + elapsedSeconds + "s");
+    totalGen.setText("Total Generations: " + evolutionModel.getTotalGenerations());
+    hillClimbGen.setText("HillClimb Gens.: " + evolutionModel.getHillClimbGenerations());
+    crossGen.setText("Crossover Gens.: " + evolutionModel.getCrossoverGenerations());
+    
+    
   }
 
   private void toggleControls()
@@ -224,8 +235,6 @@ public class MainController extends Control implements Initializable
       genomeTable.setDisable(false);
       readGenome.setDisable(false);
       writeGenome.setDisable(false);
-      nTriangles.setDisable(false);
-      fitness.setDisable(false);
     }
     else
     {
@@ -238,9 +247,7 @@ public class MainController extends Control implements Initializable
       nextGeneration.setDisable(true);
       genomeTable.setDisable(true);
       readGenome.setDisable(true);
-//      writeGenome.setDisable(true);
-      nTriangles.setDisable(true);
-      fitness.setDisable(true);
+      writeGenome.setDisable(true);
     }
   }
 
@@ -279,12 +286,14 @@ public class MainController extends Control implements Initializable
     imageSelect.getItems().addAll(Constants.IMAGE_FILES);
     triangleSlider.valueProperty().addListener(e -> triangleSliderUpdate());
     genomeSlider.valueProperty().addListener(e -> genomeSliderUpdate());
+    genomeSlider.setShowTickLabels(true);
+
 
     guiUpdater = new Thread(() ->
     {
       while (true)
       {
-        Platform.runLater(() -> updateDrawPanel());
+        Platform.runLater(() -> updateGUI());
         try
         {
           Thread.sleep(5000);
@@ -297,6 +306,15 @@ public class MainController extends Control implements Initializable
     guiUpdater.start();
 
     setup();
+  }
+  
+  public List<Thread> getThreads()
+  {
+    List<Thread> threadList = new LinkedList<>();
+    threadList.add(evolutionModel);
+    threadList.add(guiUpdater);
+    
+    return threadList;
   }
 
 }

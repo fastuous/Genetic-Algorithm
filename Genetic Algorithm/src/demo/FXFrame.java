@@ -2,8 +2,6 @@ package demo;
 
 import java.io.IOException;
 
-import javax.swing.JPanel;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
