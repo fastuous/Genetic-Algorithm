@@ -92,7 +92,10 @@ public class MainController extends Control implements Initializable
     {
       evolutionModel.unpause();
     }
-    updateGUI();
+    
+    int elapsedMinutes = (int) (evolutionModel.getElapsedTime() / 1000 / 60);
+    int elapsedSeconds = (int) ((evolutionModel.getElapsedTime() / 1000) % 60);
+    elapsedTime.setText("Elapsed Time: " + elapsedMinutes + "m " + elapsedSeconds + "s");
   }
 
   @FXML
