@@ -17,6 +17,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionModel;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 
@@ -42,11 +43,12 @@ public class MainController extends Control implements Initializable
   private DrawPanel drawPanel;
   private Genome selectedGenome;
   private EvolutionModel evolutionModel;
+  private boolean started = false;
   private boolean running = false;
   private Thread guiUpdater;
-  private int minuteCounter = 0;
+  private int minuteCounter = 12;
   private long nPreviousGenerations = 0;
-  private long tribeFitness;
+  private int[] tribeFitnesses;
   private long totalFitness;
 
   // private MainGUI GUI
@@ -72,6 +74,15 @@ public class MainController extends Control implements Initializable
   {
     running = !running;
     toggleControls();
+    
+    if (!started)
+    {
+      started = true;
+      for (int i = 0; i < Constants.threadCount; i++)
+      {
+        tribeFitnesses[i] = (int)(evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
+      }
+    }
 
     if (!evolutionModel.isPaused())
     {
@@ -138,10 +149,11 @@ public class MainController extends Control implements Initializable
     Constants.width = target.getWidth();
     Constants.height = target.getHeight();
     Constants.threadCount = getThreadCount();
+    tribeFitnesses = new int[Constants.threadCount];
     drawPanel = (Constants.useVolatileImage) ? new DrawPanelVolatileImage(Constants.width, Constants.height)
         : new DrawPanelBufferedImage(Constants.width, Constants.height);
     globalPopulation.clear();
-    for (int i = 0; i < 40; ++i)
+    for (int i = 0; i < 10 * Constants.threadCount; ++i)
     {
       globalPopulation.add(SeedGenome.generateSeed(target));
     }
@@ -162,7 +174,11 @@ public class MainController extends Control implements Initializable
     genomeSlider.setMajorTickUnit(selectedTribePopulation.size() - 1);
     genomeSlider.setMinorTickCount(selectedTribePopulation.size() - 2);
     genomeSlider.setMin(0);
-
+    
+    for (int i = 0; i < Constants.threadCount; i++)
+    {
+      tribeFitnesses[i] = (int)(evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
+    }
   }
 
   @FXML
@@ -189,7 +205,7 @@ public class MainController extends Control implements Initializable
   private void genomeSliderUpdate()
   {
     selectedGenome = selectedTribePopulation.get((int) genomeSlider.getValue());
-    updateGUI();
+    updateDrawPanel();
   }
 
   @FXML
@@ -210,14 +226,20 @@ public class MainController extends Control implements Initializable
     System.out.println("Test");
   }
 
-  private void updateGUI()
+  private void updateDrawPanel()
   {
-   
-    long generationDelta = (evolutionModel.getTotalGenerations() - nPreviousGenerations) / 5;
-
     drawPanel.setTriangles(selectedGenome.getGenes());
     drawPanelContainer.setImage(drawPanel.getFXImage());
-    fitness.textProperty().set("fitness: " + selectedGenome.getFitness());
+    fitness.textProperty().set("Fitness: " + selectedGenome.getFitness() / (Constants.height * Constants.width));
+    
+  }
+  
+  private void updateGUI()
+  {
+    minuteCounter++;
+    long generationDelta = (evolutionModel.getTotalGenerations() - nPreviousGenerations) / 5;
+    nPreviousGenerations = evolutionModel.getTotalGenerations();
+    updateDrawPanel();
 
     int elapsedMinutes = (int) (evolutionModel.getElapsedTime() / 1000 / 60);
     int elapsedSeconds = (int) ((evolutionModel.getElapsedTime() / 1000) % 60);
@@ -227,10 +249,23 @@ public class MainController extends Control implements Initializable
     crossGen.setText("Crossover Gens.: " + evolutionModel.getCrossoverGenerations());
     genPerSecond.setText("Gens. Per Second: " + generationDelta);
 
-    if (minuteCounter == 12)
+    if (minuteCounter >= 12)
     {
+      
+      
       minuteCounter = 0;
-      tribeFitPerMin.setText("Test " + nPreviousGenerations);
+      SelectionModel<String> tribeSelector = tribeSelect.getSelectionModel();
+      int selectedTribe = tribeSelector.getSelectedIndex();
+      int currentFitness = (int) (evolutionModel.getBestFitnessValue(selectedTribe) / (Constants.width * Constants.height));
+      int fitnessDelta = (currentFitness - tribeFitnesses[selectedTribe]);
+      if (fitnessDelta < 1000 && fitnessDelta > -10000){
+      tribeFitPerMin.setText("Tribe Fitness Per Min.:  " + fitnessDelta);
+      }
+      for (int i = 0; i < Constants.threadCount; i++)
+      {
+        tribeFitnesses[i] = (int)(evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
+      }
+
     }
 
   }
@@ -300,6 +335,10 @@ public class MainController extends Control implements Initializable
     triangleSlider.valueProperty().addListener(e -> triangleSliderUpdate());
     genomeSlider.valueProperty().addListener(e -> genomeSliderUpdate());
     genomeSlider.setShowTickLabels(true);
+    SelectionModel<String> selection = tribeSelect.getSelectionModel();
+    selection.select(0);
+    tribeSelect.setSelectionModel((SingleSelectionModel<String>) selection);
+    
 
     guiUpdater = new Thread(() ->
     {
@@ -312,9 +351,8 @@ public class MainController extends Control implements Initializable
         catch (Exception e)
         {
         }
-        minuteCounter++;
         Platform.runLater(() -> updateGUI());
-        nPreviousGenerations = evolutionModel.getTotalGenerations();
+        
       }
     });
     guiUpdater.start();
