@@ -92,7 +92,7 @@ public class MainController extends Control implements Initializable
     {
       evolutionModel.unpause();
     }
-    updateDrawPanel();
+    updateGUI();
   }
 
   @FXML

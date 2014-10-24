@@ -19,8 +19,11 @@ public class EvolutionModel extends Thread
   /** When true, this thread will not perform any actions. */
   private volatile boolean paused;
   
-  /** Used for keeping track of running time. */
+  /** Used for keeping track of running time since last unpause. */
   private volatile long startTime;
+  
+  /** The amount of time elapsed since running. */
+  private volatile long elapsedTime = 0;
   
   /** Will be true when a genome should be in a crossover. */
   private boolean crossoverFlag;
@@ -63,6 +66,7 @@ public class EvolutionModel extends Thread
     this.threadCount = threadCount;
     this.target = target;
     startTime = System.currentTimeMillis();
+    elapsedTime = 0;
     init();
     this.paused = false;
   }
@@ -187,6 +191,7 @@ public class EvolutionModel extends Thread
    */
   public void pause()
   {
+    if (!paused) elapsedTime += System.currentTimeMillis() - startTime;
     this.paused = true;
     hillClimberSpawner.pauseHillClimbers();
   }
@@ -196,6 +201,7 @@ public class EvolutionModel extends Thread
    */
   public void unpause()
   {
+    if (paused) startTime = System.currentTimeMillis();
     this.paused = false;
     hillClimberSpawner.unpauseHillClimbers();
   }
@@ -213,7 +219,10 @@ public class EvolutionModel extends Thread
    * Returns the running time of this thread, according to the wall clock.
    * @return The running time of this thread, according to the wall clock.
    */
-  public long getElapsedTime() { return System.currentTimeMillis() - startTime; }
+  public long getElapsedTime()
+  {
+    return (paused) ? elapsedTime :  elapsedTime + System.currentTimeMillis() - startTime;
+  }
   
   /**
    * Returns the genomes managed by a given thread, specified by index.
