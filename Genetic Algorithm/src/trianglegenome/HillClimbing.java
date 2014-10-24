@@ -19,6 +19,7 @@ public class HillClimbing extends Thread
   private FitnessEvaluator fitnessEvaluator;
   private List<GenomeDrawPanelPair> genomeStates;
   private volatile boolean paused = false;
+  private volatile boolean interrupted = false;
   
   private volatile long stepCount;
 
@@ -35,12 +36,13 @@ public class HillClimbing extends Thread
   public void run()
   {
     // performEvolution on all genomeStates
-    while (!super.isInterrupted())
+    while (!interrupted)
     {
       if (!this.paused)
       {
         for (GenomeDrawPanelPair state : genomeStates)
         {
+          if (super.isInterrupted()) break;
           performEvolution(state);
         }
       }
@@ -54,8 +56,14 @@ public class HillClimbing extends Thread
         catch (Exception e) {}
       }
     }
+    synchronized (this) { this.notify(); }
   }
 
+  public void interrupt()
+  {
+    interrupted = true;
+  }
+  
   public void pause()
   {
     this.paused = true;
@@ -102,7 +110,7 @@ public class HillClimbing extends Thread
       
       do
       {
-        if (super.isInterrupted() || this.isPaused()) return;
+        if (interrupted || paused) return;
         val = tri.dna[successfulDNA];
         upperBound = 0;
         lowerBound = 0;
@@ -156,7 +164,7 @@ public class HillClimbing extends Thread
     genomeState.genome.setFitness(fitnessBefore);
     do
     {
-      if (super.isInterrupted() || this.isPaused()) return;
+      if (interrupted || paused) return;
       evolve(genomeState.genome);
       Triangle t = genomeState.genome.getGenes().get(triangle);
       genomeState.drawPanel.updateRegion(t.getBoundingBox());
