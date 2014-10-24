@@ -49,7 +49,7 @@ public class MainController extends Control implements Initializable
   private int minuteCounter = 12;
   private long nPreviousGenerations = 0;
   private int[] tribeFitnesses;
-  private long totalFitness;
+  private int totalFitness;
 
   // private MainGUI GUI
 
@@ -92,7 +92,7 @@ public class MainController extends Control implements Initializable
     {
       evolutionModel.unpause();
     }
-
+    updateDrawPanel();
   }
 
   @FXML
@@ -179,6 +179,8 @@ public class MainController extends Control implements Initializable
     {
       tribeFitnesses[i] = (int)(evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
     }
+    
+    totalFitness = (int) (evolutionModel.getBestFitnessValue() / (Constants.width * Constants.height));
   }
 
   @FXML
@@ -248,23 +250,29 @@ public class MainController extends Control implements Initializable
     hillClimbGen.setText("HillClimb Gens.: " + evolutionModel.getHillClimbGenerations());
     crossGen.setText("Crossover Gens.: " + evolutionModel.getCrossoverGenerations());
     genPerSecond.setText("Gens. Per Second: " + generationDelta);
+    SelectionModel<String> tribeSelector = tribeSelect.getSelectionModel();
+    int selectedTribe = tribeSelector.getSelectedIndex();
+    tribeDiversity.setText("Tribe Diversity*: " + (evolutionModel.getWorstFitnessValue(selectedTribe) - evolutionModel.getBestFitnessValue(selectedTribe)));
+    totalDiversity.setText("Total Diversity*: " + (evolutionModel.getWorstFitnessValue() - evolutionModel.getBestFitnessValue()));
 
     if (minuteCounter >= 12)
     {
       
       
       minuteCounter = 0;
-      SelectionModel<String> tribeSelector = tribeSelect.getSelectionModel();
-      int selectedTribe = tribeSelector.getSelectedIndex();
-      int currentFitness = (int) (evolutionModel.getBestFitnessValue(selectedTribe) / (Constants.width * Constants.height));
-      int fitnessDelta = (currentFitness - tribeFitnesses[selectedTribe]);
-      if (fitnessDelta < 1000 && fitnessDelta > -10000){
-      tribeFitPerMin.setText("Tribe Fitness Per Min.:  " + fitnessDelta);
+      int currentTribeFitness = (int) (evolutionModel.getBestFitnessValue(selectedTribe) / (Constants.width * Constants.height));
+      int tribeFitnessDelta = (currentTribeFitness - tribeFitnesses[selectedTribe]);
+      
+      int totalFitnessDelta = (int) (totalFitness / (evolutionModel.getBestFitnessValue() / (Constants.width * Constants.height)));
+      if (tribeFitnessDelta < 1000 && tribeFitnessDelta > -10000){
+      tribeFitPerMin.setText("Tribe Fitness per Min.:  " + tribeFitnessDelta);
+      totalFitPerMin.setText("Total Fitness per Min.: " + totalFitnessDelta);
       }
       for (int i = 0; i < Constants.threadCount; i++)
       {
         tribeFitnesses[i] = (int)(evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
       }
+      totalFitness = (int) (evolutionModel.getBestFitnessValue() / (Constants.width * Constants.height));
 
     }
 
