@@ -77,7 +77,6 @@ public class EvolutionModel extends Thread
     int fitnessDelta = 0;
     int maxFitnessDelta = 0;
     hillClimberSpawner.startHillClimbing();
-    hillClimberSpawner.unpauseHillClimbers();
     while (!super.isInterrupted())
     {
       if (!paused)
