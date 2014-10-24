@@ -12,6 +12,10 @@ import trianglegenome.gui.DrawPanelVolatileImage;
 import trianglegenome.util.Constants;
 import trianglegenome.util.RandomGenome;
 
+/**
+ * Tests the validity of HillClimbing.
+ * @author collinsd
+ */
 public class HillClimbingUnitTests
 {
   private FitnessEvaluator fitnessEvaluator;
@@ -21,6 +25,9 @@ public class HillClimbingUnitTests
   private List<GenomeDrawPanelPair> genomeDrawPanelPairSingleton;
   private Genome genome;
   
+  /**
+   * Creates a new HillClimbingUnitTests and tests the validity of HillClimbing.
+   */
   public HillClimbingUnitTests()
   {
     initData();
