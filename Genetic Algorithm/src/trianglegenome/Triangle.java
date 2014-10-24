@@ -12,7 +12,7 @@ import trianglegenome.util.Constants;
 public class Triangle implements Cloneable
 {
   /**
-   * The length of the {{@link #dna} array that keeps track of the triangle DNA.
+   * The length of the {@link #dna} array that keeps track of the triangle DNA.
    */
   public static int DNA_LENGTH = 10;
   

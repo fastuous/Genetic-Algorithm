@@ -13,9 +13,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import trianglegenome.util.Constants;
 
 /**
- * 
+ * A collection of triangles that will be mutated to resemble an image.
  * @author Truman DeYoung
- *
  */
 @XmlRootElement(name="genome")
 public class Genome implements Cloneable
@@ -24,15 +23,27 @@ public class Genome implements Cloneable
   
   private long fitness = Integer.MAX_VALUE;
   
+  /**
+   * Creates an empty genome.
+   */
   public Genome()
   {
   }
   
+  /**
+   * Creates a genome from the given triangles.
+   * @param triangles The triangles to add to this genome.
+   */
   public Genome(Triangle ... triangles)
   {
     for (Triangle t : triangles) addGene(t);
   }
   
+  /**
+   * Given zero or more triangle DNA strands, create a genome. Note that the length
+   * of the array or parameters must be divisible by {@link Triangle#DNA_LENGTH} 
+   * @param dna The DNA from which to create the new triangles in this genome.
+   */
   public Genome(int ... dna)
   {
     if (dna.length % Triangle.DNA_LENGTH != 0)
@@ -47,12 +58,20 @@ public class Genome implements Cloneable
     }
   }
   
+  /**
+   * Adds a gene to this genome.
+   * @param gene The gene to add.
+   */
   public void addGene(Triangle gene)
   {
     if (genes.size() == Constants.TRIANGLE_COUNT) return;
     genes.add(gene);
   }
   
+  /**
+   * Adds a list of genes to this genome.
+   * @param gene The list genes to add.
+   */
   public void addGenes(List<Triangle> genes)
   {
     if (this.genes.size() + genes.size() > Constants.TRIANGLE_COUNT) return;
@@ -66,6 +85,12 @@ public class Genome implements Cloneable
     return genes;
   }
   
+  /**
+   * Returns the hamming distance of two genomes.
+   * @param genome1 The first genome.
+   * @param genome2 The second genome
+   * @return The number of DNA differences in each triangle in genome1 and genome2. 
+   */
   public static int getHammingDistance(Genome genome1, Genome genome2)
   {
     int distance = 0;
@@ -247,11 +272,19 @@ public class Genome implements Cloneable
     else return false;
   }
   
+  /**
+   * Returns the fitness of this Genome.
+   * @return The fitness of this Genome.
+   */
   public long getFitness()
   {
     return fitness;
   }
   
+  /**
+   * Sets the fitness of this Genome.
+   * value The new fitness of this Genome.
+   */
   public void setFitness(long value)
   {
     fitness = value;
