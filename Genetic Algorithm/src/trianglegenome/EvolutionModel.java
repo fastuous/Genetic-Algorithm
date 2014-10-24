@@ -106,7 +106,7 @@ public class EvolutionModel extends Thread
             .getAsDouble();
         fitnessDelta = abs(newAverageFitness - averageFitness);
         if (firstFitnessDelta == 0) firstFitnessDelta = fitnessDelta;
-        else if (fitnessDelta < firstFitnessDelta / 64)
+        else if (fitnessDelta <= firstFitnessDelta / 64)
         {
           crossoverFlag = true;
         }
