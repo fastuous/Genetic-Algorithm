@@ -137,7 +137,7 @@ public class MainController extends Control implements Initializable
     BufferedImage target = Constants.IMAGES[Constants.selectedImage];
     Constants.width = target.getWidth();
     Constants.height = target.getHeight();
-    Constants.threadCount = getThreadCount();
+    Constants.threadCount = 1;
     drawPanel = (Constants.useVolatileImage) ? new DrawPanelVolatileImage(Constants.width, Constants.height)
         : new DrawPanelBufferedImage(Constants.width, Constants.height);
     globalPopulation.clear();
