@@ -69,18 +69,21 @@ public class MainController extends Control implements Initializable
   private Label elapsedTime, totalGen, hillClimbGen, crossGen, genPerSecond, tribeFitPerMin, totalFitPerMin,
       tribeDiversity, totalDiversity;
 
+  /**
+   * Called whenever the start/pause button is pressed.
+   */
   @FXML
   private void toggleRunning()
   {
     running = !running;
     toggleControls();
-    
+
     if (!started)
     {
       started = true;
       for (int i = 0; i < Constants.threadCount; i++)
       {
-        tribeFitnesses[i] = (int)(evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
+        tribeFitnesses[i] = (int) (evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
       }
     }
 
@@ -92,21 +95,29 @@ public class MainController extends Control implements Initializable
     {
       evolutionModel.unpause();
     }
-    
+
     int elapsedMinutes = (int) (evolutionModel.getElapsedTime() / 1000 / 60);
     int elapsedSeconds = (int) ((evolutionModel.getElapsedTime() / 1000) % 60);
     elapsedTime.setText("Elapsed Time: " + elapsedMinutes + "m " + elapsedSeconds + "s");
   }
 
+  /**
+   * Performs one hill climbing evolution and updates the global population.
+   */
   @FXML
   private void next()
   {
-    if(!running)
+    if (!running)
     {
       evolutionModel.performOneEvolution();
     }
   }
 
+  /**
+   * A simple helper method to get the global population sorted by fitness.
+   * 
+   * @return The sorted global population
+   */
   private List<Genome> getSortedPopulation()
   {
     List<Genome> genomes = globalPopulation;
@@ -114,6 +125,9 @@ public class MainController extends Control implements Initializable
     return genomes;
   }
 
+  /**
+   * Called when the Show Genome button is pressed. Constructs a new genome table.
+   */
   @FXML
   private void showGenomeTable()
   {
@@ -121,6 +135,12 @@ public class MainController extends Control implements Initializable
     new GenomeTable(genome);
   }
 
+  /**
+   * Called whenever the selected image is changed. Resets all problem-space variables so that we
+   * are ready to start evolving a new image.
+   * 
+   * @param event
+   */
   @FXML
   private void imageSelected(ActionEvent event)
   {
@@ -146,6 +166,10 @@ public class MainController extends Control implements Initializable
     setup();
   }
 
+  /**
+   * Helper method that's called whenever we start evolving a new image. Necessary to set up all
+   * necessary environment variables.
+   */
   private void setup()
   {
     BufferedImage target = Constants.IMAGES[Constants.selectedImage];
@@ -177,15 +201,19 @@ public class MainController extends Control implements Initializable
     genomeSlider.setMajorTickUnit(selectedTribePopulation.size() - 1);
     genomeSlider.setMinorTickCount(selectedTribePopulation.size() - 2);
     genomeSlider.setMin(0);
-    
+
     for (int i = 0; i < Constants.threadCount; i++)
     {
-      tribeFitnesses[i] = (int)(evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
+      tribeFitnesses[i] = (int) (evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
     }
-    
+
     totalFitness = (int) (evolutionModel.getBestFitnessValue() / (Constants.width * Constants.height));
   }
 
+  /**
+   * Sets the tribe population to look at when considering the currently selected genome.
+   * Additionally updates the genome slider to reflect the number of genomes in a tribe.
+   */
   @FXML
   private void triangleSliderUpdate()
   {
@@ -194,6 +222,10 @@ public class MainController extends Control implements Initializable
     drawPanelContainer.setImage(drawPanel.getFXImage());
   }
 
+  /**
+   * Sets the tribe population to look at when considering the currently selected genome.
+   * Additionally updates the genome slider to reflect the number of genomes in a tribe.
+   */
   @FXML
   private void tribeSelectorUpdate()
   {
@@ -206,6 +238,9 @@ public class MainController extends Control implements Initializable
     genomeSliderUpdate();
   }
 
+  /**
+   * Changes the selected genome that is drawn based on the genome slider.
+   */
   @FXML
   private void genomeSliderUpdate()
   {
@@ -213,32 +248,38 @@ public class MainController extends Control implements Initializable
     updateDrawPanel();
   }
 
+  /**
+   * Read the currently selected genome into an XML file.
+   */
   @FXML
   private void readGenome()
   {
     selectedGenome = XMLParser.readGenome();
   }
 
+  /**
+   * Write the currently selected genome into an XML file.
+   */
   @FXML
   private void writeGenome()
   {
     XMLParser.writeGenome(selectedGenome);
   }
 
-  @FXML
-  private void test()
-  {
-    System.out.println("Test");
-  }
-
+  /**
+   * Update the draw area to show the currently selected genome and its fitness.
+   */
   private void updateDrawPanel()
   {
     drawPanel.setTriangles(selectedGenome.getGenes());
     drawPanelContainer.setImage(drawPanel.getFXImage());
     fitness.textProperty().set("Fitness: " + selectedGenome.getFitness() / (Constants.height * Constants.width));
-    
+
   }
-  
+
+  /**
+   * Called every five seconds to update statistics on the GUI.
+   */
   private void updateGUI()
   {
     minuteCounter++;
@@ -255,25 +296,30 @@ public class MainController extends Control implements Initializable
     genPerSecond.setText("Gens. Per Second: " + generationDelta);
     SelectionModel<String> tribeSelector = tribeSelect.getSelectionModel();
     int selectedTribe = tribeSelector.getSelectedIndex();
-    tribeDiversity.setText("Tribe Diversity*: " + (evolutionModel.getWorstFitnessValue(selectedTribe) - evolutionModel.getBestFitnessValue(selectedTribe)));
-    totalDiversity.setText("Total Diversity*: " + (evolutionModel.getWorstFitnessValue() - evolutionModel.getBestFitnessValue()));
+    tribeDiversity.setText("Tribe Diversity*: "
+        + (evolutionModel.getWorstFitnessValue(selectedTribe) - evolutionModel.getBestFitnessValue(selectedTribe)));
+    totalDiversity.setText("Total Diversity*: "
+        + (evolutionModel.getWorstFitnessValue() - evolutionModel.getBestFitnessValue()));
 
+    // called to only update once every minute
     if (minuteCounter >= 12)
     {
-      
-      
+
       minuteCounter = 0;
       int currentTribeFitness = (int) (evolutionModel.getBestFitnessValue(selectedTribe) / (Constants.width * Constants.height));
       int tribeFitnessDelta = (currentTribeFitness - tribeFitnesses[selectedTribe]);
-      
+
       int totalFitnessDelta = (int) (totalFitness / (evolutionModel.getBestFitnessValue() / (Constants.width * Constants.height)));
-      if (tribeFitnessDelta < 1000 && tribeFitnessDelta > -10000){
-      tribeFitPerMin.setText("Tribe Fitness per Min.:  " + tribeFitnessDelta);
-      totalFitPerMin.setText("Total Fitness per Min.: " + totalFitnessDelta);
+
+      // dirty fix to prevent displaying erroenous values within the first minute of runtime
+      if (tribeFitnessDelta < 1000 && tribeFitnessDelta > -10000)
+      {
+        tribeFitPerMin.setText("Tribe Fitness per Min.:  " + tribeFitnessDelta);
+        totalFitPerMin.setText("Total Fitness per Min.: " + totalFitnessDelta);
       }
       for (int i = 0; i < Constants.threadCount; i++)
       {
-        tribeFitnesses[i] = (int)(evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
+        tribeFitnesses[i] = (int) (evolutionModel.getBestFitnessValue(i) / (Constants.width * Constants.height));
       }
       totalFitness = (int) (evolutionModel.getBestFitnessValue() / (Constants.width * Constants.height));
 
@@ -281,6 +327,9 @@ public class MainController extends Control implements Initializable
 
   }
 
+  /**
+   * Simple helper method to enable/disable GUI controls based on the running state of the program.
+   */
   private void toggleControls()
   {
     if (!running)
@@ -338,6 +387,9 @@ public class MainController extends Control implements Initializable
     return threadCount;
   }
 
+  /* (non-Javadoc)
+   * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources)
   {
@@ -349,7 +401,6 @@ public class MainController extends Control implements Initializable
     SelectionModel<String> selection = tribeSelect.getSelectionModel();
     selection.select(0);
     tribeSelect.setSelectionModel((SingleSelectionModel<String>) selection);
-    
 
     guiUpdater = new Thread(() ->
     {
@@ -363,7 +414,7 @@ public class MainController extends Control implements Initializable
         {
         }
         Platform.runLater(() -> updateGUI());
-        
+
       }
     });
     guiUpdater.start();
@@ -371,6 +422,12 @@ public class MainController extends Control implements Initializable
     setup();
   }
 
+  /**
+   * Helper method to return the active threads called by this class, used to shut down the
+   * application.
+   * 
+   * @return
+   */
   public List<Thread> getThreads()
   {
     List<Thread> threadList = new LinkedList<>();
