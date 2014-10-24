@@ -170,7 +170,7 @@ public class FitnessEvaluator
     
     trianglesCLBuffer.release();
     
-    return sum / (referenceWidth * referenceHeight / 4);
+    return sum;
   }
 
   /**
@@ -209,7 +209,7 @@ public class FitnessEvaluator
       
       sum += sqrt(dr2 + dg2 + db2);
     }
-    return sum / (referenceWidth * referenceHeight / 4);
+    return sum;
   }
   
   /**
