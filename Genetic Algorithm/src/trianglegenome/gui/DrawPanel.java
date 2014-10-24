@@ -177,6 +177,7 @@ public abstract class DrawPanel extends JPanel
    */
   public void updateRegion(Rectangle bound)
   {
+    Rectangle originalClip = offscreenGraphics.getClipBounds();
     offscreenGraphics.setClip(bound);
     offscreenGraphics.clearRect(bound.x, bound.y, bound.width, bound.height);
     
@@ -186,6 +187,8 @@ public abstract class DrawPanel extends JPanel
         .stream()
         .filter(intersectsBound)
         .forEach(t -> drawTriangle(t));
+    
+    offscreenGraphics.setClip(originalClip);
   }
   
   /*
