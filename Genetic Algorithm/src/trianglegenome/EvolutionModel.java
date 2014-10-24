@@ -46,7 +46,6 @@ public class EvolutionModel extends Thread
   /** The average fitness of all genomes in all tribes. */
   int averageFitness;
   
-  private int[] tribeFitnesses;
   
   /**
    * Given an initial thread count, a list of genomes and a reference image, create an
@@ -285,7 +284,6 @@ public class EvolutionModel extends Thread
         .getAsLong();
   }
   
-
   
   /**
    * Returns the least fit genome's fitness value from the global population.
