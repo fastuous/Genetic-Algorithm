@@ -19,10 +19,20 @@ import trianglegenome.Genome;
 import trianglegenome.Triangle;
 import trianglegenome.util.Constants;
 
+/**
+ * A class to create a new JavaFX window that displays a table view of the desired genome.
+ * 
+ * @author Truman DeYoung
+ */
 public class GenomeTable
 {
   TableView<TriangleData> table = new TableView<TriangleData>();
 
+  /**
+   * Constructor that takes a genome and constructs a table from the data contained in the genome.
+   * 
+   * @param genome
+   */
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public GenomeTable(Genome genome)
   {
@@ -43,6 +53,8 @@ public class GenomeTable
 
       table = (TableView) scene.lookup("#table");
 
+      // set the properties of the table columns to automatically be populated with the correct
+      // field from the triangle object
       ((TableColumn) table.getColumns().get(0)).setCellValueFactory(new PropertyValueFactory<TriangleData, Integer>(
           "index"));
       ((TableColumn) table.getColumns().get(1)).setCellValueFactory(new PropertyValueFactory<TriangleData, Integer>(
@@ -68,6 +80,7 @@ public class GenomeTable
 
       final ObservableList data = FXCollections.observableArrayList(triangleData);
 
+      // read the triangles into the table
       table.setItems(data);
 
       stage.setScene(scene);
@@ -81,6 +94,11 @@ public class GenomeTable
 
   }
 
+  /**
+   * Simple helper class to associate DNA values with their corresponding data types.
+   * 
+   * @author Truman
+   */
   public static class TriangleData
   {
     private final SimpleStringProperty index;
