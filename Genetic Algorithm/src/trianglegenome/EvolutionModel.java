@@ -283,7 +283,6 @@ public class EvolutionModel extends Thread
         .getAsLong();
   }
   
-
   
   /**
    * Returns the least fit genome's fitness value from the global population.
