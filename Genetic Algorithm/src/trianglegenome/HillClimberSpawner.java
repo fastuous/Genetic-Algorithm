@@ -15,16 +15,51 @@ import trianglegenome.util.Constants;
 
 /**
  * Manages the threads that will perform hill climbing with collections of genomes.
+ * <br /><br />
+ * Example code:<br/>
+ * <code><pre>
+ *  // Assume that genomes is a global population of genomes
+ *  // Assume that target is the reference image.
+ *  
+ *  HillClimberSpawner hcsp = new HillClimberSpawner(4, genomes, target);
+ *  hcsp.startHillClimbing();
+ *  Thread.sleep(500); // Assume exception is thrown by method
+ *  hcsp.pauseHillClimbers();
+ *  Thread.sleep(500);
+ *  hcsp.unpauseHillClimbers();
+ *  Thread.sleep(500);
+ *  synchronized (hcsp)
+ *  {
+ *    hcsp.stopHillClimbing();
+ *    hcsp.wait();
+ *  }
+ *  
+ * </pre></code>
  * 
  * @author David Collins
  */
 public class HillClimberSpawner
 {
+  /** A global population of genomes that will be split amongst {@link HillClimbing} threads */
   private List<Genome> genomes;
+  
+  /** The number of {@link HillClimbing} threads to split the
+   * {@link HillClimberSpawner#genomes} */
   private int threadCount;
+  
+  /** The threads that will hill climb with the {@link HillClimberSpawner#genomes} */
   private Collection<HillClimbing> hillClimbingThreads;
+  
+  /** The image that the genomes should eventually resemble */
   private BufferedImage target;
 
+  /**
+   * Given a thread count, a global genome list and a target image,
+   * create a HillClimberSpawner and create HillClimbing threads but don't start them.
+   * @param threadCount The number of {@link HillClimbing} threads to create.
+   * @param genomes A global population of genomes.
+   * @param target The image that the genomes should eventually resemble.
+   */
   public HillClimberSpawner(int threadCount, List<Genome> genomes, BufferedImage target)
   {
     this.threadCount = threadCount;
@@ -35,6 +70,10 @@ public class HillClimberSpawner
     populateHillClimbingThreads(this.threadCount);
   }
 
+  /**
+   * Creates {@link HillClimbing} threads.
+   * @param threadCount The number of {@link HillClimbing} threads to create.
+   */
   private void populateHillClimbingThreads(int threadCount)
   {
     stopHillClimbing();
@@ -59,6 +98,10 @@ public class HillClimberSpawner
     }
   }
 
+  /**
+   * Returns whether or not all of the hill climbers are paused.
+   * @return Whether or not all of the hill climbers are paused.
+   */
   public boolean hillClimbersArePaused()
   {
     return hillClimbingThreads
@@ -66,13 +109,21 @@ public class HillClimberSpawner
         .allMatch(t -> t.isPaused());
   }
 
+  /**
+   * Returns whether or not all of the hill climbers are running.
+   * @return Whether or not all of the hill climbers are running.
+   */
   public boolean hillClimbersAreRunning()
   {
     return hillClimbingThreads
         .stream()
         .allMatch(t -> t.isAlive());
   }
-
+  
+  /**
+   * Returns whether or not any of the hill climbers is not running.
+   * @return Whether or not any of the hill climbers is not running.
+   */
   public boolean anyHillClimberIsNotRunning()
   {
     return hillClimbingThreads
@@ -80,6 +131,10 @@ public class HillClimberSpawner
         .allMatch(t -> t.isAlive());
   }
   
+  /**
+   * Returns whether or not any of the hill climbers is paused.
+   * @return Whether or not any of the hill climbers is paused.
+   */
   public boolean anyHillClimberIsPaused()
   {
     return hillClimbingThreads
@@ -87,6 +142,10 @@ public class HillClimberSpawner
         .anyMatch(t -> t.isPaused());
   }
   
+  /**
+   * Returns whether or not any of the hill climbers is not paused.
+   * @return Whether or not any of the hill climbers is not paused.
+   */
   public boolean anyHillClimberIsUnpaused()
   {
     return hillClimbingThreads
@@ -94,11 +153,17 @@ public class HillClimberSpawner
         .anyMatch(t -> !t.isPaused());
   }
   
+  /**
+   * Causes all hill climbing threads to perform one evolution, regardless of state.
+   */
   public void performOneEvolution()
   {
     hillClimbingThreads.forEach(t->t.performOneEvolution());
   }
   
+  /**
+   * Synchronously pauses all hill climbers.
+   */
   public void pauseHillClimbers()
   {
     for (HillClimbing hc : hillClimbingThreads)
@@ -115,16 +180,25 @@ public class HillClimberSpawner
     }
   }
 
+  /**
+   * Unpauses the hill climbers.
+   */
   public void unpauseHillClimbers()
   {
     hillClimbingThreads.forEach(t -> t.unpause());
   }
 
+  /**
+   * Starts the hill climbers.
+   */
   public void startHillClimbing()
   {
     hillClimbingThreads.forEach(t -> t.start());
   }
 
+  /**
+   * Synchronously interrupts all hill climbers.
+   */
   public void stopHillClimbing()
   {
     for (HillClimbing hc : hillClimbingThreads)
@@ -144,11 +218,20 @@ public class HillClimberSpawner
     synchronized (this) { this.notify(); }
   }
 
+  /**
+   * Returns the number of {@link HillClimbing} threads managed by this HillClimberSpawner.
+   * @return The number of {@link HillClimbing} threads managed by this HillClimberSpawner.
+   */
   public int getThreadCount()
   {
     return threadCount;
   }
   
+  /**
+   * Returns a list of genomes managed by a {@link HillClimbing} thread.
+   * @param threadIndex The index of the thread from which to get the managed genomes.
+   * @return A list of genomes managed by a {@link HillClimbing} thread.
+   */
   public List<Genome> getGenomesFromThread(int threadIndex)
   {
     int genomesPerThread = (int) ceil((double) genomes.size() / (double) threadCount);
@@ -171,6 +254,10 @@ public class HillClimberSpawner
         .sum();
   }
 
+  /*
+   * (non-Javadoc)
+   * @see java.lang.Object#finalize()
+   */
   @Override
   public void finalize()
   {
