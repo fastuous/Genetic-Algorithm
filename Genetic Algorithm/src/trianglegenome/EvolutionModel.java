@@ -89,6 +89,7 @@ public class EvolutionModel extends Thread
           genomeCrossover.crossover(crossoverCount);
           hillClimberSpawner.unpauseHillClimbers();
           crossoverFlag = false;
+          averageFitness = 0;
         }
         
         try { Thread.sleep(2000); }
