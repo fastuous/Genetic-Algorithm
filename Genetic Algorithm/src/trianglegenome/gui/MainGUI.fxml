@@ -42,7 +42,7 @@
       </HBox>
       <HBox layoutY="474.0" prefHeight="36.0" prefWidth="1100.0" AnchorPane.bottomAnchor="190.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="474.0">
          <children>
-            <ComboBox fx:id="tribeSelect" onAction="#tribeSelectorUpdate" prefHeight="32.0" prefWidth="155.0" promptText="Select a Tribe...">
+            <ComboBox value="Tribe 0" fx:id="tribeSelect" onAction="#tribeSelectorUpdate" prefHeight="32.0" prefWidth="155.0" promptText="Tribe 0">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
@@ -76,9 +76,9 @@
       <ComboBox fx:id="imageSelect" layoutX="21.0" layoutY="422.0" onAction="#imageSelected" prefHeight="32.0" prefWidth="356.0" promptText="Select an Image..." />
       <GridPane alignment="CENTER" layoutY="600.0" prefHeight="102.0" prefWidth="1100.0">
         <columnConstraints>
-          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="208.0" minWidth="10.0" prefWidth="207.0" />
-          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="319.0" minWidth="10.0" prefWidth="241.0" />
-            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="221.0" />
+          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="239.0" minWidth="10.0" prefWidth="239.0" />
+          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="319.0" minWidth="10.0" prefWidth="253.0" />
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="181.0" />
             <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="303.0" minWidth="10.0" prefWidth="217.0" />
             <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="252.0" minWidth="10.0" prefWidth="210.0" />
         </columnConstraints>
@@ -95,7 +95,7 @@
             <Label fx:id="genPerSecond" text="Gens. per Second: " GridPane.columnIndex="4" />
             <Label fx:id="tribeFitPerMin" text="Tribe Fitness per Min.:" GridPane.rowIndex="1" />
             <Label fx:id="totalFitPerMin" text="Total Fitness per Min.:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="tribeDiversity" text="Tribe Diversity" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label fx:id="tribeDiversity" text="Tribe Diversity:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label fx:id="totalDiversity" text="Total Diversity:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
          </children>
       </GridPane>
