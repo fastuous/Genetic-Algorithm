@@ -46,8 +46,6 @@ public class EvolutionModel extends Thread
   /** The average fitness of all genomes in all tribes. */
   int averageFitness;
   
-  private int[] tribeFitnesses;
-  
   /**
    * Given an initial thread count, a list of genomes and a reference image, create an
    * Evolution manager that will try to evolve the genomes to look like the reference image
