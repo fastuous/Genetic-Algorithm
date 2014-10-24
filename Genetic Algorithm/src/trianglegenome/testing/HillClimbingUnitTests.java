@@ -63,6 +63,10 @@ public class HillClimbingUnitTests
     return;
   }
   
+  /**
+   * Entry point to run the HillClimbing unit tests.
+   * @param args ignored
+   */
   public static void main(String [] args)
   {
     new HillClimbingUnitTests();
