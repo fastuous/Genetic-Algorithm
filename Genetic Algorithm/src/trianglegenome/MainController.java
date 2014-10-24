@@ -411,7 +411,7 @@ public class MainController extends Control implements Initializable
           Thread.sleep(5000);
         }
         catch (Exception e)
-        {
+        { 
         }
         Platform.runLater(() -> updateGUI());
 
